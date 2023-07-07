@@ -17,21 +17,17 @@ class Video extends Model
 		'id',
 		'title_ru',
 		'title_en',
-		'price_en',
-		'price_ru',
-		'currency_en',
-		'currency_ru',
+		'price',
+		'currency_id',
 		'fragment_id',
 	];
 
 	protected $with = [
-		'currencyRu',
-		'currencyEn',
+		'currency',
 	];
 
 	protected $casts = [
-		'price_ru' => PriceCast::class,
-		'price_en' => PriceCast::class,
+		'price' => PriceCast::class,
 	];
 
 	public function media(): MorphMany
@@ -44,13 +40,13 @@ class Video extends Model
 		return $this->belongsTo(Fragment::class);
 	}
 
-	public function currencyRu(): HasOne
+	public function currency(): BelongsTo
 	{
-		return $this->hasOne(Currency::class, 'id', 'currency_ru');
+		return $this->belongsTo(Currency::class);
 	}
 
-	public function currencyEn(): HasOne
-	{
-		return $this->hasOne(Currency::class, 'id', 'currency_en');
-	}
+	public function subscriptions(): MorphMany
+    {
+        return $this->morphMany(Subscription::class, 'subscribable');
+    }
 }

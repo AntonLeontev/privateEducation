@@ -15,12 +15,10 @@ class VideoSeeder extends Seeder
     {
         foreach (range(1, 17) as $val) {
 			Video::create([
-				'title_ru' => 'Видео ' . $val,
-				'title_en' => 'Video ' . $val,
-				'price_ru' => fake()->numberBetween(100, 1000),
-				'price_en' => fake()->numberBetween(1, 20),
-				'currency_ru' => 1,
-				'currency_en' => 2,
+				'title_ru' => 'Аудио ' . $val,
+				'title_en' => 'Audio ' . $val,
+				'price' => fake()->numberBetween(100, 1000),
+				'currency_id' => 3,
 				'fragment_id' => $val,
 			]);
 		}

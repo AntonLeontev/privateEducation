@@ -16,11 +16,9 @@ return new class extends Migration
             $table->id();
 			$table->string('title_ru');
 			$table->string('title_en');
-			$table->unsignedInteger('price_ru');
-			$table->unsignedInteger('price_en');
+			$table->unsignedInteger('price');
 			
-			$table->foreignId('currency_ru')->constrained('currencies')->cascadeOnDelete()->cascadeOnUpdate();
-			$table->foreignId('currency_en')->constrained('currencies')->cascadeOnDelete()->cascadeOnUpdate();
+			$table->foreignId('currency_id')->constrained('currencies')->cascadeOnDelete()->cascadeOnUpdate();
 			$table->foreignIdFor(Fragment::class)
 				->constrained()
 				->cascadeOnDelete()

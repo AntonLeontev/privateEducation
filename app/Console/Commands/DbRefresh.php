@@ -29,6 +29,7 @@ class DbRefresh extends Command
         Artisan::call('migrate:fresh');
 
 		Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
+		Artisan::call('db:seed', ['--class' => 'UserSeeder']);
 		Artisan::call('db:seed', ['--class' => 'CurrencySeeder']);
 
 		Artisan::call('db:seed', ['--class' => 'FragmentSeeder']);
@@ -36,6 +37,7 @@ class DbRefresh extends Command
 		Artisan::call('db:seed', ['--class' => 'VideoSeeder']);
 		Artisan::call('db:seed', ['--class' => 'PresentationSeeder']);
 		Artisan::call('db:seed', ['--class' => 'MediaSeeder']);
+		Artisan::call('db:seed', ['--class' => 'SubscriptionSeeder']);
 
 		$this->info('ok');
     }

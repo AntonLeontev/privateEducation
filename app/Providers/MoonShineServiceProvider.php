@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Presentation;
+use App\MoonShine\Resources\AudioReportResource;
 use App\MoonShine\Resources\AudioResource;
 use App\MoonShine\Resources\FragmentResource;
 use App\MoonShine\Resources\MediaResource;
 use App\MoonShine\Resources\PresentationResource;
+use App\MoonShine\Resources\VideoReportResource;
 use App\MoonShine\Resources\VideoResource;
 use Illuminate\Support\ServiceProvider;
 use MoonShine\Decorations\Divider;
@@ -36,6 +38,15 @@ class MoonShineServiceProvider extends ServiceProvider
             MenuItem::make('Аудио', new AudioResource()),
             MenuItem::make('Видео', new VideoResource()),
             MenuItem::make('Файлы', new MediaResource()),
+			
+			MenuDivider::make(),
+
+			MenuGroup::make('Отчеты', [
+				MenuItem::make('Сводный отчет', '/admin'),
+				MenuItem::make('Продажи аудио', new AudioReportResource()),
+				MenuItem::make('Продажи видео', new VideoReportResource()),
+			]),
+			
 
 			MenuDivider::make(),
 

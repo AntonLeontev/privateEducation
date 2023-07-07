@@ -2,6 +2,9 @@
 
 use App\Models\Audio;
 use App\Models\Fragment;
+use App\Models\Subscription;
+use App\Support\Enums\MediaLang;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,9 +20,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-	// $fragment = Fragment::with(['audio', 'video', 'presentation'])->first()->video->media->first()->sound;
+	$fragment = Subscription::query()
+							->selectRaw('COUNT(price) as count, location')
+							->where('lang', MediaLang::ru)
+							->where('created_at', '>=', now()->subYear())
+							->groupBy('location')
+							->pluck('count', 'location')
+							->toArray();
 
-	// dd($fragment);
+	dd($fragment);
 
     return view('welcome');
 });

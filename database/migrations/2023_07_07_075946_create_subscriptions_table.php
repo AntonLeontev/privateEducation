@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Currency;
 use App\Models\Fragment;
 use App\Models\Media;
 use App\Models\User;
@@ -17,10 +18,14 @@ return new class extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
 			$table->foreignIdFor(User::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-			$table->foreignIdFor(Fragment::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-			$table->string('content_type');
-			$table->date('ends_at');
+			$table->unsignedBigInteger('subscribable_id');
+			$table->string('subscribable_type');
+			$table->string('lang');
+			$table->string('location');
+			$table->unsignedInteger('price');
+			$table->foreignIdFor(Currency::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
+			$table->date('ends_at');
         });
     }
 

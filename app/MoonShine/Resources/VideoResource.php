@@ -22,7 +22,7 @@ class VideoResource extends Resource
 
 	public static string $title = 'Видео';
 
-	public static array $with = ['currencyRu', 'currencyEn'];
+	public static array $with = ['currency',];
 
 	public static string $orderType = 'ASC';
 
@@ -35,11 +35,11 @@ class VideoResource extends Resource
 					Block::make([
 						Heading::make('Русский'),
 						Text::make('Заголовок', 'title_ru'),
-						Number::make('Цена', 'price_ru')
+						Number::make('Цена', 'price')
 							->hideOnForm(),
-						Number::make('Цена', 'price_ru', fn($item) => $item->price_ru->amount())
+						Number::make('Цена', 'price', fn($item) => $item->price->amount())
 							->hideOnIndex(),
-						Select::make('Валюта ', 'currency_ru')
+						Select::make('Валюта ', 'currency')
 							->options([
 								'1' => 'Рубль РФ',
 								'2' => 'Доллар США'
@@ -51,15 +51,6 @@ class VideoResource extends Resource
 					Block::make([
 						Heading::make('Английский'),
 						Text::make('Title', 'title_en'),
-						Number::make('Price', 'price_en')
-							->hideOnForm(),
-						Number::make('Цена', 'price_en', fn($item) => $item->price_en->amount())
-							->hideOnIndex(),
-						Select::make('Валюта ', 'currency_en')
-							->options([
-								'1' => 'Рубль РФ',
-								'2' => 'Доллар США'
-							])->hideOnIndex(),
 					]),
 				])->columnSpan(6),
 			]),

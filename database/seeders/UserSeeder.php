@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use Database\Factories\SubscriptionFactory;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SubscriptionSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        SubscriptionFactory::new()->count(300)->create();
+        UserFactory::new()->count(5)->create();
     }
 }

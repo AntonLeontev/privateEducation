@@ -9,9 +9,6 @@ use App\MoonShine\Resources\PresentationResource;
 use App\MoonShine\Resources\VideoResource;
 use Illuminate\Database\Eloquent\Model;
 use MoonShine\Actions\FiltersAction;
-use MoonShine\Decorations\Column;
-use MoonShine\Decorations\Flex;
-use MoonShine\Decorations\Grid;
 use MoonShine\Decorations\Tab;
 use MoonShine\Decorations\Tabs;
 use MoonShine\Fields\HasOne;
@@ -64,18 +61,18 @@ class FragmentResource extends Resource
 					->hideOnIndex()
 					->fields([
 						Text::make('Заголовок', 'title_ru'),
-						Number::make('Цена', 'price_ru', fn($item) => $item->price_ru->amount())
-							->expansion($this->getItem()?->audio->currencyRu->sign ?? ''),
-						Select::make('Валюта ', 'currency_ru')
+						Number::make('Цена', 'price', fn($item) => $item->price->amount())
+							->expansion($this->getItem()?->audio->currency->sign ?? ''),
+						Select::make('Валюта ', 'currency')
 							->options([
 								'1' => 'Рубль РФ',
 								'2' => 'Доллар США'
 							]),
 						
 						Text::make('Title', 'title_en'),
-						Number::make('Цена', 'price_en', fn($item) => $item->price_en->amount())
-							->expansion($this->getItem()?->audio->currencyEn->sign ?? ''),
-						Select::make('Валюта ', 'currency_en')
+						Number::make('Цена', 'price', fn($item) => $item->price->amount())
+							->expansion($this->getItem()?->audio->currency->sign ?? ''),
+						Select::make('Валюта ', 'currency')
 							->options([
 								'1' => 'Рубль РФ',
 								'2' => 'Доллар США'
@@ -88,11 +85,11 @@ class FragmentResource extends Resource
 					->hideOnIndex()
 					->fields([
 						Text::make('Заголовок', 'title_ru'),
-						Number::make('Цена', 'price_ru')
+						Number::make('Цена', 'price')
 							->hideOnForm(),
-						Number::make('Цена', 'price_ru', fn($item) => $item->price_ru->amount())
+						Number::make('Цена', 'price', fn($item) => $item->price->amount())
 							->hideOnIndex(),
-						Select::make('Валюта ', 'currency_ru')
+						Select::make('Валюта ', 'currency')
 							->options([
 								'1' => 'Рубль РФ',
 								'2' => 'Доллар США'
@@ -105,10 +102,10 @@ class FragmentResource extends Resource
 			
 
 			NoInput::make('Цена аудио', '', function($item) {
-				return $item->audio->price_ru . ' | ' . $item->audio->price_en;
+				return $item->audio->price . ' | ' . $item->audio->price;
 			})->hideOnForm(),
 			NoInput::make('Цена видео', '', function($item) {
-				return $item->video->price_ru . ' | ' . $item->video->price_en;
+				return $item->video->price . ' | ' . $item->video->price;
 			})->hideOnForm(),
 
 			
