@@ -33,25 +33,48 @@ class AudioResource extends Resource
 		    ID::make()->sortable(),
 			Grid::make([
 				Column::make([
-					Block::make([
-						Heading::make('Русский'),
-						Text::make('Заголовок', 'title_ru'),
-						Number::make('Цена', 'price')
-							->hideOnForm(),
-						Number::make('Цена', 'price', fn($item) => $item->price->amount())
-							->hideOnIndex(),
-						Select::make('Валюта ', 'currency')
-							->options([
-								'1' => 'Рубль РФ',
-								'2' => 'Доллар США'
-							])
-							->hideOnIndex(),
-					]),
-					])->columnSpan(6),
+					Number::make('Цена', 'price')
+						->hideOnForm(),
+					Number::make('Цена', 'price', fn($item) => $item->price->amount())
+						->expansion('€')
+						->hideOnIndex(),
+					// Block::make([
+					// 	// Heading::make('Русский'),
+					// 	// Text::make('Заголовок', 'title_ru'),
+					// 	// Select::make('Валюта ', 'currency')
+					// 	// 	->options([
+					// 	// 		'1' => 'Рубль РФ',
+					// 	// 		'2' => 'Доллар США'
+					// 	// 	])
+					// 	// 	->hideOnIndex(),
+					// ]),
+					])->columnSpan(3),
+				Column::make([
+					// Block::make([
+					// 	Heading::make('Английский'),
+					// 	Text::make('Title', 'title_en'),
+					// ]),
+				])->columnSpan(6),
+			]),
+			Grid::make([
 				Column::make([
 					Block::make([
-						Heading::make('Английский'),
-						Text::make('Title', 'title_en'),
+						NoInput::make('', '', fn(Audio $presentation) => 
+							view('admin.media-audio', [
+								'media' => $presentation->load('media')->media,
+								'lang' => 'Русский язык'
+							])->render()
+						)->hideOnIndex(),
+					]),
+				])->columnSpan(6),
+				Column::make([
+					Block::make([
+						NoInput::make('', '', fn(Audio $presentation) => 
+							view('admin.media-audio', [
+								'media' => $presentation->load('media')->media,
+								'lang' => 'Английский язык'
+							])->render()
+						)->hideOnIndex(),
 					]),
 				])->columnSpan(6),
 			]),

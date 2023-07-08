@@ -11,6 +11,7 @@ use MoonShine\Decorations\Column;
 use MoonShine\Decorations\Grid;
 use MoonShine\Decorations\Heading;
 use MoonShine\Fields\ID;
+use MoonShine\Fields\NoInput;
 use MoonShine\Fields\Select;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\TinyMce;
@@ -24,6 +25,8 @@ class PresentationResource extends Resource
 
 	public static string $orderType = 'ASC';
 
+	public static array $activeActions = ['edit'];
+
 	public function fields(): array
 	{
 		return [
@@ -32,7 +35,7 @@ class PresentationResource extends Resource
 				Column::make([
 					Block::make([
 						Heading::make('Русский'),
-						Text::make('Заголовок', 'title_ru'),
+						// Text::make('Заголовок', 'title_ru'),
 						TinyMce::make('Текст', 'text_ru')
 							->hideOnIndex(),
 					]),
@@ -40,12 +43,29 @@ class PresentationResource extends Resource
 				Column::make([
 					Block::make([
 						Heading::make('Английский'),
-						Text::make('Title', 'title_en'),
+						// Text::make('Title', 'title_en'),
 						TinyMce::make('Текст', 'text_en')
 							->hideOnIndex(),
 					]),
 				])->columnSpan(6),
 			]),
+			Grid::make([
+				Column::make([
+					Block::make([
+						NoInput::make('', '', fn(Presentation $presentation) => 
+							view('admin.media-video', ['media' => $presentation->load('media')->media])->render()
+						)->hideOnIndex(),
+					]),
+				])->columnSpan(6),
+				Column::make([
+					Block::make([
+						NoInput::make('', '', fn(Presentation $presentation) => 
+							view('admin.media-video', ['media' => $presentation->load('media')->media])->render()
+						)->hideOnIndex(),
+					]),
+				])->columnSpan(6),
+			]),
+			
         ];
 	}
 

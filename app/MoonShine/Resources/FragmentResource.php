@@ -9,6 +9,7 @@ use App\MoonShine\Resources\PresentationResource;
 use App\MoonShine\Resources\VideoResource;
 use Illuminate\Database\Eloquent\Model;
 use MoonShine\Actions\FiltersAction;
+use MoonShine\Decorations\Flex;
 use MoonShine\Decorations\Tab;
 use MoonShine\Decorations\Tabs;
 use MoonShine\Fields\HasOne;
@@ -30,7 +31,7 @@ class FragmentResource extends Resource
 
 	public static array $with = ['audio', 'video', 'presentation'];
 
-	public static array $activeActions = ['show', 'edit', 'delete'];
+	public static array $activeActions = ['edit'];
 
 	protected bool $editInModal = false;
 
@@ -38,74 +39,71 @@ class FragmentResource extends Resource
 	{
 		return [
 			ID::make()->sortable(),
-			Tabs::make([
-				Tab::make('Основное', [
-					Text::make('Заголовок', 'title_ru'),
-					Text::make('Title', 'title_en'),
-				]),
-				Tab::make('Презентация', [
-					HasOne::make('Презентация', 'presentation', new PresentationResource)				
-					->fields([
-						Text::make('Заголовок', 'title_ru'),
-						TinyMce::make('Текст', 'text_ru')
-							->hideOnIndex(),
-						Text::make('Title', 'title_en'),
-						TinyMce::make('Текст', 'text_en')
-							->hideOnIndex(),
-					])
-					->fullPage()
+			Flex::make([
+				Text::make('Заголовок', 'title_ru'),
+				Text::make('Title', 'title_en'),
+			]),
+
+			HasOne::make('Презентация', 'presentation', new PresentationResource)				
+					// ->fields([
+					// 	// Text::make('Заголовок', 'title_ru'),
+					// 	TinyMce::make('Текст на русском', 'text_ru')
+					// 		->hideOnIndex(),
+					// 	// Text::make('Title', 'title_en'),
+					// 	TinyMce::make('Текст на английском', 'text_en')
+					// 		->hideOnIndex(),
+					// ])
+					->resourceMode()
 					->hideOnIndex(),
-				]),
-				Tab::make('Аудио', [
+
+
 					HasOne::make('Аудио', 'audio', new AudioResource)				
 					->hideOnIndex()
 					->fields([
-						Text::make('Заголовок', 'title_ru'),
+						// Text::make('Заголовок', 'title_ru'),
 						Number::make('Цена', 'price', fn($item) => $item->price->amount())
 							->expansion($this->getItem()?->audio->currency->sign ?? ''),
-						Select::make('Валюта ', 'currency')
-							->options([
-								'1' => 'Рубль РФ',
-								'2' => 'Доллар США'
-							]),
+						// Select::make('Валюта ', 'currency')
+						// 	->options([
+						// 		'1' => 'Рубль РФ',
+						// 		'2' => 'Доллар США'
+						// 	]),
 						
-						Text::make('Title', 'title_en'),
-						Number::make('Цена', 'price', fn($item) => $item->price->amount())
-							->expansion($this->getItem()?->audio->currency->sign ?? ''),
-						Select::make('Валюта ', 'currency')
-							->options([
-								'1' => 'Рубль РФ',
-								'2' => 'Доллар США'
-							]),
+						// Text::make('Title', 'title_en'),
+						// Number::make('Цена', 'price', fn($item) => $item->price->amount())
+							// ->expansion($this->getItem()?->audio->currency->sign ?? ''),
+						// Select::make('Валюта ', 'currency')
+						// 	->options([
+						// 		'1' => 'Рубль РФ',
+						// 		'2' => 'Доллар США'
+						// 	]),
 					])
-					->fullPage(),
-				]),
-				Tab::make('Видео', [
+					->resourceMode(),
+
 					HasOne::make('Видео', 'video', new VideoResource)				
 					->hideOnIndex()
 					->fields([
-						Text::make('Заголовок', 'title_ru'),
-						Number::make('Цена', 'price')
-							->hideOnForm(),
+						// Text::make('Заголовок', 'title_ru'),
+						// Number::make('Цена', 'price')
+						// 	->hideOnForm(),
 						Number::make('Цена', 'price', fn($item) => $item->price->amount())
-							->hideOnIndex(),
-						Select::make('Валюта ', 'currency')
-							->options([
-								'1' => 'Рубль РФ',
-								'2' => 'Доллар США'
-							])
-							->hideOnIndex(),
+							->expansion($this->getItem()?->audio->currency->sign ?? ''),
+						// Select::make('Валюта ', 'currency')
+						// 	->options([
+						// 		'1' => 'Рубль РФ',
+						// 		'2' => 'Доллар США'
+						// 	])
+						// 	->hideOnIndex(),
 					])
-					->fullPage(),
-				]),
-			]),
-			
+					->resourceMode(),
+
+
 
 			NoInput::make('Цена аудио', '', function($item) {
-				return $item->audio->price . ' | ' . $item->audio->price;
+				return $item->audio->price;
 			})->hideOnForm(),
 			NoInput::make('Цена видео', '', function($item) {
-				return $item->video->price . ' | ' . $item->video->price;
+				return $item->video->price;
 			})->hideOnForm(),
 
 			

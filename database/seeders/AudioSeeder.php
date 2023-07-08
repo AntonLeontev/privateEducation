@@ -17,7 +17,7 @@ class AudioSeeder extends Seeder
 			Audio::create([
 				'title_ru' => 'Аудио ' . $val,
 				'title_en' => 'Audio ' . $val,
-				'price' => fake()->numberBetween(100, 1000),
+				'price' => fake()->numberBetween(5, 10),
 				'currency_id' => 3,
 				'fragment_id' => $val,
 			]);

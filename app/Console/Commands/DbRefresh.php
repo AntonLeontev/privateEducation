@@ -39,6 +39,8 @@ class DbRefresh extends Command
 		Artisan::call('db:seed', ['--class' => 'MediaSeeder']);
 		Artisan::call('db:seed', ['--class' => 'SubscriptionSeeder']);
 
+		Artisan::call('db:seed', ['--class' => 'SeoSeeder']);
+
 		$this->info('ok');
     }
 }
