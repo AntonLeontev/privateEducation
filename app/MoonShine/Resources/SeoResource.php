@@ -22,6 +22,7 @@ class SeoResource extends Resource
 	{
 		return [
 		    Text::make('Title'),
+		    Text::make('H1'),
 		    Textarea::make('Description'),
 		    Textarea::make('Keywords'),
         ];

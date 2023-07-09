@@ -20,7 +20,7 @@ return [
     'use_migrations' => true,
     'use_notifications' => true,
     'auth' => [
-        'enable' => false,
+        'enable' => true,
         'fields' => [
             'username' => 'email',
             'password' => 'password',

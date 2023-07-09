@@ -11,6 +11,7 @@ class Seo extends Model
 
 	protected $fillable = [
 		'title',
+		'h1',
 		'description',
 		'keywords',
 	];
