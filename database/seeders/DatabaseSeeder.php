@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +13,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
+		Artisan::call('db:seed', ['--class' => 'UserSeeder']);
+		Artisan::call('db:seed', ['--class' => 'CurrencySeeder']);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+		Artisan::call('db:seed', ['--class' => 'FragmentSeeder']);
+		Artisan::call('db:seed', ['--class' => 'AudioSeeder']);
+		Artisan::call('db:seed', ['--class' => 'VideoSeeder']);
+		Artisan::call('db:seed', ['--class' => 'PresentationSeeder']);
+		Artisan::call('db:seed', ['--class' => 'MediaSeeder']);
+		Artisan::call('db:seed', ['--class' => 'SubscriptionSeeder']);
+
+		Artisan::call('db:seed', ['--class' => 'SeoSeeder']);
     }
 }
