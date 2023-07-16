@@ -17,6 +17,7 @@ use MoonShine\Menu\MenuDivider;
 use MoonShine\Menu\MenuGroup;
 use MoonShine\Menu\MenuItem;
 use MoonShine\MoonShine;
+use MoonShine\Resources\CustomPage;
 use MoonShine\Resources\MoonShineUserResource;
 use MoonShine\Resources\MoonShineUserRoleResource;
 
@@ -39,11 +40,14 @@ class MoonShineServiceProvider extends ServiceProvider
 			MenuItem::make('Продажи видео', new VideoReportResource())->icon('heroicons.film'),
 			
 
-			MenuItem::make('Презентации', new PresentationResource())->canSee(fn() => false),
+			MenuItem::make('Презентации', new PresentationResource())->canSee(fn() => true),
 			MenuItem::make('Аудио', new AudioResource())->canSee(fn() => false),
 			MenuItem::make('Видео', new VideoResource())->canSee(fn() => false),
-            // MenuItem::make('Файлы', new MediaResource()),
 			
+			MenuDivider::make(),
+
+			MenuItem::make('Статистика', '/admin/custom'),
+
 			MenuDivider::make(),
 
 			MenuItem::make('Фрагменты', new FragmentResource())

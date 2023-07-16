@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Models\Audio;
 use App\Models\Fragment;
 use App\Models\Subscription;
@@ -32,3 +33,6 @@ Route::get('/', function () {
 
     return view('welcome');
 });
+
+Route::get('admin/custom', [AdminController::class, 'custom'])->name('admin.custom');
+Route::get('admin/users', [AdminController::class, 'users'])->name('admin.users');
