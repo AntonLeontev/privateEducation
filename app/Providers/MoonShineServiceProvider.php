@@ -40,7 +40,7 @@ class MoonShineServiceProvider extends ServiceProvider
 			MenuItem::make('Продажи видео', new VideoReportResource())->icon('heroicons.film'),
 			
 
-			MenuItem::make('Презентации', new PresentationResource())->canSee(fn() => true),
+			MenuItem::make('Презентации', new PresentationResource())->canSee(fn() => false),
 			MenuItem::make('Аудио', new AudioResource())->canSee(fn() => false),
 			MenuItem::make('Видео', new VideoResource())->canSee(fn() => false),
 			

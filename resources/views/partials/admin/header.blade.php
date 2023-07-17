@@ -21,8 +21,8 @@
         Личный кабинет
       </div>
     </a>
-    <div class="burger menu">
-      <div class="menu-text">Меню</div>
+    <div class="burger">
+      <div class="">Меню</div>
       <span></span>
     </div>
   </div>

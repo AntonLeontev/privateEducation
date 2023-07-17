@@ -27,10 +27,16 @@
 					<div class="flex items-center min-w-[150px] pl-2">Фрагмент №{{ $item }}</div>
 					<div class="flex items-center gap-3 w-[10%]">
 						<img class="w-[45px] h-[35px]" src="{{ Vite::asset('resources/images/icon4.png') }}" alt="Презентация">
-						<div class="flex items-center gap-1" title="Количество просмотров пользователем">
+						<div class="flex items-center gap-1 min-w-[50px]" title="Количество просмотров видео">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
 								<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+							</svg>
+							{{ random_int(1, 12) }}
+						</div>
+						<div class="flex items-center gap-1" title="Количество просмотров текста">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
 							</svg>
 							{{ random_int(1, 12) }}
 						</div>
@@ -44,7 +50,7 @@
 							</svg>
 							{{ random_int(1, 12) }}
 						</div>
-						<div class="flex items-center gap-1 min-w-[100px]" title="Сумма покупок">
+						<div class="flex items-center gap-1 min-w-[100px]" title="Сумма покупок аудио">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 100 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 							</svg>
@@ -69,7 +75,7 @@
 							</svg>
 							{{ random_int(1, 12) }}
 						</div>
-						<div class="flex items-center gap-1 min-w-[100px]" title="Сумма покупок">
+						<div class="flex items-center gap-1 min-w-[100px]" title="Сумма покупок видео">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 100 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 							</svg>
