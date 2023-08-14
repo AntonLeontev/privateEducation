@@ -237,7 +237,7 @@ template {
 .page {
   /* overflow-y: hidden; */
   position: relative;
-  min-height: 100vw;
+  min-height: 100vh;
 }
 
 .myBtn {

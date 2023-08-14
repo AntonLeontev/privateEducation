@@ -22,8 +22,6 @@
 <div id="panel"></div>
 <div class="main main--index">
   
-	@include('partials.admin.header')
-
 	@yield('content')
 </div>
 

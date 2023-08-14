@@ -3,21 +3,51 @@
 @section('title', 'Admin panel')
 
 @section('content')
-    <div class="container" x-data="container">
-        <div class="row player_row">
-        </div>
-        <div class="content hidden-md visible-sm" x-data="fragments">
+<div class="w-full" x-data="container">
+	<header class="my-4 header">
+		<div class="container container-header">
+			<nav class="header__nav">
+				<ul class="header__list__nav">
+					<li class="flex items-center gap-x-1 header__nav__list-item" @click="$dispatch('all-stats', 'all')">
+						<img width="25px" src="{{ Vite::asset('resources/images/icon5.png') }}" alt="">
+						<span>Все продажи</span>
+					</li>
+					<li class="flex items-center gap-x-1 header__nav__list-item" @click="$dispatch('all-stats', 'all-audio')">
+						<img width="25px" src="{{ Vite::asset('resources/images/icon2.png') }}" alt="">
+						<span>Только аудио</span>
+					</li>
+					<li class="flex items-center gap-x-1 header__nav__list-item" @click="$dispatch('all-stats', 'all-video')">
+						<img width="25px" src="{{ Vite::asset('resources/images/icon3.png') }}" alt="">
+						<span>Только видео</span>
+					</li>
+					<li class="flex items-center gap-x-1 header__nav__list-item" @click="modal = true">
+						Сводная информация
+					</li>
+				</ul>
+			</nav>
+			<div class="burger">
+				<div class="">Меню</div>
+				<span></span>
+			</div>
+		</div>
+	</header>
+
+    <div class="container">
+        <div 
+			class="content hidden-md visible-sm" 
+			x-data="fragments"
+			@all-stats.window="allStats"
+		>
             <div class="grid grid-cols-11 grid-rows-1 mb-5">
                 <div class="col-span-5 player">
                     <div class="">
                         <div class="flex justify-between player__title align-center">
-							<div class="flex items-center gap-x-2 bg-[rgba(146,140,141,0.7)] pl-2">
+							<div class="flex items-center gap-x-2 bg-[rgba(146,140,141,0.7)] pr-2">
 								<img class="h-[45px]" :src="image" alt="">
-								<span class="text-[32px]" x-text="title()">
+								<span class="text-[150%]" x-text="getTitle">
 									Презентация. Фрагмент №1
 								</span>
 							</div>
-							<button class="text-white rounded-none btn btn-primary" @click="modal = true">Сводная информация</button>
                         </div>
                         <div class="player__content">
                             <div class="player__frame ">
@@ -113,11 +143,24 @@
 		<script>
 			document.addEventListener('alpine:init', () => {
 				Alpine.data('fragments', () => ({
-					active: 'total1',
-					activeType: 'total',
-					activeFragment: 1,
-					title() {
-						if (! this.active) return;
+					active: '',
+					activeType: 'all',
+					activeFragment: '',
+
+					getTitle() {
+						if (! this.activeType) return;
+
+						if (this.activeType === 'all-audio') {
+							return "Все аудио";
+						} 
+
+						if (this.activeType === 'all-video') {
+							return "Все видео";
+						} 
+
+						if (this.activeType === 'all') {
+							return "Все продажи";
+						} 
 						
 						let type;
 						if (this.activeType === 'presentation') {
@@ -141,18 +184,32 @@
 						if (this.activeType === 'music') {
 							return "{{ Vite::asset('resources/images/icon2.png') }}";
 						} 
+						if (this.activeType === 'all-audio') {
+							return "{{ Vite::asset('resources/images/icon2.png') }}";
+						} 
+						if (this.activeType === 'all') {
+							return "{{ Vite::asset('resources/images/icon5.png') }}";
+						} 
 						if (this.activeType === 'video') {
 							return "{{ Vite::asset('resources/images/icon3.png') }}";
 						} 
-						if (this.activeType === 'total') {
-							return "{{ Vite::asset('resources/images/icon1.png') }}";
+						if (this.activeType === 'all-video') {
+							return "{{ Vite::asset('resources/images/icon3.png') }}";
 						} 
+						if (this.activeType === 'total') {
+							return "{{ Vite::asset('resources/images/icon5.png') }}";
+						} 
+					},
+					allStats() {
+						this.active = null;
+						this.activeType = this.$event.detail;
+						this.activeFragment = null;
 					},
 				}))
 			})
 		</script>
 
-        <div class="content visible-md hidden-sm hidden-bg">
+        {{-- <div class="content visible-md hidden-sm hidden-bg">
             <div class="row player_row">
                 <div class="player">
                     <div class="player__fixed">
@@ -608,7 +665,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
 		<div class="absolute max-h-[80vh] rounded-xl top-0 left-0 right-0 overflow-hidden shadow-[0_1px_3px_#757252]"
 			x-cloak
@@ -628,7 +685,7 @@
 					<img src="{{ Vite::asset('resources/images/close-modal.png') }}" alt="">
 				</button>
 			</div>
-			<div class="bg-[rgba(220,246,210,0.77)] p-5 text-black overflow-y-auto">
+			<div class="bg-[rgba(220,246,210,0.77)] p-5 text-black overflow-y-auto max-h-[calc(80vh-40px)]">
 				<div class="flex justify-start mb-4 align-center gap-x-10">
 					<img 
 						class="w-[45px] h-[45px] opacity-50 hover:opacity-70 cursor-pointer" 
@@ -657,15 +714,18 @@
 				</div>
 				<table class="w-full">
 					<thead>
-						<tr class="[&>*]:px-2">
+						<tr class="[&>*]:px-2 text-[14px]">
 							<th></th>
 							<th>
-								<div class="flex items-center justify-center gap-x-2">
+								<div class="flex items-center justify-center cursor-pointer gap-x-2" @click="changeSort('view-ru')">
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 										<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
 										<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 									</svg>
 									<span class="">RU</span> 
+									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 transition" x-show="sort === 'view-ru' && direction != null" :class="direction === 'desc' && 'rotate-180'">
+										<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25L12 21m0 0l-3.75-3.75M12 21V3" />
+									</svg>
 								</div>
 							</th>
 							<th x-show="section == 'presentation'">
@@ -725,35 +785,63 @@
 							</th>
 						</tr>
 					</thead>
-					<tbody class="text-md">
-						@foreach (range(1,17) as $item)
-							<tr class="[&>*]:py-1">
-								<td class="text-left">Фрагмент {{ $item }}</td>
-								<td class="text-center">{{ random_int(0,15) }}</td>
-								<td class="text-center">{{ random_int(0,15) }}</td>
-								<td class="text-center" x-show="section == 'presentation'">{{ random_int(0,15) }}</td>
-								<td class="text-center" x-show="section == 'presentation'">{{ random_int(0,15) }}</td>
-								<td class="text-center" x-show="section != 'presentation'">{{ random_int(0,15) }} €</td>
-								<td class="text-center" x-show="section != 'presentation'">{{ random_int(0,15) }} €</td>
-								<td class="text-center" x-show="section != 'presentation'">{{ random_int(0,15) }} €</td>
-								<td class="text-center" x-show="section != 'presentation'">{{ random_int(0,15) }} €</td>
-								<td class="text-center" x-show="section != 'presentation'">{{ random_int(0,15) }} €</td>
-								<td class="text-center" x-show="section != 'presentation'">{{ random_int(0,15) }} €</td>
-								<td class="text-center" x-show="section != 'presentation'">{{ random_int(0,15) }} €</td>
-								<td class="text-center" x-show="section != 'presentation'">{{ random_int(0,15) }} €</td>
-								<td class="text-center" x-show="section != 'presentation'">{{ random_int(0,15) }} €</td>
-								<td class="text-center" x-show="section != 'presentation'">{{ random_int(0,15) }} €</td>
+					<tbody class="text-[14px]">
+						<template x-for="fragment in fragments">
+							<tr class="[&>*]:py-1 hover:bg-primary transition duration-300 even:bg-[rgba(205,253,187,0.5)]">
+								<td class="text-left" x-text="fragment.title"></td>
+								<td class="text-center" x-text="fragment['view-ru']"></td>
+								<td class="text-center" x-text="fragment[2]"></td>
+								<td class="text-center" x-text="fragment[3]" x-show="section == 'presentation'"></td>
+								<td class="text-center" x-text="fragment[4]" x-show="section == 'presentation'"></td>
+								<td class="text-center" x-text="fragment[5]" x-show="section != 'presentation'"></td>
+								<td class="text-center" x-text="fragment[6]" x-show="section != 'presentation'"></td>
+								<td class="text-center" x-text="fragment[7]" x-show="section != 'presentation'"></td>
+								<td class="text-center" x-text="fragment[8]" x-show="section != 'presentation'"></td>
+								<td class="text-center" x-text="fragment[9]" x-show="section != 'presentation'"></td>
+								<td class="text-center" x-text="fragment[10]" x-show="section != 'presentation'"></td>
+								<td class="text-center" x-text="fragment[11]" x-show="section != 'presentation'"></td>
+								<td class="text-center" x-text="fragment[12]" x-show="section != 'presentation'"></td>
+								<td class="text-center" x-text="fragment[13]" x-show="section != 'presentation'"></td>
+								<td class="text-center" x-text="fragment[14]" x-show="section != 'presentation'"></td>
 							</tr>
-						@endforeach
+						</template>
 					</tbody>
 				</table>
 			</div>
 		</div>
 
+		@php
+			$fragments = [];
+			foreach (range(1, 17) as $item) {
+				$fragments[] = [
+					'position' => $item,
+					'title' => "Фрагмент $item",
+					'view-ru' => random_int(0,15),
+					2 => random_int(0,15),
+					3 => random_int(0,15),
+					4 => random_int(0,15),
+					5 => random_int(0,15),
+					6 => random_int(0,15),
+					7 => random_int(0,15),
+					8 => random_int(0,15),
+					9 => random_int(0,15),
+					10 => random_int(0,15),
+					11 => random_int(0,15),
+					12 => random_int(0,15),
+					13 => random_int(0,15),
+					14 => random_int(0,15),
+				];
+			}
+		@endphp
+
 		<script>
 			document.addEventListener('alpine:init', () => {
 				Alpine.data('modal', () => ({
+					fragments: @json($fragments),
 					section: 'audio',
+					sort: null,
+					direction: null,
+
 					setSection() {
 						this.section = this.$el.dataset.section;
 					},
@@ -779,19 +867,51 @@
 							return "{{ Vite::asset('resources/images/icon4.png') }}";
 						}
 					},
+					changeSort(column) {
+						if (this.sort === column) {
+							this.changeDirection();
+							this.sortFragments();
+							return;
+						}
+
+						this.sort = column;
+						this.direction = 'asc';
+						this.sortFragments();
+					},
+					changeDirection() {
+						this.direction === 'asc'
+							? this.direction = 'desc'
+							: this.direction === 'desc' 
+								? this.direction = null
+								: this.direction = 'asc';
+					},
+					sortFragments() {
+						this.fragments.sort((a, b) => {
+							if (this.direction === 'desc') {
+								return a[this.sort] - b[this.sort];
+							}
+
+							if (this.direction === 'asc') {
+								return b[this.sort] - a[this.sort];
+							}
+
+							return a.position - b.position;
+						});
+					},
 				}))
 			})
 		</script>
 
     </div>
+</div>
 
-	<script>
-		document.addEventListener('alpine:init', () => {
-			Alpine.data('container', () => ({
-				modal: false,
-			}))
-		})
-	</script>
+<script>
+	document.addEventListener('alpine:init', () => {
+		Alpine.data('container', () => ({
+			modal: true,
+		}))
+	})
+</script>
 
 @endsection
 
@@ -805,87 +925,5 @@
 @endsection
 
 @section('body-scripts')
-    <script>
-        const mainModal = document.querySelector('.auth-modal--main');
-        const lkBtn = document.querySelector('.user_link');
-        const page = document.querySelector('.page');
-        const fragmentModal = document.querySelector('.fragment-modal--main');
-        const fragmentItem = document.querySelectorAll('[data-type="text"]');
-
-        let ps;
-
-        fragmentItem.forEach(fragmentItem => {
-            fragmentItem.addEventListener('click', (e) => {
-                const otherBlock = document.querySelector('.fragment-modal--main');
-                otherBlock.classList.toggle('hidden');
-                const containermain = document.querySelector('.modal-fragment-main .modal-header-text');
-                const containerreg = document.querySelector('.modal-fragment-reg .modal-header-text');
-                const containerRestore = document.querySelector(
-                    '.auth-modal--restore-fragment .modal-header-text');
-                const containerRestoreFragment = document.querySelector(
-                    '.js-restore-success-modal-fragment .modal-header-text');
-                const containerContinueFragment = document.querySelector(
-                    '.auth-modal--continue-fragment .modal-header-text');
-
-
-                const data_int = e.currentTarget.getAttribute('data-int');
-                containermain.innerHTML = `Фрагмент ${data_int}`;
-                //   containerreg.innerHTML = `Фрагмент ${data_int}`;
-                //   containerRestore.innerHTML = `Фрагмент ${data_int}`;
-                //   containerRestoreFragment.innerHTML = `Фрагмент ${data_int}`;
-                //   containerContinueFragment.innerHTML = `Фрагмент ${data_int}`;
-
-                // получаем значение атрибутов data-*
-                // использование полученных атрибутов
-
-            });
-        });
-
-
-        const scrollInit = () => {
-            if (document.querySelector('.content-block')) { // чтобы не вылетал в ошибку, если нет блока
-                ps = new PerfectScrollbar('.content-block', {
-                    wheelSpeed: 2,
-                    wheelPropagation: true,
-                    minScrollbarLength: 100,
-                });
-            }
-        }
-        scrollInit();
-
-        // открытие/закрытие модалок
-        //
-        lkBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            if (document.querySelector('.content-block')) { // т.е. для всех страниц, кроме index.html
-                ps.destroy();
-                ps = null;
-            }
-
-            const escHandler = (e) => {
-                if (e.keyCode === 27) mainModal.classList.add('hidden');
-                page.removeEventListener('keydown', escHandler);
-                if (!ps) scrollInit();
-            }
-
-            mainModal.classList.remove('hidden');
-
-            const closeBtnForMain = mainModal.querySelector('.modal-close-btn');
-            closeBtnForMain.addEventListener('click', () => {
-                mainModal.classList.add('hidden');
-                if (!ps) scrollInit();
-            })
-            page.addEventListener('keydown', escHandler);
-        })
-
-
-        const closeModalBtn = [...document.querySelectorAll('.modal-close-btn')]
-        closeModalBtn.forEach((el) => {
-            el.addEventListener('click', () => {
-                let m = el.closest('.auth-modal');
-                m.classList.add('hidden');
-            })
-        });
-    </script>
+   
 @endsection

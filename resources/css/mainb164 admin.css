@@ -3680,8 +3680,7 @@ header {
     width: 83%;
 }
 
-.header__nav__list-item > a {
-    text-decoration: none;
+.header__nav__list-item {
 
     color: #344760;
 
@@ -3690,10 +3689,11 @@ header {
 }
 
 @media only screen and (max-width: 1600px) {
-    .header__nav__list-item > a {
+    .header__nav__list-item {
         font-size: 1.3vw;
         font-family: "Arimo", sans-serif;
         font-weight: 500;
+		cursor: pointer;
     }
     .item__title .fragment {
         font-size: 1.46vw;
@@ -3704,8 +3704,6 @@ header {
 }
 
 @media only screen and (max-width: 1600px) {
-    .header__nav__list-item > a {
-    }
 }
 
 .new-string {
@@ -4422,7 +4420,7 @@ header {
         margin-top: 3px;
     }
 
-    .header__nav__list-item > a {
+    .header__nav__list-item {
         font-size: 1.2vw;
         font-weight: 500;
     }

@@ -3,6 +3,23 @@
 @section('title', 'Пользователи')
 
 @section('content')
+	<header class="my-4 header">
+		<div class="container container-header">
+			{{-- <nav class="header__nav">
+				<ul class="header__list__nav">
+					<li class="header__nav__list-item">Все продажи</li>
+					<li class="header__nav__list-item">Только аудио</li>
+					<li class="header__nav__list-item">Только видео</li>
+					<li class="header__nav__list-item">Сводная информация</li>
+				</ul>
+			</nav> --}}
+			<div class="ml-auto burger">
+				<div class="">Меню</div>
+				<span></span>
+			</div>
+		</div>
+	</header>
+
     <div class="container">
 		<div class="flex mb-5 gap-x-3 player__title">
 			<span class="mr-10 player__title__bg">
@@ -37,4 +54,11 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('modals')
+    @include('partials.admin.menu')
+
+    <!--script1.js -  скрипт для открытия-закрытия серого меню справа-->
+    <script src="/js/script1.js"></script>
 @endsection
