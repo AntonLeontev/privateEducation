@@ -14,7 +14,7 @@
 	@endif
 
 	@if (Route::has('admin.custom'))
-		<li class="transition duration-300 right-menu__item border border-x-0 @if (Route::is('admin.custom')) !bg-[#50657c] @endif">
+		<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.custom')) !bg-[#50657c] @endif">
 			<a class="right-menu__link" href="{{ route('admin.custom') }}">
 				<span class="right-menu-link__wrapper">
 					<span class="right-menu-link__text @if (Route::is('admin.custom')) !text-primary @endif">Фрагменты</span>

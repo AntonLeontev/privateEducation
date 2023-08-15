@@ -16,4 +16,9 @@ class AdminController extends Controller
 	{
 		return view('admin.users', ['resource' => (new UserResource())]);
 	}
+
+	public function dashboard()
+	{
+		return view('admin.dashboard');
+	}
 }

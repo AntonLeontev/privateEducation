@@ -21,11 +21,11 @@
 		</div>
 	</div>
 	<div x-cloak x-show="show" x-transition>
-		<div class="px-5">
+		<div class="px-5 w-[1150px] overflow-x-auto">
 			@foreach (range(1, 17) as $item)
-				<div class="flex justify-between py-1 transition gap-x-10 hover:bg-slate-100/10">
+				<div class="flex justify-start py-1 transition gap-x-1 hover:bg-slate-100/10">
 					<div class="flex items-center min-w-[150px] pl-2">Фрагмент №{{ $item }}</div>
-					<div class="flex items-center gap-3 w-[10%]">
+					<div class="flex items-center gap-3 min-w-[180px]">
 						<img class="w-[45px] h-[35px]" src="{{ Vite::asset('resources/images/icon4.png') }}" alt="Презентация">
 						<div class="flex items-center gap-1 min-w-[50px]" title="Количество просмотров видео">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -41,12 +41,11 @@
 							{{ random_int(1, 12) }}
 						</div>
 					</div>
-					<div class="grid auto-cols-max grid-flow-col items-center gap-3 w-[30%]">
+					<div class="grid items-center grid-flow-col gap-1 auto-cols-max min-w-[400px]">
 						<img class="w-[35px] h-[35px]" src="{{ Vite::asset('resources/images/icon2.png') }}" alt="Аудио">
 						<div class="flex items-center gap-1 min-w-[70px]" title="Количество прослушиваний пользователем">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-								<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+							<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="24px">
+								<title/><g data-name="Layer 2" id="Layer_2"><path d="M16,4A14,14,0,0,0,2,18v9a1,1,0,0,0,1,1H9a1,1,0,0,0,1-1V19a1,1,0,0,0-1-1H4a12,12,0,0,1,24,0H23a1,1,0,0,0-1,1v8a1,1,0,0,0,1,1h6a1,1,0,0,0,1-1V18A14,14,0,0,0,16,4Z"/></g>
 							</svg>
 							{{ random_int(1, 12) }}
 						</div>
@@ -66,7 +65,7 @@
 							@endif
 						</div>
 					</div>
-					<div class="flex items-center gap-3 w-[30%]">
+					<div class="flex items-center gap-1 min-w-[400px]">
 						<img class="w-[35px] h-[35px]" src="{{ Vite::asset('resources/images/icon3.png') }}" alt="Видео">
 						<div class="flex items-center gap-1 min-w-[70px]" title="Количество просмотров пользователем">
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

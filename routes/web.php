@@ -34,5 +34,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 Route::get('admin/custom', [AdminController::class, 'custom'])->name('admin.custom');
 Route::get('admin/users', [AdminController::class, 'users'])->name('admin.users');
