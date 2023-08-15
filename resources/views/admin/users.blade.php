@@ -39,12 +39,12 @@
 		</div>
         <div class="w-full text-lg border-separate border-spacing-y-3">
 			<div class="flex">
-				<div class="w-[15%] text-center">email</div>
+				<div class="w-[25%] text-center">email</div>
 				<div class="w-[10%] text-center">Страна</div>
 				<div class="w-[10%] text-center">Город</div>
 				<div class="w-[20%] text-center">Количество активных подписок</div>
-				<div class="w-[20%] text-center">Всего куплено подписок</div>
-				<div class="w-[20%] text-center">Сумма покупок</div>
+				<div class="w-[15%] text-center">Всего куплено подписок</div>
+				<div class="w-[15%] text-center">Сумма покупок</div>
 				<div class="w-[5%] text-center"></div>
 			</div>
             <div class="text-lg text-black">

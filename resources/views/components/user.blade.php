@@ -8,12 +8,12 @@
 		:class="show && 'opacity-100'"
 		@click="show = !show"
 	>
-		<div class="w-[15%] text-center">{{ $user->email }}</div>
+		<div class="w-[25%] text-center">{{ $user->email }}</div>
 		<div class="w-[10%] text-center">Россия</div>
 		<div class="w-[10%] text-center">Москва</div>
 		<div class="w-[20%] text-center">{{ random_int(1, 22) }}</div>
-		<div class="w-[20%] text-center">{{ random_int(20, 50) }}</div>
-		<div class="w-[20%] text-center">{{ random_int(30, 1200) }} €</div>
+		<div class="w-[15%] text-center">{{ random_int(20, 50) }}</div>
+		<div class="w-[15%] text-center">{{ random_int(30, 1200) }} €</div>
 		<div class="w-[5%] text-center cursor-pointer">
 			<svg :class="show && 'rotate-180'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
