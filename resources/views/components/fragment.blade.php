@@ -28,7 +28,7 @@
 				}"
 				@click="activate"
 			>
-				<img src="{{ Vite::asset('resources/images/icon5.png') }}" alt="">
+				<img src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
 			</button>
         </li>
         <li>

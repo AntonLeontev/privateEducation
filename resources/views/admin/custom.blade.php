@@ -9,7 +9,7 @@
 			<nav class="header__nav">
 				<ul class="header__list__nav">
 					<li class="flex items-center gap-x-1 header__nav__list-item" @click="$dispatch('all-stats', 'all')">
-						<img width="25px" src="{{ Vite::asset('resources/images/icon5.png') }}" alt="">
+						<img width="25px" src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
 						<span>Все продажи</span>
 					</li>
 					<li class="flex items-center gap-x-1 header__nav__list-item" @click="$dispatch('all-stats', 'all-audio')">
@@ -188,7 +188,7 @@
 							return "{{ Vite::asset('resources/images/icon2.png') }}";
 						} 
 						if (this.activeType === 'all') {
-							return "{{ Vite::asset('resources/images/icon5.png') }}";
+							return "{{ Vite::asset('resources/images/icon1.png') }}";
 						} 
 						if (this.activeType === 'video') {
 							return "{{ Vite::asset('resources/images/icon3.png') }}";
@@ -197,7 +197,7 @@
 							return "{{ Vite::asset('resources/images/icon3.png') }}";
 						} 
 						if (this.activeType === 'total') {
-							return "{{ Vite::asset('resources/images/icon5.png') }}";
+							return "{{ Vite::asset('resources/images/icon1.png') }}";
 						} 
 					},
 					allStats() {
