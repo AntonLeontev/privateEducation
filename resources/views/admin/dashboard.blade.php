@@ -3,6 +3,8 @@
 @section('title', 'Dashboard')
 
 @section('content')
+	@vite(['resources/js/metrics.js'])
+
 	<header class="my-4 header">
 		<div class="container container-header">
 			<nav class="header__nav">
@@ -21,6 +23,8 @@
 		Metrics
 	</div>
 
+	<x-dashboard.date-chart />
+
 	
 @endsection
 
@@ -30,3 +34,5 @@
     <!--script1.js -  скрипт для открытия-закрытия серого меню справа-->
     <script src="/js/script1.js"></script>
 @endsection
+
+
