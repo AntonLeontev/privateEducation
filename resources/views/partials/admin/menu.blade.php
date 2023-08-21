@@ -1,4 +1,4 @@
-<ul class="right-menu hidden h-[100vh] !bg-[#7e90a5] pt-8">
+<ul class="right-menu hidden h-[100vh] !bg-[#7e90a5] pt-8 z-50">
     <button class="absolute right-menu__close-btn top-2 right-2">
 		<img src="/img/right-menu-close.png" alt="close-button">
 	</button>

@@ -4,27 +4,11 @@
 
 @section('content')
 <div class="w-full" x-data="container">
-	<header class="my-4 header">
+	<header class="relative z-10 my-4 header">
 		<div class="container container-header">
-			<nav class="header__nav">
-				<ul class="header__list__nav">
-					<li class="flex items-center gap-x-1 header__nav__list-item" @click="$dispatch('all-stats', 'all')">
-						<img width="25px" src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
-						<span>Все продажи</span>
-					</li>
-					<li class="flex items-center gap-x-1 header__nav__list-item" @click="$dispatch('all-stats', 'all-audio')">
-						<img width="25px" src="{{ Vite::asset('resources/images/icon2.png') }}" alt="">
-						<span>Только аудио</span>
-					</li>
-					<li class="flex items-center gap-x-1 header__nav__list-item" @click="$dispatch('all-stats', 'all-video')">
-						<img width="25px" src="{{ Vite::asset('resources/images/icon3.png') }}" alt="">
-						<span>Только видео</span>
-					</li>
-					<li class="flex items-center gap-x-1 header__nav__list-item" @click="modal = true">
-						Сводная информация
-					</li>
-				</ul>
-			</nav>
+			
+			<x-admin.menu />
+
 			<div class="burger">
 				<div class="">Меню</div>
 				<span></span>
