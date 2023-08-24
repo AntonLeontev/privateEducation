@@ -23,7 +23,7 @@
 		Metrics
 	</div>
 
-	<x-dashboard.date-chart />
+	<x-admin.dashboard.date-chart />
 
 	
 @endsection

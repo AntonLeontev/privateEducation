@@ -13,8 +13,9 @@
 	</div>
 	
 	<ul 
-		class="absolute bg-[#344760] rounded top-[calc(1.2vw+1rem)] [&>*:nth-child(n)]:!ml-0 flex flex-col gap-y-3 whitespace-nowrap transition text-[1.2vw] overflow-hidden"
+		class="absolute bg-[#344760] rounded top-[calc(1.2vw+1rem)] [&>*:nth-child(n)]:!ml-0 flex flex-col gap-y-3 whitespace-nowrap transition text-[1.2vw] overflow-hidden shadow-md shadow-gray-800"
 		x-show="submenu"
+		style="display: none"
 	>
 		{{ $slot }}
 	</ul>

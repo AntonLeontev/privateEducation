@@ -9,6 +9,7 @@ export default defineConfig({
                 "resources/css/admin.css",
                 "resources/css/tailwind.css",
                 "resources/js/app.js",
+                "resources/js/metrics.js",
             ],
             refresh: true,
         }),

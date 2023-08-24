@@ -34,6 +34,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-Route::get('admin/custom', [AdminController::class, 'custom'])->name('admin.custom');
-Route::get('admin/users', [AdminController::class, 'users'])->name('admin.users');
+
+Route::prefix('admin')
+	->as('admin.')
+	->group(function() {
+		Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+		Route::get('custom', [AdminController::class, 'custom'])->name('custom');
+		Route::get('users', [AdminController::class, 'users'])->name('users');
+		Route::get('metrics/sales', [AdminController::class, 'salesMetrics'])->name('metrics.sales');
+		Route::get('sales', [AdminController::class, 'sales'])->name('sales');
+		Route::get('popular-fragments', [AdminController::class, 'popularFragments'])->name('popular-fragments');
+	});

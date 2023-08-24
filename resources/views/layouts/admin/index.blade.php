@@ -13,17 +13,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-	[x-cloak] {display: none;}
+	[x-cloak] {display: none;!important}
   </style>
 
-  @vite(['resources/css/tailwind.css', 'resources/css/admin.css', 'resources/js/app.js'])
+  @vite(['resources/css/tailwind.css', 'resources/css/admin.css', 'resources/js/app.js', 'resources/js/metrics.js'])
 </head>
 <body class="page page--index">
-<div id="panel"></div>
-<div class="main main--index">
-  
-	@yield('content')
-</div>
+	@routes
+	
+	<div id="panel"></div>
+	<div class="main main--index">
+	
+		@yield('content')
+	</div>
 
 
 	@yield('modals')
@@ -32,8 +34,6 @@
 
 
 
-{{-- <script src="/js/vendorb164.js?v=1674558313"></script>
-<script src="/js/mainb164.js?v=1674558313"></script> --}}
 </body>
 
 </html>

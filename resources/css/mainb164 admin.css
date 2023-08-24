@@ -2420,6 +2420,8 @@ img {
 }
 
 .item ul li button.is-active {
+	position: relative;
+	z-index: 1;
     opacity: 1 !important;
 }
 

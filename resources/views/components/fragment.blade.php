@@ -7,24 +7,30 @@
 	class="item" 
 	x-data="fragment{{ $number }}" 
 	:class="{
-		'is-active': activeFragment === number 
-			|| activeType === 'all'
-			|| activeType === 'all-video'
-			|| activeType === 'all-audio',
+		'is-active': fragment === number 
+			|| fragment === 'all'
 	}"
-	:class="activeFragment === number && 'is-active'"
 >
     <div class="item__title @if ($isPurple) item__title--purple @endif">
 		<span class="fragment">Фрагмент</span>
 		<br>
 		<span class="span-number">№ {{ $number }}</span>
 	</div>
-    <ul>
+
+	
+    <ul class="relative">
+		<div class="absolute bottom-0 flex items-end w-full h-full bg-transparent">
+			<div class="w-full h-full bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 1"></div>
+			<div class="w-full h-[70%] bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 2"></div>
+			<div class="w-full h-[45%] bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 3"></div>
+			<div class="w-full h-1/4 bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 4"></div>
+		</div>
+
         <li>
             <button type="button" data-type="total"
 				:class="{
-					'is-active': active === `total` + number ||
-						activeType === 'all',
+					'is-active': (page === `sum` && fragment === 'all') ||
+					(page === `sum` && fragment === number),
 				}"
 				@click="activate"
 			>
@@ -34,8 +40,8 @@
         <li>
             <button type="button" data-type="music"
 				:class="{
-					'is-active': active === `music` + number ||
-						activeType === 'all-audio',
+					'is-active': (page === `audio` && fragment === 'all') ||
+					(page === `audio` && fragment === number),
 				}"
 				@click="activate"
 			>
@@ -45,8 +51,8 @@
         <li>
             <button type="button" data-type="video"
 				:class="{
-					'is-active': active === `video` + number ||
-						activeType === 'all-video',
+					'is-active': (page === `video` && fragment === 'all') ||
+					(page === `video` && fragment === number),
 				}"
 				@click="activate"
 			>
@@ -55,12 +61,17 @@
         </li>
         <li>
             <button type="button" data-type="presentation"
-				:class="active === `presentation` + number && 'is-active'"
+				:class="{
+					'is-active': (page === `presentation` && fragment === 'all') ||
+					(page === `presentation` && fragment === number),
+				}"
 				@click="activate"
 			>
 				<img src="{{ Vite::asset('resources/images/icon4.png') }}" alt="">
 			</button>
         </li>
+
+		
     </ul>
 </div>
 
