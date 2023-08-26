@@ -51,6 +51,10 @@
 							@include('partials.admin.stats.metrics-views')
 						</div>
 
+						<div class="h-[calc(100%-45px)]" x-show="stats === 'geo'">
+							@include('partials.admin.stats.geo')
+						</div>
+
 						
                     </div>
                 </div>
@@ -70,7 +74,7 @@
 		<script>
 			document.addEventListener('alpine:init', () => {
 				Alpine.data('fragments', () => ({
-					stats: 'sails', // ['sails', 'views', 'metrics-sails', 'metrics-views',]
+					stats: 'geo', // ['sails', 'views', 'metrics-sails', 'metrics-views', 'geo']
 					page: 'sum', // ['sum', 'audio', 'video', 'presentation']
 					fragment: 'all', // ['all', 'fragment id']
 					title: 'Суммарные продажи',
@@ -84,6 +88,9 @@
 					},
 					image() {
 						if (this.page === 'metrics') {
+							return "{{ Vite::asset('resources/images/icon5.png') }}";
+						} 
+						if (this.page === 'geo') {
 							return "{{ Vite::asset('resources/images/icon5.png') }}";
 						} 
 						if (this.page === 'audio') {

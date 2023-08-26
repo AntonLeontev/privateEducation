@@ -38,6 +38,12 @@
 					График продаж видео
 				</div>
 			</x-admin.menu.subitem>
+			<x-admin.menu.subitem stats="geo" page="sum" title="Геолокация продаж">
+				<img width="25px" src="{{ Vite::asset('resources/images/icon5.png') }}" alt="">
+				<div>
+					Геолокация продаж
+				</div>
+			</x-admin.menu.subitem>
 		</x-admin.menu.item>
 
 		<x-admin.menu.item title="Просмотры в личном кабинете">
