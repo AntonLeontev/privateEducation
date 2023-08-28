@@ -13,7 +13,7 @@ window.am5geodata_worldLow = am5geodata_worldLow;
 
 import am5geodata_usaLow from "@amcharts/amcharts5-geodata/usaLow";
 window.am5geodata_usaLow = am5geodata_usaLow;
-import am5geodata_russiaLow from "@amcharts/amcharts5-geodata/russiaCrimeaLow";
+import am5geodata_russiaLow from "@amcharts/amcharts5-geodata/russiaLow";
 window.am5geodata_russiaLow = am5geodata_russiaLow;
 
 import am5locales_ru_RU from "@amcharts/amcharts5/locales/ru_RU";
