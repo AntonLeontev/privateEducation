@@ -40,10 +40,12 @@ Route::prefix('admin')
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('custom', [AdminController::class, 'custom'])->name('custom');
         Route::get('users', [AdminController::class, 'users'])->name('users');
-        Route::get('metrics/sales', [AdminController::class, 'salesMetrics'])->name('metrics.sales');
+
         Route::get('sales', [SubscriptionController::class, 'sales'])->name('sales');
         Route::get('sales/popular-fragments', [SubscriptionController::class, 'popularFragments'])->name('sales.popular-fragments');
+        Route::get('metrics/sales', [SubscriptionController::class, 'metrics'])->name('metrics.sales');
 
         Route::get('views', [ViewController::class, 'views'])->name('views');
         Route::get('views/popular-fragments', [ViewController::class, 'popularFragments'])->name('views.popular-fragments');
+        Route::get('metrics/views', [ViewController::class, 'metrics'])->name('metrics.views');
     });

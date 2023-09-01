@@ -71,4 +71,50 @@ class SubscriptionController extends Controller
 
         return response()->json($fragments);
     }
+
+    public function metrics(SalesStatsRequest $request)
+    {
+        $sales = [];
+
+        $model = $request->getModel($request->get('content'));
+
+        foreach (range(180, 0, -1) as $day) {
+            $date = now()->subDays($day);
+
+            $sum = DB::table('subscriptions')
+                ->where('created_at', '>=', $date->startOfDay())
+                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
+                ->when(! empty($model), function (Builder $query) use ($model) {
+                    return $query->where('subscribable_type', $model);
+                })
+                ->sum('price');
+
+            $ru = DB::table('subscriptions')
+                ->where('created_at', '>=', $date->startOfDay())
+                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
+                ->where('lang', 'ru')
+                ->when(! empty($model), function (Builder $query) use ($model) {
+                    return $query->where('subscribable_type', $model);
+                })
+                ->sum('price');
+
+            $en = DB::table('subscriptions')
+                ->where('created_at', '>=', $date->startOfDay())
+                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
+                ->where('lang', 'en')
+                ->when(! empty($model), function (Builder $query) use ($model) {
+                    return $query->where('subscribable_type', $model);
+                })
+                ->sum('price');
+
+            $sales[] = [
+                'date' => $date->format('Y-m-d'),
+                'sum' => (int) $sum / 100,
+                'ru' => (int) $ru / 100,
+                'en' => (int) $en / 100,
+            ];
+        }
+
+        return response()->json($sales);
+    }
 }

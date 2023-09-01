@@ -39,16 +39,8 @@
 							@include('partials.admin.stats.sails')
 						</div>
 
-						{{-- <div class="h-[calc(100%-45px)]" x-show="stats === 'views'">
-							@include('partials.admin.stats.views')
-						</div> --}}
-
-						<div class="h-[calc(100%-45px)]" x-show="stats === 'metrics-sails'">
+						<div class="h-[calc(100%-45px)]" x-show="stats === 'metrics-sails' || stats === 'metrics-views'">
 							@include('partials.admin.stats.metrics-sails')
-						</div>
-
-						<div class="h-[calc(100%-45px)]" x-show="stats === 'metrics-views'">
-							@include('partials.admin.stats.metrics-views')
 						</div>
 
 						<div class="h-[calc(100%-45px)]" x-show="stats === 'geo'">

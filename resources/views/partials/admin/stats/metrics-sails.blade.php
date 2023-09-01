@@ -8,33 +8,23 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('metrics', () => ({
-			sales: [],
 			total: null,
 			ru: null,
 			en: null,
 
             init() {
-				this.$watch('stats', value => this.statsChange(value))
-				this.$watch('page', value => this.pageChange(value))
+				this.$watch('stats', value => this.update())
+				this.$watch('page', value => this.update())
             },
-
-			statsChange(value) {
-				if (value != 'metrics-sails') {
-					return;
-				}
-				
-				this.update();
-			},
-			pageChange(value) {
-				if (this.stats != 'metrics-sails') {
-					return;
-				}
-				
-				this.update();
-			},
 			update() {
+				if (this.stats !== 'metrics-views' && this.stats !== 'metrics-sails') return;
+
+				let url;
+				if (this.stats === 'metrics-sails') url = route('admin.metrics.sales');
+				if (this.stats === 'metrics-views') url = route('admin.metrics.views');
+
 				axios
-					.get(route('admin.metrics.sales'), {
+					.get(url, {
 						params: {
 							content: this.page,
 						}
@@ -47,11 +37,10 @@
 							return;
 						}
 
-						this.sales = response.data;
-						this.render();
+						this.render(response.data);
 					})
 			},
-			render() {
+			render(data) {
 				let root = am5.Root.new("chart");
 					root.locale = am5locales_ru_RU;
 	
@@ -66,8 +55,6 @@
 						dateFormat: "yyyy",
 						dateFields: ["valueX"]
 					});
-	
-					let data = this.sales;
 	
 	
 					// Create chart
@@ -121,7 +108,7 @@
 						stroke: am5.color(0x000000),
 						tooltip: am5.Tooltip.new(root, {
 							pointerOrientation: "horizontal",
-							labelText: "{valueY} €"
+							html: `<div class="font-sans">{valueY}<span x-show="stats === 'metrics-sails'"> €</span></div>`,
 						})
 					}));
 	
@@ -173,8 +160,9 @@
 						stroke: am5.color(0xff0000),
 						tooltip: am5.Tooltip.new(root, {
 							pointerOrientation: "horizontal",
-							labelText: "{valueY} €"
-						})
+							html: `<div class="font-sans">{valueY}<span x-show="stats === 'metrics-sails'"> €</span></div>`,
+						}),
+						visible: false,
 					}));
 	
 					ruSeries.fills.template.setAll({
@@ -224,8 +212,8 @@
 						stroke: am5.color(0x0000ff),
 						tooltip: am5.Tooltip.new(root, {
 							pointerOrientation: "horizontal",
-							labelText: "{valueY} €"
-						})
+							html: `<div class="font-sans">{valueY}<span x-show="stats === 'metrics-sails'"> €</span></div>`,
+						}),
 					}));
 	
 					enSeries.fills.template.setAll({
@@ -297,6 +285,9 @@
 	
 					}));
 					legend.data.setAll(chart.series.values);
+
+					this.en.hide();
+					this.ru.hide();
 	
 	
 					this.chart = chart;

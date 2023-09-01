@@ -65,10 +65,22 @@
 					Просмотры видео
 				</div>
 			</x-admin.menu.subitem>
-			<x-admin.menu.subitem stats="views" page="metrics" title="Графики просмотров и прослушиваний">
+			<x-admin.menu.subitem stats="metrics-views" page="sum" title="Суммарный график просмотров и прослушиваний">
 				<img width="25px" src="{{ Vite::asset('resources/images/icon5.png') }}" alt="">
 				<div>
-					Графики просмотров и прослушиваний
+					Суммарный график просмотров и прослушиваний
+				</div>
+			</x-admin.menu.subitem>
+			<x-admin.menu.subitem stats="metrics-views" page="audio" title="График прослушивания аудио">
+				<img width="25px" src="{{ Vite::asset('resources/images/icon5.png') }}" alt="">
+				<div>
+					График прослушивания аудио
+				</div>
+			</x-admin.menu.subitem>
+			<x-admin.menu.subitem stats="metrics-views" page="video" title="График просмотров видео">
+				<img width="25px" src="{{ Vite::asset('resources/images/icon5.png') }}" alt="">
+				<div>
+					График просмотров видео
 				</div>
 			</x-admin.menu.subitem>
 		</x-admin.menu.item>

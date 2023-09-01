@@ -71,4 +71,50 @@ class ViewController extends Controller
 
         return response()->json($fragments);
     }
+
+    public function metrics(ViewsStatsRequest $request)
+    {
+        $sales = [];
+
+        $model = $request->getModel($request->get('content'));
+
+        foreach (range(180, 0, -1) as $day) {
+            $date = now()->subDays($day);
+
+            $sum = DB::table('views')
+                ->where('created_at', '>=', $date->startOfDay())
+                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
+                ->when(! empty($model), function (Builder $query) use ($model) {
+                    return $query->where('viewable_type', $model);
+                })
+                ->count();
+
+            $ru = DB::table('views')
+                ->where('created_at', '>=', $date->startOfDay())
+                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
+                ->where('lang', 'ru')
+                ->when(! empty($model), function (Builder $query) use ($model) {
+                    return $query->where('viewable_type', $model);
+                })
+                ->count();
+
+            $en = DB::table('views')
+                ->where('created_at', '>=', $date->startOfDay())
+                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
+                ->where('lang', 'en')
+                ->when(! empty($model), function (Builder $query) use ($model) {
+                    return $query->where('viewable_type', $model);
+                })
+                ->count();
+
+            $sales[] = [
+                'date' => $date->format('Y-m-d'),
+                'sum' => (int) $sum,
+                'ru' => (int) $ru,
+                'en' => (int) $en,
+            ];
+        }
+
+        return response()->json($sales);
+    }
 }

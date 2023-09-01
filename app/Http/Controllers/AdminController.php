@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Audio;
-use App\Models\Video;
 use App\MoonShine\Resources\UserResource;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -43,55 +39,5 @@ class AdminController extends Controller
     public function dashboard()
     {
         return view('admin.dashboard');
-    }
-
-    public function salesMetrics(Request $request)
-    {
-        $sales = [];
-
-        $model = match ($request->content) {
-            'video' => Video::class,
-            'audio' => Audio::class,
-            default => null,
-        };
-
-        foreach (range(180, 0, -1) as $day) {
-            $date = now()->subDays($day);
-
-            $sum = DB::table('subscriptions')
-                ->where('created_at', '>=', $date->startOfDay())
-                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
-                ->when(! empty($model), function (Builder $query) use ($model) {
-                    return $query->where('subscribable_type', $model);
-                })
-                ->sum('price');
-
-            $ru = DB::table('subscriptions')
-                ->where('created_at', '>=', $date->startOfDay())
-                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
-                ->where('lang', 'ru')
-                ->when(! empty($model), function (Builder $query) use ($model) {
-                    return $query->where('subscribable_type', $model);
-                })
-                ->sum('price');
-
-            $en = DB::table('subscriptions')
-                ->where('created_at', '>=', $date->startOfDay())
-                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
-                ->where('lang', 'en')
-                ->when(! empty($model), function (Builder $query) use ($model) {
-                    return $query->where('subscribable_type', $model);
-                })
-                ->sum('price');
-
-            $sales[] = [
-                'date' => $date->format('Y-m-d'),
-                'sum' => (int) $sum / 100,
-                'ru' => (int) $ru / 100,
-                'en' => (int) $en / 100,
-            ];
-        }
-
-        return response()->json($sales);
     }
 }
