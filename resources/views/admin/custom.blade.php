@@ -83,8 +83,8 @@
 						if (this.page === 'metrics') {
 							return "{{ Vite::asset('resources/images/icon5.png') }}";
 						} 
-						if (this.page === 'geo') {
-							return "{{ Vite::asset('resources/images/icon5.png') }}";
+						if (this.stats === 'geo') {
+							return "{{ Vite::asset('resources/images/icon6.png') }}";
 						} 
 						if (this.page === 'audio') {
 							return "{{ Vite::asset('resources/images/icon2.png') }}";

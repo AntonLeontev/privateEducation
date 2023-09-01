@@ -39,7 +39,7 @@
 				</div>
 			</x-admin.menu.subitem>
 			<x-admin.menu.subitem stats="geo" page="sum" title="Геолокация продаж">
-				<img width="25px" src="{{ Vite::asset('resources/images/icon5.png') }}" alt="">
+				<img width="25px" src="{{ Vite::asset('resources/images/icon6.png') }}" alt="">
 				<div>
 					Геолокация продаж
 				</div>
