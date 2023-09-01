@@ -84,7 +84,8 @@
 					popularFragments: @json($fragments),
 
 					init() {
-						this.$watch('page', value => this.changePage(value));
+						this.$watch('stats', value => this.updatePopularFragments());
+						this.$watch('page', value => this.updatePopularFragments());
 					},
 					image() {
 						if (this.page === 'metrics') {
@@ -116,19 +117,23 @@
 
 						this.updatePopularFragments();
 					},
-					changePage(page) {
-						if (this.stats != 'sails') return;
-
-						this.updatePopularFragments();
-					},
 					updatePopularFragments() {
 						if (this.fragment != 'all') {
 							this.popularFragments = null;
 							return;
 						}
 
+						if (this.stats !== 'views' && this.stats !== 'sails') {
+							this.popularFragments = null;
+							return
+						}
+
+						let url;
+						if (this.stats === 'sails') url = route('admin.sales.popular-fragments');
+						if (this.stats === 'views') url = route('admin.views.popular-fragments');
+
 						axios
-							.get(route('admin.popular-fragments'), {
+							.get(url, {
 								params: {
 									period: this.period,
 									start: this.start,

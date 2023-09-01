@@ -48,4 +48,9 @@ class Video extends Model
     {
         return $this->morphMany(Subscription::class, 'subscribable');
     }
+
+    public function views(): MorphMany
+    {
+        return $this->morphMany(View::class, 'viewable');
+    }
 }

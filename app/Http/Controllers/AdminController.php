@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Audio;
 use App\Models\Video;
 use App\MoonShine\Resources\UserResource;
-use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -94,92 +93,5 @@ class AdminController extends Controller
         }
 
         return response()->json($sales);
-    }
-
-    public function sales(Request $request)
-    {
-        [$start, $end] = $this->getPeriodDates();
-
-        $model = $this->getModel();
-
-        $en = DB::table('subscriptions')
-            ->where('created_at', '>=', $start->startOfDay())
-            ->where('created_at', '<=', $end->endOfDay())
-            ->where('lang', 'en')
-            ->when(! empty($model), function (Builder $query) use ($model) {
-                return $query->where('subscribable_type', $model);
-            })
-            ->when(is_numeric($request->get('fragment')), function (Builder $query) {
-                return $query->where('subscribable_id', request()->get('fragment'));
-            })
-            ->sum('price');
-
-        $ru = DB::table('subscriptions')
-            ->where('created_at', '>=', $start->startOfDay())
-            ->where('created_at', '<=', $end->endOfDay())
-            ->where('lang', 'ru')
-            ->when(! empty($model), function (Builder $query) use ($model) {
-                return $query->where('subscribable_type', $model);
-            })
-            ->when(is_numeric($request->get('fragment')), function (Builder $query) {
-                return $query->where('subscribable_id', request()->get('fragment'));
-            })
-            ->sum('price');
-
-        return response()->json(['ru' => $ru / 100, 'en' => $en / 100]);
-    }
-
-    public function popularFragments(Request $request)
-    {
-        [$start, $end] = $this->getPeriodDates();
-
-        $model = $this->getModel();
-
-        $fragments = DB::table('subscriptions')
-            ->select([
-                'subscribable_id',
-                DB::raw('SUM(price) AS sum_price'),
-            ])
-            ->where('created_at', '>=', $start->startOfDay())
-            ->where('created_at', '<=', $end->endOfDay())
-            ->when(! empty($model), function (Builder $query) use ($model) {
-                return $query->where('subscribable_type', $model);
-            })
-            ->groupBy('subscribable_id')
-            ->orderByDesc('sum_price')
-            ->take(4)
-            ->get()
-            ->map(function ($el, int $key) {
-                return [
-                    'id' => $el->subscribable_id,
-                    'sum' => $el->sum_price / 100,
-                    'position' => $key + 1,
-                ];
-            });
-
-        return response()->json($fragments);
-    }
-
-    private function getPeriodDates(): array
-    {
-        return match (request()->period) {
-            'today' => [now(), now()],
-            'yesterday' => [now()->subDay(), now()->subDay()],
-            'week' => [now()->startOfWeek(), now()->endOfWeek()],
-            'month' => [now()->startOfMonth(), now()->endOfMonth()],
-            'quarter' => [now()->startOfQuarter(), now()->endOfQuarter()],
-            'year' => [now()->startOfYear(), now()->endOfYear()],
-            'custom' => [Carbon::parse(request()->get('start')), Carbon::parse(request()->get('end'))],
-            default => [null, null],
-        };
-    }
-
-    private function getModel()
-    {
-        return match (request()->content) {
-            'video' => Video::class,
-            'audio' => Audio::class,
-            default => null,
-        };
     }
 }

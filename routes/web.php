@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Models\Subscription;
-use App\Support\Enums\MediaLang;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ViewController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,15 +19,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    $fragment = Subscription::query()
-        ->selectRaw('COUNT(price) as count, location')
-        ->where('lang', MediaLang::ru)
-        ->where('created_at', '>=', now()->subYear())
-        ->groupBy('location')
-        ->pluck('count', 'location')
-        ->toArray();
+    $fragments = DB::table('views')
+        ->select([
+            'viewable_id',
+            DB::raw('COUNT(viewable_id) AS count'),
+        ])
+        ->groupBy('viewable_id')
+        ->orderByDesc('count')
+        ->take(4)
+        ->get();
 
-    dd($fragment);
+    dd($fragments);
 
     return view('welcome');
 });
@@ -38,6 +41,9 @@ Route::prefix('admin')
         Route::get('custom', [AdminController::class, 'custom'])->name('custom');
         Route::get('users', [AdminController::class, 'users'])->name('users');
         Route::get('metrics/sales', [AdminController::class, 'salesMetrics'])->name('metrics.sales');
-        Route::get('sales', [AdminController::class, 'sales'])->name('sales');
-        Route::get('popular-fragments', [AdminController::class, 'popularFragments'])->name('popular-fragments');
+        Route::get('sales', [SubscriptionController::class, 'sales'])->name('sales');
+        Route::get('sales/popular-fragments', [SubscriptionController::class, 'popularFragments'])->name('sales.popular-fragments');
+
+        Route::get('views', [ViewController::class, 'views'])->name('views');
+        Route::get('views/popular-fragments', [ViewController::class, 'popularFragments'])->name('views.popular-fragments');
     });

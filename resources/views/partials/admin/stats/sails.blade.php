@@ -47,12 +47,12 @@
 
                 <div class="flex items-center justify-around w-full">
                     <div class="relative">
-                        <div class="mb-1 text-center">Сумма продаж</div>
-                        <div class="bg-secondary flex items-center justify-center p-6 text-[4vw]"
-                            x-text="ru + en + ' €'">
-
+                        {{-- <div class="mb-1 text-center">Сумма продаж</div> --}}
+                        <div class="bg-secondary flex items-center justify-center p-6 text-[4vw] min-w-[150px]">
+							<span x-text="ru + en"></span>
+							<span x-show="stats === 'sails'">&nbsp;€</span>
                         </div>
-                        <div class="absolute -right-[15px] bottom-0 top-[22.4px] w-[10px]">
+                        <div class="absolute -right-[15px] top-0 bottom-0 w-[10px]">
                             <div class="bg-[#aa0000] transition-all duration-500"
                                 :style="'height: ' + getPercent(ru) + '%;'"></div>
                             <div class="bg-[#0000aa] transition-all duration-500"
@@ -60,11 +60,13 @@
 
                             <div class="absolute left-[15px] top-0 flex w-max items-center gap-x-1">
                                 <span>RU:</span>
-                                <span class="text-[20px]" x-text="ru + ' €'"></span>
+                                <span class="text-[20px]" x-text="ru"></span>
+								<span x-show="stats === 'sails'">&nbsp;€</span>
                             </div>
                             <div class="absolute bottom-0 left-[15px] flex w-max items-center gap-x-1">
                                 <span>US:</span>
-                                <span class="text-[20px]" x-text="en + ' €'"></span>
+                                <span class="text-[20px]" x-text="en"></span>
+								<span x-show="stats === 'sails'">&nbsp;€</span>
                             </div>
                         </div>
 
@@ -87,14 +89,13 @@
 
                 init() {
 					this.update();
+					this.$watch('stats', value => {
+						this.update();
+					});
 					this.$watch('page', value => {
-						if (this.stats != 'sails') return;
-
 						this.update();
 					});
 					this.$watch('fragment', value => {
-						if (this.stats != 'sails') return;
-
 						this.update();
 					});
                 },
