@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use MoonShine\Models\MoonshineUser;
 
@@ -14,10 +13,10 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         MoonshineUser::create([
-			'moonshine_user_role_id' => 1,
-			'email' => 'admin',
-			'password' => bcrypt('12345678'),
-			'name' => 'Администратор',
-		]);
+            'moonshine_user_role_id' => 1,
+            'email' => 'admin',
+            'password' => bcrypt('12345678'),
+            'name' => 'Администратор',
+        ]);
     }
 }

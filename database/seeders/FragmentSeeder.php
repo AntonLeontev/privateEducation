@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Fragment;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class FragmentSeeder extends Seeder
@@ -13,11 +12,11 @@ class FragmentSeeder extends Seeder
      */
     public function run(): void
     {
-		foreach (range(1, 17) as $value) {
-			Fragment::create([
-				'title_ru' => 'Фрагмент ' . $value,
-				'title_en' => 'Fragment ' . $value,
-			]);
-		}
+        foreach (range(1, 17) as $value) {
+            Fragment::create([
+                'title_ru' => 'Фрагмент '.$value,
+                'title_en' => 'Fragment '.$value,
+            ]);
+        }
     }
 }

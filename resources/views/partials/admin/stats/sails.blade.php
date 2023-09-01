@@ -92,6 +92,11 @@
 
 						this.update();
 					});
+					this.$watch('fragment', value => {
+						if (this.stats != 'sails') return;
+
+						this.update();
+					});
                 },
                 changePeriod() {
                     this.period = this.$refs.select.value;
@@ -113,9 +118,16 @@
                     return Math.round(value * 100 / (this.ru + this.en));
                 },
 				update() {
+					if (this.stats !== 'views' && this.stats !== 'sails') return;
+
+					let url;
+					if (this.stats === 'sails') url = route('admin.sales');
+					if (this.stats === 'views') url = route('admin.views');
+
 					axios
-						.get(route('admin.sales'), {
+						.get(url, {
 							params: {
+								fragment: this.fragment,
 								period: this.period,
 								start: this.$refs.start.value,
 								end: this.$refs.end.value,

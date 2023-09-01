@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('fragments', function (Blueprint $table) {
             $table->id();
-			$table->string('title_ru');
-			$table->string('title_en');
+            $table->string('title_ru');
+            $table->string('title_en');
             $table->timestamps();
         });
     }

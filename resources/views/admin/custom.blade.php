@@ -20,7 +20,7 @@
         <div 
 			class="content hidden-md visible-sm" 
 			x-data="fragments"
-			@submenu.window="submenu"
+			@state-change.window="stateChange"
 			@period-change="periodChange"
 		>
             <div class="grid grid-cols-11 grid-rows-1 mb-5">
@@ -35,13 +35,13 @@
 							</div>
                         </div>
 						
-						<div class="h-[calc(100%-45px)]" x-show="stats === 'sails'">
+						<div class="h-[calc(100%-45px)]" x-show="stats === 'sails' || stats === 'views'">
 							@include('partials.admin.stats.sails')
 						</div>
 
-						<div class="h-[calc(100%-45px)]" x-show="stats === 'views'">
+						{{-- <div class="h-[calc(100%-45px)]" x-show="stats === 'views'">
 							@include('partials.admin.stats.views')
-						</div>
+						</div> --}}
 
 						<div class="h-[calc(100%-45px)]" x-show="stats === 'metrics-sails'">
 							@include('partials.admin.stats.metrics-sails')
@@ -74,7 +74,7 @@
 		<script>
 			document.addEventListener('alpine:init', () => {
 				Alpine.data('fragments', () => ({
-					stats: 'geo', // ['sails', 'views', 'metrics-sails', 'metrics-views', 'geo']
+					stats: 'sails', // ['sails', 'views', 'metrics-sails', 'metrics-views', 'geo']
 					page: 'sum', // ['sum', 'audio', 'video', 'presentation']
 					fragment: 'all', // ['all', 'fragment id']
 					title: 'Суммарные продажи',
@@ -103,11 +103,11 @@
 							return "{{ Vite::asset('resources/images/icon3.png') }}";
 						} 
 					},
-					submenu() {
-						this.stats = this.$event.detail.stats;
-						this.page = this.$event.detail.page;
-						this.fragment = this.$event.detail.fragment;
-						this.title = this.$event.detail.title;
+					stateChange() {
+						this.stats = this.$event.detail.stats ?? this.stats;
+						this.page = this.$event.detail.page ?? this.page;
+						this.fragment = this.$event.detail.fragment ?? this.fragment;
+						this.title = this.$event.detail.title ?? this.title;
 					},
 					periodChange(options) {
 						this.start = options.detail.start;
@@ -122,6 +122,11 @@
 						this.updatePopularFragments();
 					},
 					updatePopularFragments() {
+						if (this.fragment != 'all') {
+							this.popularFragments = null;
+							return;
+						}
+
 						axios
 							.get(route('admin.popular-fragments'), {
 								params: {

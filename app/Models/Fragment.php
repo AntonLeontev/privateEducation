@@ -10,23 +10,23 @@ class Fragment extends Model
 {
     use HasFactory;
 
-	protected $fillable = [
-		'title_ru',
-		'title_en',
-	];
+    protected $fillable = [
+        'title_ru',
+        'title_en',
+    ];
 
-	public function presentation(): HasOne
-	{
-		return $this->hasOne(Presentation::class);
-	}
+    public function presentation(): HasOne
+    {
+        return $this->hasOne(Presentation::class);
+    }
 
-	public function audio(): HasOne
-	{
-		return $this->hasOne(Audio::class);
-	}
+    public function audio(): HasOne
+    {
+        return $this->hasOne(Audio::class);
+    }
 
-	public function video(): HasOne
-	{
-		return $this->hasOne(Video::class);
-	}
+    public function video(): HasOne
+    {
+        return $this->hasOne(Video::class);
+    }
 }

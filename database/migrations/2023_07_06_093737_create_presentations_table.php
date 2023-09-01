@@ -14,14 +14,14 @@ return new class extends Migration
     {
         Schema::create('presentations', function (Blueprint $table) {
             $table->id();
-			$table->string('title_ru');
-			$table->string('title_en');
-			$table->text('text_ru');
-			$table->text('text_en');
-			$table->foreignIdFor(Fragment::class)
-				->constrained()
-				->cascadeOnDelete()
-				->cascadeOnUpdate();
+            $table->string('title_ru');
+            $table->string('title_en');
+            $table->text('text_ru');
+            $table->text('text_en');
+            $table->foreignIdFor(Fragment::class)
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->timestamps();
         });
     }

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('seos', function (Blueprint $table) {
             $table->id();
-			$table->string('title');
-			$table->text('h1');
-			$table->text('description');
-			$table->text('keywords');
+            $table->string('title');
+            $table->text('h1');
+            $table->text('description');
+            $table->text('keywords');
             $table->timestamps();
         });
     }

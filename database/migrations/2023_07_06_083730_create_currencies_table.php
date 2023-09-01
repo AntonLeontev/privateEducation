@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('currencies', function (Blueprint $table) {
             $table->id();
-			$table->string('alpha_code');
-			$table->string('numeric_code');
+            $table->string('alpha_code');
+            $table->string('numeric_code');
 
-			// Number of fractional units (e.g. in dollar 100 cents)
-			$table->unsignedSmallInteger('fraction')->default(100); 
+            // Number of fractional units (e.g. in dollar 100 cents)
+            $table->unsignedSmallInteger('fraction')->default(100);
 
-			$table->string('sign', 2)->nullable();
+            $table->string('sign', 2)->nullable();
         });
     }
 

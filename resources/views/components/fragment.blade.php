@@ -7,7 +7,7 @@
 	class="item" 
 	x-data="fragment{{ $number }}" 
 	:class="{
-		'is-active': fragment === number 
+		'is-active': fragment == number 
 			|| fragment === 'all'
 	}"
 >
@@ -30,9 +30,9 @@
             <button type="button" data-type="total"
 				:class="{
 					'is-active': (page === `sum` && fragment === 'all') ||
-					(page === `sum` && fragment === number),
+					(page === `sum` && fragment == number),
 				}"
-				@click="activate"
+				@click="activate('sum')"
 			>
 				<img src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
 			</button>
@@ -41,9 +41,9 @@
             <button type="button" data-type="music"
 				:class="{
 					'is-active': (page === `audio` && fragment === 'all') ||
-					(page === `audio` && fragment === number),
+					(page === `audio` && fragment == number),
 				}"
-				@click="activate"
+				@click="activate('audio')"
 			>
 				<img src="{{ Vite::asset('resources/images/icon2.png') }}" alt="">
 			</button>
@@ -52,9 +52,9 @@
             <button type="button" data-type="video"
 				:class="{
 					'is-active': (page === `video` && fragment === 'all') ||
-					(page === `video` && fragment === number),
+					(page === `video` && fragment == number),
 				}"
-				@click="activate"
+				@click="activate('video')"
 			>
 				<img src="{{ Vite::asset('resources/images/icon3.png') }}" alt="">
 			</button>
@@ -63,9 +63,9 @@
             <button type="button" data-type="presentation"
 				:class="{
 					'is-active': (page === `presentation` && fragment === 'all') ||
-					(page === `presentation` && fragment === number),
+					(page === `presentation` && fragment == number),
 				}"
-				@click="activate"
+				@click="activate('presentation')"
 			>
 				<img src="{{ Vite::asset('resources/images/icon4.png') }}" alt="">
 			</button>
@@ -83,10 +83,33 @@
 				'is-active': this.active === `total` + this.number ||
 					this.activeType === 'all',
 			},
-			activate() {
+			activate(page) {
 				this.active = this.$el.dataset.type + this.number;
 				this.activeFragment = this.number;
 				this.activeType = this.$el.dataset.type;
+
+
+				this.$dispatch(
+					'state-change', 
+					{
+						page: page,
+						fragment: '{{ $number }}',
+						title: this.makeTitle(page) + ' фрагмента №{{ $number }}',
+					}
+				)
+			},
+			makeTitle(page) {
+				if (this.stats === 'sails') {
+					if (page === 'sum') return 'Суммарные продажи'
+					if (page === 'audio') return 'Продажи аудио'
+					if (page === 'video') return 'Продажи видео'
+				}
+
+				if (this.stats === 'views') {
+					if (page === 'sum') return 'Просмотры и прослушивания'
+					if (page === 'audio') return 'Прослушивания аудио'
+					if (page === 'video') return 'Просмотры видео'
+				}
 			},
 		}))
 	})

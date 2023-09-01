@@ -13,42 +13,42 @@ class Subscription extends Model
 {
     use HasFactory;
 
-	protected $fillable = [
-		'id',
-		'user_id',
-		'subscribable_id',
-		'subscribable_type',
-		'lang',
-		'price',
-		'currency_id',
-		'location',
-		'ends_at',
-	];
+    protected $fillable = [
+        'id',
+        'user_id',
+        'subscribable_id',
+        'subscribable_type',
+        'lang',
+        'price',
+        'currency_id',
+        'location',
+        'ends_at',
+    ];
 
-	protected $casts = [
-		'ends_at' => 'date',
-		'lang' => MediaLang::class,
-		'price' => PriceCast::class,
-	];
+    protected $casts = [
+        'ends_at' => 'date',
+        'lang' => MediaLang::class,
+        'price' => PriceCast::class,
+    ];
 
-	protected $with = ['currency'];
+    protected $with = ['currency'];
 
-	public function subscribable(): MorphTo
-	{
-		return $this->morphTo();
-	}
+    public function subscribable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 
-	public function user(): BelongsTo
-	{
-		return $this->belongsTo(User::class);
-	}
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
-	public function currency(): BelongsTo
-	{
-		return $this->belongsTo(Currency::class);
-	}
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
 
-	protected static function booted(): void
+    protected static function booted(): void
     {
         static::creating(function (Subscription $sub) {
             $sub->ends_at = $sub->created_at->addDays(30);

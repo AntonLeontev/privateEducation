@@ -4,6 +4,6 @@ namespace App\Support\Enums;
 
 enum MediaLang: string
 {
-	case en = 'en';
-	case ru = 'ru';
+    case en = 'en';
+    case ru = 'ru';
 }

@@ -4,6 +4,6 @@ namespace App\Support\Enums;
 
 enum MediaType: string
 {
-	case video = 'video';
-	case audio = 'audio';
+    case video = 'video';
+    case audio = 'audio';
 }

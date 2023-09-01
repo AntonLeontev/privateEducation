@@ -28,19 +28,19 @@ class DbRefresh extends Command
     {
         Artisan::call('migrate:fresh');
 
-		Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
-		Artisan::call('db:seed', ['--class' => 'UserSeeder']);
-		Artisan::call('db:seed', ['--class' => 'CurrencySeeder']);
+        Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
+        Artisan::call('db:seed', ['--class' => 'UserSeeder']);
+        Artisan::call('db:seed', ['--class' => 'CurrencySeeder']);
 
-		Artisan::call('db:seed', ['--class' => 'FragmentSeeder']);
-		Artisan::call('db:seed', ['--class' => 'AudioSeeder']);
-		Artisan::call('db:seed', ['--class' => 'VideoSeeder']);
-		Artisan::call('db:seed', ['--class' => 'PresentationSeeder']);
-		Artisan::call('db:seed', ['--class' => 'MediaSeeder']);
-		Artisan::call('db:seed', ['--class' => 'SubscriptionSeeder']);
+        Artisan::call('db:seed', ['--class' => 'FragmentSeeder']);
+        Artisan::call('db:seed', ['--class' => 'AudioSeeder']);
+        Artisan::call('db:seed', ['--class' => 'VideoSeeder']);
+        Artisan::call('db:seed', ['--class' => 'PresentationSeeder']);
+        Artisan::call('db:seed', ['--class' => 'MediaSeeder']);
+        Artisan::call('db:seed', ['--class' => 'SubscriptionSeeder']);
 
-		Artisan::call('db:seed', ['--class' => 'SeoSeeder']);
+        Artisan::call('db:seed', ['--class' => 'SeoSeeder']);
 
-		$this->info('ok');
+        $this->info('ok');
     }
 }

@@ -9,12 +9,12 @@ class Currency extends Model
 {
     use HasFactory;
 
-	public $timestamps = false;
+    public $timestamps = false;
 
-	protected $fillable = [
-		'alpha_code',
-		'numeric_code',
-		'fraction',
-		'sign',
-	];
+    protected $fillable = [
+        'alpha_code',
+        'numeric_code',
+        'fraction',
+        'sign',
+    ];
 }

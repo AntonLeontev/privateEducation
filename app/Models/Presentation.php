@@ -11,22 +11,22 @@ class Presentation extends Model
 {
     use HasFactory;
 
-	protected $fillable = [
-		'id',
-		'title_ru',
-		'title_en',
-		'text_ru',
-		'text_en',
-		'fragment_id',
-	];
+    protected $fillable = [
+        'id',
+        'title_ru',
+        'title_en',
+        'text_ru',
+        'text_en',
+        'fragment_id',
+    ];
 
-	public function media(): MorphMany
+    public function media(): MorphMany
     {
         return $this->morphMany(Media::class, 'mediable');
     }
 
-	public function fragment(): BelongsTo
-	{
-		return $this->belongsTo(Fragment::class);
-	}
+    public function fragment(): BelongsTo
+    {
+        return $this->belongsTo(Fragment::class);
+    }
 }

@@ -14,16 +14,16 @@ return new class extends Migration
     {
         Schema::create('audio', function (Blueprint $table) {
             $table->id();
-			$table->string('title_ru');
-			$table->string('title_en');
+            $table->string('title_ru');
+            $table->string('title_en');
 
-			$table->unsignedInteger('price');
-			
-			$table->foreignId('currency_id')->constrained('currencies')->cascadeOnDelete()->cascadeOnUpdate();
-			$table->foreignIdFor(Fragment::class)
-				->constrained()
-				->cascadeOnDelete()
-				->cascadeOnUpdate();
+            $table->unsignedInteger('price');
+
+            $table->foreignId('currency_id')->constrained('currencies')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignIdFor(Fragment::class)
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->timestamps();
         });
     }

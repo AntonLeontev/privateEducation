@@ -2,35 +2,34 @@
 
 namespace App\MoonShine\Resources;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Seo;
-
-use MoonShine\Resources\Resource;
-use MoonShine\Fields\Text;
+use Illuminate\Database\Eloquent\Model;
 use MoonShine\Actions\FiltersAction;
+use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
+use MoonShine\Resources\Resource;
 
 class SeoResource extends Resource
 {
-	public static string $model = Seo::class;
+    public static string $model = Seo::class;
 
-	public static string $title = 'SEO';
+    public static string $title = 'SEO';
 
-	public static array $activeActions = ['edit'];
+    public static array $activeActions = ['edit'];
 
-	public function fields(): array
-	{
-		return [
-		    Text::make('Title'),
-		    Text::make('H1'),
-		    Textarea::make('Description'),
-		    Textarea::make('Keywords'),
+    public function fields(): array
+    {
+        return [
+            Text::make('Title'),
+            Text::make('H1'),
+            Textarea::make('Description'),
+            Textarea::make('Keywords'),
         ];
-	}
+    }
 
-	public function rules(Model $item): array
-	{
-	    return [];
+    public function rules(Model $item): array
+    {
+        return [];
     }
 
     public function search(): array

@@ -10,17 +10,17 @@ class PriceCast implements CastsAttributes
 {
     public function get(Model $model, string $key, mixed $value, array $attributes): Price
     {
-		// $locale = str($key)->afterLast('_')->ucfirst()->value();
-		// $currencyField = 'currency' . $locale;
-		
-		return new Price($value, $model->currency);
+        // $locale = str($key)->afterLast('_')->ucfirst()->value();
+        // $currencyField = 'currency' . $locale;
+
+        return new Price($value, $model->currency);
     }
 
     public function set(Model $model, string $key, mixed $value, array $attributes): int
     {
-		if ($value instanceof Price) {
-			return $value->amount;
-		}
+        if ($value instanceof Price) {
+            return $value->amount;
+        }
 
         return $value * 100;
     }

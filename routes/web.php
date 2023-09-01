@@ -1,11 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Models\Audio;
-use App\Models\Fragment;
 use App\Models\Subscription;
 use App\Support\Enums\MediaLang;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,27 +18,26 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-	$fragment = Subscription::query()
-							->selectRaw('COUNT(price) as count, location')
-							->where('lang', MediaLang::ru)
-							->where('created_at', '>=', now()->subYear())
-							->groupBy('location')
-							->pluck('count', 'location')
-							->toArray();
+    $fragment = Subscription::query()
+        ->selectRaw('COUNT(price) as count, location')
+        ->where('lang', MediaLang::ru)
+        ->where('created_at', '>=', now()->subYear())
+        ->groupBy('location')
+        ->pluck('count', 'location')
+        ->toArray();
 
-	dd($fragment);
+    dd($fragment);
 
     return view('welcome');
 });
 
-
 Route::prefix('admin')
-	->as('admin.')
-	->group(function() {
-		Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-		Route::get('custom', [AdminController::class, 'custom'])->name('custom');
-		Route::get('users', [AdminController::class, 'users'])->name('users');
-		Route::get('metrics/sales', [AdminController::class, 'salesMetrics'])->name('metrics.sales');
-		Route::get('sales', [AdminController::class, 'sales'])->name('sales');
-		Route::get('popular-fragments', [AdminController::class, 'popularFragments'])->name('popular-fragments');
-	});
+    ->as('admin.')
+    ->group(function () {
+        Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('custom', [AdminController::class, 'custom'])->name('custom');
+        Route::get('users', [AdminController::class, 'users'])->name('users');
+        Route::get('metrics/sales', [AdminController::class, 'salesMetrics'])->name('metrics.sales');
+        Route::get('sales', [AdminController::class, 'sales'])->name('sales');
+        Route::get('popular-fragments', [AdminController::class, 'popularFragments'])->name('popular-fragments');
+    });
