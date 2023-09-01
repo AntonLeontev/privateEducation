@@ -15,6 +15,7 @@
             init() {
 				this.$watch('stats', value => this.update())
 				this.$watch('page', value => this.update())
+				this.$watch('fragment', value => this.update())
             },
 			update() {
 				if (this.stats !== 'metrics-views' && this.stats !== 'metrics-sails') return;
@@ -27,6 +28,7 @@
 					.get(url, {
 						params: {
 							content: this.page,
+							fragment: this.fragment,
 						}
 					})
 					.then(response => {

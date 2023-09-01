@@ -87,6 +87,9 @@ class SubscriptionController extends Controller
                 ->when(! empty($model), function (Builder $query) use ($model) {
                     return $query->where('subscribable_type', $model);
                 })
+                ->when(is_numeric($request->get('fragment')), function (Builder $query) {
+                    return $query->where('subscribable_id', request()->get('fragment'));
+                })
                 ->sum('price');
 
             $ru = DB::table('subscriptions')
@@ -96,6 +99,9 @@ class SubscriptionController extends Controller
                 ->when(! empty($model), function (Builder $query) use ($model) {
                     return $query->where('subscribable_type', $model);
                 })
+                ->when(is_numeric($request->get('fragment')), function (Builder $query) {
+                    return $query->where('subscribable_id', request()->get('fragment'));
+                })
                 ->sum('price');
 
             $en = DB::table('subscriptions')
@@ -104,6 +110,9 @@ class SubscriptionController extends Controller
                 ->where('lang', 'en')
                 ->when(! empty($model), function (Builder $query) use ($model) {
                     return $query->where('subscribable_type', $model);
+                })
+                ->when(is_numeric($request->get('fragment')), function (Builder $query) {
+                    return $query->where('subscribable_id', request()->get('fragment'));
                 })
                 ->sum('price');
 

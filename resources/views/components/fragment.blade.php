@@ -103,12 +103,20 @@
 					if (page === 'sum') return 'Суммарные продажи'
 					if (page === 'audio') return 'Продажи аудио'
 					if (page === 'video') return 'Продажи видео'
-				}
-
-				if (this.stats === 'views') {
+				} else if (this.stats === 'views') {
 					if (page === 'sum') return 'Просмотры и прослушивания'
 					if (page === 'audio') return 'Прослушивания аудио'
 					if (page === 'video') return 'Просмотры видео'
+				} else if (this.stats === 'metrics-sails') {
+					if (page === 'sum') return 'График продаж'
+					if (page === 'audio') return 'График продаж аудио'
+					if (page === 'video') return 'График продаж видео'
+				} else if (this.stats === 'metrics-views') {
+					if (page === 'sum') return 'График просмотров и прослушиваний'
+					if (page === 'audio') return 'График прослушиваний аудио'
+					if (page === 'video') return 'График просмотров видео'
+				} else {
+					return '';
 				}
 			},
 		}))

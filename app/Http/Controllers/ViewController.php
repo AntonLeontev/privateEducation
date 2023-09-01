@@ -87,6 +87,9 @@ class ViewController extends Controller
                 ->when(! empty($model), function (Builder $query) use ($model) {
                     return $query->where('viewable_type', $model);
                 })
+                ->when(is_numeric($request->get('fragment')), function (Builder $query) {
+                    return $query->where('viewable_id', request()->get('fragment'));
+                })
                 ->count();
 
             $ru = DB::table('views')
@@ -96,6 +99,9 @@ class ViewController extends Controller
                 ->when(! empty($model), function (Builder $query) use ($model) {
                     return $query->where('viewable_type', $model);
                 })
+                ->when(is_numeric($request->get('fragment')), function (Builder $query) {
+                    return $query->where('viewable_id', request()->get('fragment'));
+                })
                 ->count();
 
             $en = DB::table('views')
@@ -104,6 +110,9 @@ class ViewController extends Controller
                 ->where('lang', 'en')
                 ->when(! empty($model), function (Builder $query) use ($model) {
                     return $query->where('viewable_type', $model);
+                })
+                ->when(is_numeric($request->get('fragment')), function (Builder $query) {
+                    return $query->where('viewable_id', request()->get('fragment'));
                 })
                 ->count();
 
