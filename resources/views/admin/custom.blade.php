@@ -101,6 +101,13 @@
 						this.page = this.$event.detail.page ?? this.page;
 						this.fragment = this.$event.detail.fragment ?? this.fragment;
 						this.title = this.$event.detail.title ?? this.title;
+
+						this.$nextTick(() => {
+							if (this.$event.detail.stats === 'geo') {
+								this.$dispatch('geo-full');
+							}
+						})
+
 					},
 					periodChange(options) {
 						this.start = options.detail.start;

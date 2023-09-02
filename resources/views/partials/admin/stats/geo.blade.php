@@ -1,4 +1,9 @@
-<div class="h-full pt-1 player__content" x-data="geo">
+<div 
+	class="h-full pt-1 player__content" 
+	x-data="geo" 
+	@geo-full.window="fullscreen = true"
+	@keyup.escape.window="fullscreen = false"
+>
 
     <div class="relative h-full w-full bg-[#d4f1f990] transition-all duration-[600]"
         :class="{ '!fixed top-10 bottom-10 left-10 right-10 z-40 bg-[#d4f1f9ee] !w-auto !h-auto': fullscreen }">
