@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Presentation extends Model
@@ -28,5 +29,10 @@ class Presentation extends Model
     public function fragment(): BelongsTo
     {
         return $this->belongsTo(Fragment::class);
+    }
+
+    public function views(): HasMany
+    {
+        return $this->hasMany(PresentationView::class);
     }
 }

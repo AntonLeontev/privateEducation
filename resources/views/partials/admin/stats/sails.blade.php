@@ -119,11 +119,12 @@
                     return Math.round(value * 100 / (this.ru + this.en));
                 },
 				update() {
-					if (this.stats !== 'views' && this.stats !== 'sails') return;
+					if (this.stats !== 'views' && this.stats !== 'sails' && this.stats !== 'pres') return;
 
 					let url;
 					if (this.stats === 'sails') url = route('admin.sales');
 					if (this.stats === 'views') url = route('admin.views');
+					if (this.stats === 'pres') url = route('admin.pres');
 
 					axios
 						.get(url, {

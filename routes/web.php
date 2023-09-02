@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PresentationViewController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\DB;
@@ -48,4 +49,8 @@ Route::prefix('admin')
         Route::get('views', [ViewController::class, 'views'])->name('views');
         Route::get('views/popular-fragments', [ViewController::class, 'popularFragments'])->name('views.popular-fragments');
         Route::get('metrics/views', [ViewController::class, 'metrics'])->name('metrics.views');
+
+        Route::get('presentation-views', [PresentationViewController::class, 'index'])->name('pres');
+        Route::get('pres/popular-fragments', [PresentationViewController::class, 'popularFragments'])->name('pres.popular-fragments');
+        Route::get('metrics/pres', [PresentationViewController::class, 'metrics'])->name('metrics.pres');
     });

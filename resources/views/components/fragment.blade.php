@@ -29,8 +29,8 @@
         <li>
             <button type="button" data-type="total"
 				:class="{
-					'is-active': (page === `sum` && fragment === 'all') ||
-					(page === `sum` && fragment == number),
+					'is-active': (page === `sum` && fragment === 'all' && stats != 'pres' && stats != `metrics-pres`) ||
+					(page === `sum` && fragment == number && stats != 'pres' && stats != `metrics-pres`),
 				}"
 				@click="activate('sum')"
 			>
@@ -40,8 +40,8 @@
         <li>
             <button type="button" data-type="music"
 				:class="{
-					'is-active': (page === `audio` && fragment === 'all') ||
-					(page === `audio` && fragment == number),
+					'is-active': (page === `audio` && fragment === 'all' && stats != 'pres' && stats != `metrics-pres`) ||
+					(page === `audio` && fragment == number && stats != 'pres' && stats != `metrics-pres`),
 				}"
 				@click="activate('audio')"
 			>
@@ -51,8 +51,8 @@
         <li>
             <button type="button" data-type="video"
 				:class="{
-					'is-active': (page === `video` && fragment === 'all') ||
-					(page === `video` && fragment == number),
+					'is-active': (page === `video` && fragment === 'all' && stats != 'pres' && stats != `metrics-pres`) ||
+					(page === `video` && fragment == number && stats != 'pres' && stats != `metrics-pres`),
 				}"
 				@click="activate('video')"
 			>
@@ -62,8 +62,10 @@
         <li>
             <button type="button" data-type="presentation"
 				:class="{
-					'is-active': (page === `presentation` && fragment === 'all') ||
-					(page === `presentation` && fragment == number),
+					'is-active': (stats === `pres` && fragment === 'all') ||
+					(stats === `pres` && fragment == number) || 
+					(stats === `metrics-pres` && fragment === 'all') || 
+					(stats === `metrics-pres` && fragment == number),
 				}"
 				@click="activate('presentation')"
 			>
@@ -79,39 +81,58 @@
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('fragment{{ $number }}', () => ({
 			number: {{ $number }},
-			totalClass: {
-				'is-active': this.active === `total` + this.number ||
-					this.activeType === 'all',
-			},
 			activate(page) {
-				this.active = this.$el.dataset.type + this.number;
-				this.activeFragment = this.number;
-				this.activeType = this.$el.dataset.type;
+				let stats = this.stats;
+				
+				if (page === 'presentation') {
+					if (this.stats.indexOf('metrics') >= 0) {
+						stats = 'metrics-pres';
+					} else {
+						stats = 'pres';
+					}
+					
+					page = 'sum';
+				} else {
+					if (this.stats === 'metrics-pres') {
+						stats = 'metrics-views';
+					} 
+					if (this.stats === 'pres') {
+						stats = 'views';
+					}
+					if (this.stats === 'geo') {
+						stats = 'views';
+					}
+				}
 
+				let title = this.makeTitle(stats, page);
 
 				this.$dispatch(
 					'state-change', 
 					{
+						stats: stats,
 						page: page,
 						fragment: '{{ $number }}',
-						title: this.makeTitle(page) + ' фрагмента №{{ $number }}',
+						title: title + ' фрагмента №{{ $number }}',
 					}
 				)
 			},
-			makeTitle(page) {
-				if (this.stats === 'sails') {
+			makeTitle(stats, page) {
+				if (stats === 'pres') return 'Просмотры и чтения презентации';
+				if (stats === 'metrics-pres') return 'График просмотров и чтения презентации';
+
+				if (stats === 'sails') {
 					if (page === 'sum') return 'Суммарные продажи'
 					if (page === 'audio') return 'Продажи аудио'
 					if (page === 'video') return 'Продажи видео'
-				} else if (this.stats === 'views') {
+				} else if (stats === 'views') {
 					if (page === 'sum') return 'Просмотры и прослушивания'
 					if (page === 'audio') return 'Прослушивания аудио'
 					if (page === 'video') return 'Просмотры видео'
-				} else if (this.stats === 'metrics-sails') {
+				} else if (stats === 'metrics-sails') {
 					if (page === 'sum') return 'График продаж'
 					if (page === 'audio') return 'График продаж аудио'
 					if (page === 'video') return 'График продаж видео'
-				} else if (this.stats === 'metrics-views') {
+				} else if (stats === 'metrics-views') {
 					if (page === 'sum') return 'График просмотров и прослушиваний'
 					if (page === 'audio') return 'График прослушиваний аудио'
 					if (page === 'video') return 'График просмотров видео'

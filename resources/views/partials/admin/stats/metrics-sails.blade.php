@@ -18,11 +18,12 @@
 				this.$watch('fragment', value => this.update())
             },
 			update() {
-				if (this.stats !== 'metrics-views' && this.stats !== 'metrics-sails') return;
+				if (this.stats !== 'metrics-views' && this.stats !== 'metrics-sails' && this.stats !== 'metrics-pres') return;
 
 				let url;
 				if (this.stats === 'metrics-sails') url = route('admin.metrics.sales');
 				if (this.stats === 'metrics-views') url = route('admin.metrics.views');
+				if (this.stats === 'metrics-pres') url = route('admin.metrics.pres');
 
 				axios
 					.get(url, {
@@ -98,7 +99,7 @@
 					// Add series
 					// https://www.amcharts.com/docs/v5/charts/xy-chart/series/
 					let total = chart.series.push(am5xy.LineSeries.new(root, {
-						name: 'Общие продажи',
+						name: 'Сумма',
 						minBulletDistance: 15,
 						connect: false,
 						xAxis: xAxis,

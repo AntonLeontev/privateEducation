@@ -4,7 +4,7 @@
 ])
 
 <li 
-	class="relative flex items-center justify-between w-full px-3 py-2 cursor-pointer gap-x-1 hover:bg-primary"
+	class="relative flex items-center justify-between w-full px-3 py-2 cursor-pointer gap-x-10 hover:bg-primary"
 	x-data="{menu: false}"
 	@mouseover="menu = true"
 	@mouseout="menu = false"
@@ -21,7 +21,7 @@
 	</svg>
 
 
-	<ul class="absolute top-0 left-full bg-[#344760] rounded [&>*:nth-child(n)]:!ml-0 flex flex-col gap-y-3 whitespace-nowrap transition text-[1.2vw] shadow-md shadow-gray-800 min-w-[450px]" x-show="menu">
+	<ul class="absolute top-0 left-full bg-[#344760] rounded [&>*:nth-child(n)]:!ml-0 flex flex-col gap-y-3 whitespace-nowrap transition text-[1.2vw] shadow-md shadow-gray-800" x-show="menu">
 		{{ $slot }}
 	</ul>
 </li>

@@ -4,7 +4,7 @@
 		<x-admin.menu.item title="Продажи">
 			<x-admin.menu.subitem stats="sails" page="sum" title="Суммарные продажи">
 				<img class="block" width="25px" src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
-				<div class="w-[250px]">
+				<div class="">
 					Суммарные продажи
 				</div>
 			</x-admin.menu.subitem>
@@ -51,7 +51,7 @@
 		<x-admin.menu.item title="Просмотры в личном кабинете">
 			<x-admin.menu.subitem stats="views" page="sum" title="Суммарные просмотры и прослушивания">
 				<img width="25px" src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
-				<div class="w-[450px] 2xl:w-[500px]">
+				<div class="">
 					Суммарные просмотры и прослушивания
 				</div>
 			</x-admin.menu.subitem>
@@ -94,9 +94,51 @@
 			</x-admin.menu.submenu>
 		</x-admin.menu.item>
 
-        <li class="flex items-center header__nav__list-item gap-x-1" @click="$dispatch('all-stats', 'all-audio')">
-            <img width="25px" src="{{ Vite::asset('resources/images/icon2.png') }}" alt="">
-            <span>Только аудио</span>
-        </li>
+		<x-admin.menu.item title="Просмотры презентаций">
+			<x-admin.menu.subitem stats="pres" page="sum" title="Суммарные просмотры и чтение презентаций">
+				<img width="25px" src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
+				<div class="">
+					Суммарные просмотры и чтение
+				</div>
+			</x-admin.menu.subitem>
+
+			<x-admin.menu.subitem stats="pres" page="video" title="Суммарные просмотры презентаций">
+				<img width="25px" src="{{ Vite::asset('resources/images/icon3.png') }}" alt="">
+				<div>
+					Суммарные просмотры
+				</div>
+			</x-admin.menu.subitem>
+
+			<x-admin.menu.subitem stats="pres" page="audio" title="Суммарное чтение презентаций">
+				<img width="25px" src="{{ Vite::asset('resources/images/icon2.png') }}" alt="">
+				<div>
+					Суммарное чтение
+				</div>
+			</x-admin.menu.subitem>
+
+			<x-admin.menu.submenu title="Графики просмотров и чтения" img="{{ Vite::asset('resources/images/icon5.png') }}">
+				<x-admin.menu.subitem stats="metrics-pres" page="sum" title="Суммарный график просмотров и чтения презентаций">
+					<img width="25px" src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
+					<div>
+						Суммарный график просмотров и чтения
+					</div>
+				</x-admin.menu.subitem>
+
+				<x-admin.menu.subitem stats="metrics-pres" page="audio" title="График чтения презентаций">
+					<img width="25px" src="{{ Vite::asset('resources/images/icon2.png') }}" alt="">
+					<div>
+						График чтения презентаций
+					</div>
+				</x-admin.menu.subitem>
+
+				<x-admin.menu.subitem stats="metrics-pres" page="video" title="График просмотров презентаций">
+					<img width="25px" src="{{ Vite::asset('resources/images/icon3.png') }}" alt="">
+					<div>
+						График просмотров презентаций
+					</div>
+				</x-admin.menu.subitem>
+			</x-admin.menu.submenu>
+		</x-admin.menu.item>
+
     </ul>
 </nav>

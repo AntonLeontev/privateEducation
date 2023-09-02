@@ -35,11 +35,11 @@
 							</div>
                         </div>
 						
-						<div class="h-[calc(100%-45px)]" x-show="stats === 'sails' || stats === 'views'">
+						<div class="h-[calc(100%-45px)]" x-show="stats === 'sails' || stats === 'views' || stats === 'pres'">
 							@include('partials.admin.stats.sails')
 						</div>
 
-						<div class="h-[calc(100%-45px)]" x-show="stats === 'metrics-sails' || stats === 'metrics-views'">
+						<div class="h-[calc(100%-45px)]" x-show="stats === 'metrics-sails' || stats === 'metrics-views' || stats === 'metrics-pres'">
 							@include('partials.admin.stats.metrics-sails')
 						</div>
 
@@ -66,8 +66,8 @@
 		<script>
 			document.addEventListener('alpine:init', () => {
 				Alpine.data('fragments', () => ({
-					stats: 'sails', // ['sails', 'views', 'metrics-sails', 'metrics-views', 'geo']
-					page: 'sum', // ['sum', 'audio', 'video', 'presentation']
+					stats: 'sails', // ['sails', 'views', 'pres', 'metrics-sails', 'metrics-views', metrics-pres', 'geo']
+					page: 'sum', // ['sum', 'audio', 'video']
 					fragment: 'all', // ['all', 'fragment id']
 					title: 'Суммарные продажи',
 					period: 'today',
@@ -80,8 +80,8 @@
 						this.$watch('page', value => this.updatePopularFragments());
 					},
 					image() {
-						if (this.page === 'metrics') {
-							return "{{ Vite::asset('resources/images/icon5.png') }}";
+						if (this.stats === 'metrics-pres' || this.stats === 'pres') {
+							return "{{ Vite::asset('resources/images/icon4.png') }}";
 						} 
 						if (this.stats === 'geo') {
 							return "{{ Vite::asset('resources/images/icon6.png') }}";
@@ -115,7 +115,7 @@
 							return;
 						}
 
-						if (this.stats !== 'views' && this.stats !== 'sails') {
+						if (this.stats !== 'views' && this.stats !== 'sails' && this.stats !== 'pres') {
 							this.popularFragments = null;
 							return
 						}
@@ -123,6 +123,7 @@
 						let url;
 						if (this.stats === 'sails') url = route('admin.sales.popular-fragments');
 						if (this.stats === 'views') url = route('admin.views.popular-fragments');
+						if (this.stats === 'pres') url = route('admin.pres.popular-fragments');
 
 						axios
 							.get(url, {

@@ -148,33 +148,33 @@ class Dashboard extends DashboardScreen
                     ->columnSpan(2),
                 ValueMetric::make('Неделя. C '.now()->startOfWeek()->translatedFormat('j F'))
                     ->value(Subscription::query()
-                    ->where('created_at', '>=', now()->startOfWeek())
-                    ->where('lang', MediaLang::en)
-                    ->sum('price') / 100)
+                        ->where('created_at', '>=', now()->startOfWeek())
+                        ->where('lang', MediaLang::en)
+                        ->sum('price') / 100)
                     ->valueFormat('{value} €')
                     ->progress(20)
                     ->columnSpan(2),
                 ValueMetric::make('Месяц. C '.now()->startOfMonth()->translatedFormat('j F'))
                     ->value(Subscription::query()
-                    ->where('created_at', '>=', now()->startOfMonth())
-                    ->where('lang', MediaLang::en)
-                    ->sum('price') / 100)
+                        ->where('created_at', '>=', now()->startOfMonth())
+                        ->where('lang', MediaLang::en)
+                        ->sum('price') / 100)
                     ->valueFormat('{value} €')
                     ->progress(80)
                     ->columnSpan(2),
                 ValueMetric::make('Квартал. C '.now()->startOfQuarter()->translatedFormat('j F'))
                     ->value(Subscription::query()
-                    ->where('created_at', '>=', now()->startOfQuarter())
-                    ->where('lang', MediaLang::en)
-                    ->sum('price') / 100)
+                        ->where('created_at', '>=', now()->startOfQuarter())
+                        ->where('lang', MediaLang::en)
+                        ->sum('price') / 100)
                     ->valueFormat('{value} €')
                     ->progress(250)
                     ->columnSpan(3),
                 ValueMetric::make('Год. C '.now()->startOfYear()->translatedFormat('j F'))
                     ->value(Subscription::query()
-                    ->where('created_at', '>=', now()->startOfYear())
-                    ->where('lang', MediaLang::en)
-                    ->sum('price') / 100)
+                        ->where('created_at', '>=', now()->startOfYear())
+                        ->where('lang', MediaLang::en)
+                        ->sum('price') / 100)
                     ->valueFormat('{value} €')
                     ->progress(1000)
                     ->columnSpan(3),
@@ -211,27 +211,27 @@ class Dashboard extends DashboardScreen
                     )->columnSpan(6),
             ]),
             DashboardBlock::make([
-                    DonutChartMetric::make('Сумма покупок US')
-                        ->values(
-                            Subscription::query()
-                                ->selectRaw('SUM(price / 100) as sum, location')
-                                ->where('lang', MediaLang::en)
-                                ->where('created_at', '>=', now()->subYear())
-                                ->groupBy('location')
-                                ->pluck('sum', 'location')
-                                ->map(fn ($item) => $item = (int) $item)
-                                ->toArray()
-                        )->columnSpan(6),
-                    DonutChartMetric::make('Количество покупок US')
-                        ->values(
-                            Subscription::query()
-                                ->selectRaw('COUNT(price) as count, location')
-                                ->where('lang', MediaLang::en)
-                                ->where('created_at', '>=', now()->subYear())
-                                ->groupBy('location')
-                                ->pluck('count', 'location')
-                                ->toArray()
-                        )->columnSpan(6),
+                DonutChartMetric::make('Сумма покупок US')
+                    ->values(
+                        Subscription::query()
+                            ->selectRaw('SUM(price / 100) as sum, location')
+                            ->where('lang', MediaLang::en)
+                            ->where('created_at', '>=', now()->subYear())
+                            ->groupBy('location')
+                            ->pluck('sum', 'location')
+                            ->map(fn ($item) => $item = (int) $item)
+                            ->toArray()
+                    )->columnSpan(6),
+                DonutChartMetric::make('Количество покупок US')
+                    ->values(
+                        Subscription::query()
+                            ->selectRaw('COUNT(price) as count, location')
+                            ->where('lang', MediaLang::en)
+                            ->where('created_at', '>=', now()->subYear())
+                            ->groupBy('location')
+                            ->pluck('count', 'location')
+                            ->toArray()
+                    )->columnSpan(6),
             ]),
         ];
     }
