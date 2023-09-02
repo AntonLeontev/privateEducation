@@ -17,23 +17,25 @@
             <option value="custom">За произвольный период</option>
         </select>
 
-		<label class="w-min text-[14px] flex gap-x-1 items-center" x-show="period === 'custom'" x-transition x-cloak>
+		<label class="w-min text-[14px] flex gap-x-1 items-center">
 			<input 
 				name="start" 
 				type="date" 
-				class="px-2 py-1 bg-transparent border border-t-0 rounded-none border-x-0 focus:outline-none" 
+				class="px-2 py-1 bg-transparent border border-t-0 rounded-none border-x-0 focus:outline-none disabled:text-[#bbb] disabled:border-[#bbb]" 
+				:disabled="period !== 'custom'"
 				x-ref="start"
 				@change="changePeriod"
 			>
 		</label>
 
-		<span class="flex items-center" x-show="period === 'custom'" x-transition x-cloak>-</span>
+		<span class="flex items-center" :class="period !== 'custom' && 'text-[#bbb]'">-</span>
 
-		<label class="w-min text-[14px] flex gap-x-1 items-center" x-show="period === 'custom'" x-transition x-cloak>
+		<label class="w-min text-[14px] flex gap-x-1 items-center">
 			<input 
 				name="end" 
 				type="date" 
-				class="px-2 py-1 bg-transparent border border-t-0 rounded-none border-x-0 focus:outline-none" 
+				class="px-2 py-1 bg-transparent border border-t-0 rounded-none border-x-0 focus:outline-none disabled:text-[#bbb] disabled:border-[#bbb]"
+				:disabled="period !== 'custom'" 
 				x-ref="end"
 				@change="changePeriod"
 			>
