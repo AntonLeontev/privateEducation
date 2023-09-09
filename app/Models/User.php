@@ -48,4 +48,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Subscription::class);
     }
+
+    public function activeSubscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class)->where('ends_at', '>=', now());
+    }
+
+    public function lastSubscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class)->orderBy('created_at');
+    }
+
+	public function views(): HasMany
+	{
+		return $this->hasMany(View::class);
+	}
+
+	public function presentationViews(): HasMany
+	{
+		return $this->hasMany(PresentationView::class);
+	}
 }

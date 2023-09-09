@@ -31,7 +31,7 @@ class Subscription extends Model
         'price' => PriceCast::class,
     ];
 
-    protected $with = ['currency'];
+    protected $with = [];
 
     public function subscribable(): MorphTo
     {
@@ -41,11 +41,6 @@ class Subscription extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function currency(): BelongsTo
-    {
-        return $this->belongsTo(Currency::class);
     }
 
     protected static function booted(): void

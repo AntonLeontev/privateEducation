@@ -37,19 +37,22 @@
 				<option>Волгоград</option>
 			</select>
 		</div>
-        <div class="w-full text-lg border-separate border-spacing-y-3">
-			<div class="flex">
-				<div class="w-[25%] text-center">email</div>
-				<div class="w-[10%] text-center">Страна</div>
-				<div class="w-[10%] text-center">Город</div>
-				<div class="w-[20%] text-center">Количество активных подписок</div>
-				<div class="w-[15%] text-center">Всего куплено подписок</div>
-				<div class="w-[15%] text-center">Сумма покупок</div>
-				<div class="w-[5%] text-center"></div>
+        <div class="relative w-full max-h-screen text-md">
+			<div class="flex py-1 gap-x-1">
+				<div class="w-[5%] flex items-center justify-center text-center">№</div>
+				<div class="w-[25%] flex items-center justify-center text-center">email</div>
+				<div class="w-[10%] flex items-center justify-center text-center">Страна</div>
+				<div class="w-[10%] flex items-center justify-center text-center">Город</div>
+				<div class="w-[10%] flex items-center justify-center text-center">Количество активных подписок</div>
+				<div class="w-[10%] flex items-center justify-center text-center">Всего куплено подписок</div>
+				<div class="w-[10%] flex items-center justify-center text-center">Сумма покупок</div>
+				<div class="w-[15%] flex items-center justify-center text-center">Дата последней покупки</div>
+				<div class="w-[15%] flex items-center justify-center text-center">Дата регистрации</div>
+				<div class="w-[5%] flex items-center justify-center text-center"></div>
 			</div>
-            <div class="text-lg text-black">
-				@foreach ($resource->items() as $item)
-					<x-user :user="$item->getItem()" />
+            <div class="text-lg text-black max-h-[calc(100vh-64px)] overflow-y-auto">
+				@foreach ($users as $user)
+					<x-user :user="$user" />
 				@endforeach
             </div>
         </div>

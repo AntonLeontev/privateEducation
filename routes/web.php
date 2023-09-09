@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PresentationViewController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\ViewController;
+use App\Models\Subscription;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -20,15 +22,29 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    $fragments = DB::table('views')
-        ->select([
-            'viewable_id',
-            DB::raw('COUNT(viewable_id) AS count'),
-        ])
-        ->groupBy('viewable_id')
-        ->orderByDesc('count')
-        ->take(4)
-        ->get();
+	$fragments = collect();
+
+    $subs = Subscription::query()
+		->where('user_id', 25)
+		->orderByDesc('created_at')
+		->get();
+
+	
+	foreach ($subs as $sub) {
+		$key = $sub->subscribable_id . '.' . str($sub->subscribable_type)->afterLast('\\')->lower();
+
+		if ($fragments->has($key)) {
+			continue;
+		}
+
+		$fragments->put($key, [
+			'created_at' => $sub->created_at,
+			'ends_at' => $sub->ends_at,
+		]);
+	}
+
+	$fragments = $fragments->undot();
+
 
     dd($fragments);
 
