@@ -1,7 +1,7 @@
 // правое серое меню
 const burgerMenu = document.querySelector('.burger');
 const rightMenu = document.querySelector('.right-menu');
-const rightMenuCloseBtn = document.querySelector('.right-menu__close-btn');
+// const rightMenuCloseBtn = document.querySelector('.right-menu__close-btn');
 
 const menuCloser = (e) => {
   if (!e.target.classList.contains('right-menu__item') && !e.target.classList.contains('right-menu__link')) {
@@ -16,6 +16,6 @@ burgerMenu.addEventListener('click', (e) => {
   document.addEventListener('click', menuCloser);
 })
 
-rightMenuCloseBtn.addEventListener('click', () => {
-  rightMenu.classList.add('hidden')
-})
+// rightMenuCloseBtn.addEventListener('click', () => {
+//   rightMenu.classList.add('hidden')
+// })

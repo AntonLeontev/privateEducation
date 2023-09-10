@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PresentationViewController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
 use App\Models\Subscription;
 use App\Models\User;
@@ -57,6 +58,8 @@ Route::prefix('admin')
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('custom', [AdminController::class, 'custom'])->name('custom');
         Route::get('users', [AdminController::class, 'users'])->name('users');
+        Route::get('users/subscriptions', [UserController::class, 'subscriptions'])->name('users.subscriptions');
+        Route::post('users/subscriptions/search', [UserController::class, 'subscriptionsSearch'])->name('users.subscriptions.search');
 
         Route::get('sales', [SubscriptionController::class, 'sales'])->name('sales');
         Route::get('sales/popular-fragments', [SubscriptionController::class, 'popularFragments'])->name('sales.popular-fragments');

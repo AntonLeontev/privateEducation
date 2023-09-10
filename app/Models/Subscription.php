@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\PriceCast;
+use App\Casts\SubscribableTypeCast;
 use App\Support\Enums\MediaLang;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,7 @@ class Subscription extends Model
         'ends_at' => 'date',
         'lang' => MediaLang::class,
         'price' => PriceCast::class,
+		'subscribable_type' => SubscribableTypeCast::class,
     ];
 
     protected $with = [];

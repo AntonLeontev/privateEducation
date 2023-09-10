@@ -69,7 +69,7 @@ class AdminController extends Controller
 
 				
 				foreach ($userSubs as $sub) {
-					$key = $sub->subscribable_id . '.' . str($sub->subscribable_type)->afterLast('\\')->lower();
+					$key = $sub->subscribable_id . '.' . $sub->subscribable_type;
 
 					if (! $fragments->has($sub->subscribable_id . '.presentation')) {
 						$fragments->put($sub->subscribable_id . '.presentation', [
