@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Database\Factories\UserFactory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
@@ -40,6 +41,8 @@ class DbRefresh extends Command
         Artisan::call('db:seed', ['--class' => 'SubscriptionSeeder']);
         Artisan::call('db:seed', ['--class' => 'ViewsSeeder']);
         Artisan::call('db:seed', ['--class' => 'PresentationViewSeeder']);
+
+		UserFactory::new()->count(3)->create();
 
         Artisan::call('db:seed', ['--class' => 'SeoSeeder']);
 

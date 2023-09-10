@@ -9,7 +9,7 @@
 		@click="show = !show"
 	>
 		<div class="w-[5%] text-center">{{ $user->id }}</div>
-		<div class="w-[25%] text-center">{{ $user->email }}</div>
+		<div class="w-[18%] text-center grow-0 shrink-0 overflow-hidden truncate" title="{{ $user->email }}">{{ $user->email }}</div>
 		<div class="w-[10%] text-center">Россия</div>
 		<div class="w-[10%] text-center">Москва</div>
 		<div class="w-[10%] text-center">{{ $user->active_subscriptions_count }}</div>
@@ -25,7 +25,7 @@
 	</div>
 	<div class="grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows] duration-500" :class="show && 'grid-rows-[1fr]'">
 		<div class="w-full overflow-hidden">
-			<div class="mx-5 mt-8 mb-2 overflow-hidden rounded-xl bg-white/20">
+			<div class="mx-5 mt-2 mb-8 overflow-hidden rounded-xl bg-white/20">
 				@foreach ($user->fragments as $id => $fragment)
 					<div class="flex justify-start py-1 transition gap-x-1 hover:bg-slate-100/10">
 						<div class="flex items-center min-w-[150px] pl-2">Фрагмент №{{ $id }}</div>
@@ -49,8 +49,10 @@
 							@if ($fragment['audio'] ?? false)
 								<img class="w-[35px] h-[35px]" src="{{ Vite::asset('resources/images/icon2.png') }}" alt="Аудио">
 								<div class="flex items-center gap-1 min-w-[70px]" title="Количество прослушиваний аудио фрагмента  №{{ $id }}">
-									<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="24px">
-										<title/><g data-name="Layer 2" id="Layer_2"><path d="M16,4A14,14,0,0,0,2,18v9a1,1,0,0,0,1,1H9a1,1,0,0,0,1-1V19a1,1,0,0,0-1-1H4a12,12,0,0,1,24,0H23a1,1,0,0,0-1,1v8a1,1,0,0,0,1,1h6a1,1,0,0,0,1-1V18A14,14,0,0,0,16,4Z"/></g>
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-volume-up-fill" viewBox="0 0 16 16">
+										<path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
+										<path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
+										<path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
 									</svg>
 									{{ $fragment['audio']['views'] }}
 								</div>
@@ -64,13 +66,24 @@
 								@php
 									$isActive = $fragment['audio']['ends_at'] > now();
 								@endphp
-			
-								<input type="checkbox" class="toggle toggle-primary" @if ($isActive) checked title="Подписка на аудио активна до {{ $fragment['audio']['ends_at']->translatedFormat('d F Y') }}" @else title="Подписка на аудио не активна" @endif />
-								<div>
-									@if ($isActive)
-										до {{ $fragment['audio']['ends_at']->format('d.m.Y') }}
-									@endif
-								</div>
+								@if ($isActive)
+									<div class="flex items-center gap-x-1" 
+										title="Подписка на аудио активна до {{ $fragment['audio']['ends_at']->translatedFormat('d F Y') }}&#013;Дата последней покупки {{ $fragment['audio']['created_at']->translatedFormat('d F Y') }}"
+									>
+										<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-toggle-on" viewBox="0 0 16 16">
+											<path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+											<circle cx="11" cy="8" r="4" fill="#E9742B"/>
+										</svg>
+										<span>до {{ $fragment['audio']['ends_at']->format('d.m.Y') }}</span>
+									</div>
+								@else
+									<div class="flex items-center gap-x-1" title="Подписка на аудио не активна&#013;Дата последней покупки {{ $fragment['audio']['created_at']->translatedFormat('d F Y') }}">
+										<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-toggle-off" viewBox="0 0 16 16">
+											<path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
+											<circle cx="5" cy="8" r="4" fill="#999"/>
+										</svg>
+									</div>
+								@endif
 							@endif
 						</div>
 						<div class="flex items-center gap-1 min-w-[400px]">
@@ -94,12 +107,24 @@
 									$isActive = $fragment['video']['ends_at'] > now();
 								@endphp
 			
-								<input type="checkbox" class="toggle toggle-primary" @if ($isActive) checked title="Подписка на видео активна до {{ $fragment['video']['ends_at']->translatedFormat('d F Y') }}" @else title="Подписка на видео не активна" @endif />
-								<div>
-									@if ($isActive)
-										до {{ $fragment['video']['ends_at']->format('d.m.Y') }}
-									@endif
-								</div>
+								@if ($isActive)
+									<div class="flex items-center gap-x-1" 
+										title="Подписка на видео активна до {{ $fragment['video']['ends_at']->translatedFormat('d F Y') }}&#013;Дата последней покупки {{ $fragment['video']['created_at']->translatedFormat('d F Y') }}"
+									>
+										<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-toggle-on" viewBox="0 0 16 16">
+											<path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+											<circle cx="11" cy="8" r="4" fill="#E9742B"/>
+										</svg>
+										<span>до {{ $fragment['video']['ends_at']->format('d.m.Y') }}</span>
+									</div>
+								@else
+									<div class="flex items-center gap-x-1" title="Подписка на видео не активна&#013;Дата последней покупки {{ $fragment['video']['created_at']->translatedFormat('d F Y') }}">
+										<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-toggle-off" viewBox="0 0 16 16">
+											<path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
+											<circle cx="5" cy="8" r="4" fill="#999"/>
+										</svg>
+									</div>
+								@endif
 							@endif
 						</div>
 					</div>

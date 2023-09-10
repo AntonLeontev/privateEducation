@@ -42,7 +42,8 @@ class AdminController extends Controller
 		->select('subscriptions.user_id', DB::raw('MAX(subscriptions.created_at) AS last_sub'))
 		->groupBy('subscriptions.user_id')
 		->orderByDesc('last_sub')
-		->paginate(15);
+		->simplePaginate(15)
+		->withQueryString();
 
 		$lastSubsCollection = collect($usersLastSubs->items());
 
@@ -106,8 +107,18 @@ class AdminController extends Controller
 				return $user;
 			})
 			->sortByDesc('last_sub');
+
+		$total = User::count();
+		$active = User::whereHas('subscriptions')->count();
+		$inactive = $total - $active;
 		
-        return view('admin.users', ['users' => $users]);
+        return view('admin.users', [
+			'users' => $users, 
+			'paginator' => $usersLastSubs, 
+			'total' => $total,
+			'active' => $active,
+			'inactive' => $inactive,
+		]);
     }
 
     public function dashboard()
