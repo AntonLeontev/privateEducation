@@ -20,5 +20,5 @@ return [
     'socialite' => [
         'link_exists' => 'Account already exists',
         'link_success' => 'Account linked',
-    ]
+    ],
 ];

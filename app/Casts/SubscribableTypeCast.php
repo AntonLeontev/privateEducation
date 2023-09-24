@@ -24,6 +24,6 @@ class SubscribableTypeCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return 'App\\Models\\' . str($value)->ucfirst()->value();
+        return 'App\\Models\\'.str($value)->ucfirst()->value();
     }
 }

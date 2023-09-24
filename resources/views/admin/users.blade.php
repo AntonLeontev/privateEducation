@@ -41,7 +41,8 @@
 			</div>
 		</div>
         <div class="relative w-full max-h-screen text-md">
-			<div class="flex py-1 gap-x-1">
+			{{-- 64px --}}
+			{{-- <div class="flex py-1 gap-x-1">
 				<div class="w-[5%] flex items-center justify-center text-center">№</div>
 				<div class="w-[18%] flex items-center justify-center text-center shrink-0 grow-0">email</div>
 				<div class="w-[10%] flex items-center justify-center text-center">Страна</div>
@@ -52,8 +53,8 @@
 				<div class="w-[15%] flex items-center justify-center text-center">Дата последней покупки</div>
 				<div class="w-[15%] flex items-center justify-center text-center">Дата регистрации</div>
 				<div class="w-[5%] flex items-center justify-center text-center"></div>
-			</div>
-            <div class="text-lg text-black max-h-[calc(100vh-64px-91px-79px)] overflow-y-auto">
+			</div> --}}
+            <div class="text-lg text-black max-h-[calc(100vh-91px-79px)] overflow-y-auto">
 				@foreach ($users as $user)
 					<x-user :user="$user" />
 				@endforeach

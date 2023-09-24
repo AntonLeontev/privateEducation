@@ -42,7 +42,7 @@ class DbRefresh extends Command
         Artisan::call('db:seed', ['--class' => 'ViewsSeeder']);
         Artisan::call('db:seed', ['--class' => 'PresentationViewSeeder']);
 
-		UserFactory::new()->count(3)->create();
+        UserFactory::new()->count(3)->create();
 
         Artisan::call('db:seed', ['--class' => 'SeoSeeder']);
 

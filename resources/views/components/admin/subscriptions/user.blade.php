@@ -4,7 +4,7 @@
 		:class="show && '!opacity-100'"
 		@click="show = !show"
 	>
-		<div class="w-[5%] text-center" x-text="user.id"></div>
+		<div class="w-[5%] text-center" x-text="user.id" title="Порядковый номер"></div>
 		<div class="w-[45%] text-center grow-0 shrink-0 overflow-hidden truncate" x-text="user.email"></div>
 		<div class="w-[45%] text-center" x-text="user.name"></div>
 		<div class="w-[5%] text-center cursor-pointer flex justify-center">

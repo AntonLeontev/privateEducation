@@ -8,15 +8,15 @@
 		:class="show && '!opacity-100'"
 		@click="show = !show"
 	>
-		<div class="w-[5%] text-center">{{ $user->id }}</div>
+		<div class="w-[5%] text-center" title="Порядковый ноер">{{ $user->id }}</div>
 		<div class="w-[18%] text-center grow-0 shrink-0 overflow-hidden truncate" title="{{ $user->email }}">{{ $user->email }}</div>
-		<div class="w-[10%] text-center">Россия</div>
-		<div class="w-[10%] text-center">Москва</div>
-		<div class="w-[10%] text-center">{{ $user->active_subscriptions_count }}</div>
-		<div class="w-[10%] text-center">{{ $user->subscriptions_count }}</div>
-		<div class="w-[10%] text-center">{{ $user->subscriptions_sum_price }} €</div>
-		<div class="w-[15%] text-center">{{ $user->last_sub->format('d.m.Y') }}</div>
-		<div class="w-[15%] text-center">{{ $user->created_at->format('d.m.Y') }}</div>
+		<div class="w-[10%] text-center" title="Страна">Россия</div>
+		<div class="w-[10%] text-center" title="Город">Москва</div>
+		<div class="w-[10%] text-center" title="Количество дейчтвующих сейчас подписок подписок">{{ $user->active_subscriptions_count }}</div>
+		<div class="w-[10%] text-center" title="Всего куплено подписок за все время">{{ $user->subscriptions_count }}</div>
+		<div class="w-[10%] text-center" title="Сумма покупок за все время">{{ $user->subscriptions_sum_price }} €</div>
+		<div class="w-[15%] text-center" title="Дата последней покупки">{{ $user->last_sub->format('d.m.Y') }}</div>
+		<div class="w-[15%] text-center" title="Дата регистрации">{{ $user->created_at->format('d.m.Y') }}</div>
 		<div class="w-[5%] text-center cursor-pointer flex justify-center">
 			<svg class="w-6 h-6 transition duration-500" :class="show && 'rotate-180'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />

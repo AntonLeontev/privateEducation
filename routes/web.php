@@ -6,8 +6,6 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
 use App\Models\Subscription;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,29 +21,27 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-	$fragments = collect();
+    $fragments = collect();
 
     $subs = Subscription::query()
-		->where('user_id', 25)
-		->orderByDesc('created_at')
-		->get();
+        ->where('user_id', 25)
+        ->orderByDesc('created_at')
+        ->get();
 
-	
-	foreach ($subs as $sub) {
-		$key = $sub->subscribable_id . '.' . str($sub->subscribable_type)->afterLast('\\')->lower();
+    foreach ($subs as $sub) {
+        $key = $sub->subscribable_id.'.'.str($sub->subscribable_type)->afterLast('\\')->lower();
 
-		if ($fragments->has($key)) {
-			continue;
-		}
+        if ($fragments->has($key)) {
+            continue;
+        }
 
-		$fragments->put($key, [
-			'created_at' => $sub->created_at,
-			'ends_at' => $sub->ends_at,
-		]);
-	}
+        $fragments->put($key, [
+            'created_at' => $sub->created_at,
+            'ends_at' => $sub->ends_at,
+        ]);
+    }
 
-	$fragments = $fragments->undot();
-
+    $fragments = $fragments->undot();
 
     dd($fragments);
 

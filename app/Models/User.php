@@ -59,13 +59,13 @@ class User extends Authenticatable
         return $this->hasMany(Subscription::class)->orderBy('created_at');
     }
 
-	public function views(): HasMany
-	{
-		return $this->hasMany(View::class);
-	}
+    public function views(): HasMany
+    {
+        return $this->hasMany(View::class);
+    }
 
-	public function presentationViews(): HasMany
-	{
-		return $this->hasMany(PresentationView::class);
-	}
+    public function presentationViews(): HasMany
+    {
+        return $this->hasMany(PresentationView::class);
+    }
 }

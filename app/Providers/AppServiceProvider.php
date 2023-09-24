@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::shouldBeStrict(app()->isLocal());
         Carbon::setLocale('ru');
-		Paginator::defaultView('vendor.pagination.tailwind');
-		Paginator::defaultSimpleView('vendor.pagination.simple-tailwind');
+        Paginator::defaultView('vendor.pagination.tailwind');
+        Paginator::defaultSimpleView('vendor.pagination.simple-tailwind');
     }
 }

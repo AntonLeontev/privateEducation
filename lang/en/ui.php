@@ -82,7 +82,7 @@ return [
         'import' => [
             'imported' => 'Imported',
             'file_required' => 'File is required',
-            'extension_not_supported' => 'File extension not supported'
-        ]
-    ]
+            'extension_not_supported' => 'File extension not supported',
+        ],
+    ],
 ];

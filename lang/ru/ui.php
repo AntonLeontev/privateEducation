@@ -82,7 +82,7 @@ return [
         'import' => [
             'imported' => 'Импортирован',
             'file_required' => 'Файл обязателен',
-            'extension_not_supported' => 'Расширения не поддерживается'
-        ]
-    ]
+            'extension_not_supported' => 'Расширения не поддерживается',
+        ],
+    ],
 ];

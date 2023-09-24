@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PriceCast implements CastsAttributes
 {
-    public function get(Model $model, string $key, mixed $value, array $attributes): float | int
+    public function get(Model $model, string $key, mixed $value, array $attributes): float|int
     {
         // $locale = str($key)->afterLast('_')->ucfirst()->value();
         // $currencyField = 'currency' . $locale;
