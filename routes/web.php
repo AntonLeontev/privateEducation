@@ -51,11 +51,11 @@ Route::get('/', function () {
 Route::prefix('admin')
     ->as('admin.')
     ->group(function () {
-        Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('custom', [AdminController::class, 'custom'])->name('custom');
         Route::get('users', [AdminController::class, 'users'])->name('users');
         Route::get('users/subscriptions', [UserController::class, 'subscriptions'])->name('users.subscriptions');
         Route::post('users/subscriptions/search', [UserController::class, 'subscriptionsSearch'])->name('users.subscriptions.search');
+        Route::get('files', [AdminController::class, 'files'])->name('files');
 
         Route::get('sales', [SubscriptionController::class, 'sales'])->name('sales');
         Route::get('sales/popular-fragments', [SubscriptionController::class, 'popularFragments'])->name('sales.popular-fragments');

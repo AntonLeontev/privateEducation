@@ -7,7 +7,7 @@
 	<div class="pt-10">
 		<div class="text-lg mb-7">Стерео звук</div>
 	
-		<div class="flex gap-x-10 justify-around">
+		<div class="flex justify-around gap-x-10">
 			<div class="">
 				<div class="">Для десктопа</div>
 	
@@ -60,7 +60,7 @@
 	<div class="pt-10">
 		<div class="text-lg mb-7">Моно звук</div>
 	
-		<div class="flex gap-x-10 justify-around">
+		<div class="flex justify-around gap-x-10">
 			<div class="">
 				<div class="">Для десктопа</div>
 	

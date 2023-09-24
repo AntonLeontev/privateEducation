@@ -33,11 +33,11 @@
 		</li>
 	@endif
 
-	@if (Route::has('admin.dashboard'))
-		<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.dashboard')) !bg-[#50657c] @endif">
-			<a class="right-menu__link" href="{{ route('admin.dashboard') }}">
+	@if (Route::has('admin.files'))
+		<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.files')) !bg-[#50657c] @endif">
+			<a class="right-menu__link" href="{{ route('admin.files') }}">
 				<span class="right-menu-link__wrapper">
-					<span class="right-menu-link__text @if (Route::is('admin.dashboard')) !text-primary @endif">Управление файлами</span>
+					<span class="right-menu-link__text @if (Route::is('admin.files')) !text-primary @endif">Управление файлами</span>
 				</span>
 			</a>
 		</li>
