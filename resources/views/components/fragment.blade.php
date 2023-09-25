@@ -81,65 +81,18 @@
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('fragment{{ $number }}', () => ({
 			number: {{ $number }},
-			activate(page) {
-				let stats = this.stats;
+			activate(icon) {
 				
-				if (page === 'presentation') {
-					if (this.stats.indexOf('metrics') >= 0) {
-						stats = 'metrics-pres';
-					} else {
-						stats = 'pres';
-					}
-					
-					page = 'sum';
-				} else {
-					if (this.stats === 'metrics-pres') {
-						stats = 'metrics-views';
-					} 
-					if (this.stats === 'pres') {
-						stats = 'views';
-					}
-					if (this.stats === 'geo') {
-						stats = 'views';
-					}
-				}
-
-				let title = this.makeTitle(stats, page);
 
 				this.$dispatch(
-					'state-change', 
+					'click-fragment', 
 					{
-						stats: stats,
-						page: page,
+						icon: icon,
 						fragment: '{{ $number }}',
-						title: title + ' фрагмента №{{ $number }}',
 					}
 				)
 			},
-			makeTitle(stats, page) {
-				if (stats === 'pres') return 'Просмотры и чтения презентации';
-				if (stats === 'metrics-pres') return 'График просмотров и чтения презентации';
-
-				if (stats === 'sails') {
-					if (page === 'sum') return 'Суммарные продажи'
-					if (page === 'audio') return 'Продажи аудио'
-					if (page === 'video') return 'Продажи видео'
-				} else if (stats === 'views') {
-					if (page === 'sum') return 'Просмотры и прослушивания'
-					if (page === 'audio') return 'Прослушивания аудио'
-					if (page === 'video') return 'Просмотры видео'
-				} else if (stats === 'metrics-sails') {
-					if (page === 'sum') return 'График продаж'
-					if (page === 'audio') return 'График продаж аудио'
-					if (page === 'video') return 'График продаж видео'
-				} else if (stats === 'metrics-views') {
-					if (page === 'sum') return 'График просмотров и прослушиваний'
-					if (page === 'audio') return 'График прослушиваний аудио'
-					if (page === 'video') return 'График просмотров видео'
-				} else {
-					return '';
-				}
-			},
+			
 		}))
 	})
 </script>

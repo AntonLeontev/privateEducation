@@ -21,6 +21,7 @@
 			class="content hidden-md visible-sm" 
 			x-data="fragments"
 			@state-change.window="stateChange"
+			@click-fragment.window="fragmentClick"
 			@period-change="periodChange"
 		>
             <div class="grid grid-cols-11 grid-rows-1 mb-5">
@@ -109,6 +110,36 @@
 						})
 
 					},
+					fragmentClick() {
+						let icon = this.$event.detail.icon;
+						let fragment = this.$event.detail.fragment;
+				
+						if (icon === 'presentation') {
+							if (this.stats.indexOf('metrics') >= 0) {
+								this.stats = 'metrics-pres';
+							} else {
+								this.stats = 'pres';
+							}
+							
+							this.page = 'sum';
+							this.fragment = fragment;
+						} else {
+							if (this.stats === 'metrics-pres') {
+								this.stats = 'metrics-views';
+							} 
+							if (this.stats === 'pres') {
+								this.stats = 'views';
+							}
+							if (this.stats === 'geo') {
+								this.stats = 'views';
+							}
+
+							this.page = icon;
+							this.fragment = fragment;
+						}
+
+						this.title = this.makeTitle() + ' фрагмента №' + this.fragment;
+					},
 					periodChange(options) {
 						this.start = options.detail.start;
 						this.end = options.detail.end;
@@ -144,7 +175,31 @@
 							.then(response => {
 								this.popularFragments = response.data;
 							})
-					}
+					},
+					makeTitle() {
+						if (this.stats === 'pres') return 'Просмотры и чтения презентации';
+						if (this.stats === 'metrics-pres') return 'График просмотров и чтения презентации';
+
+						if (this.stats === 'sails') {
+							if (this.page === 'sum') return 'Суммарные продажи'
+							if (this.page === 'audio') return 'Продажи аудио'
+							if (this.page === 'video') return 'Продажи видео'
+						} else if (this.stats === 'views') {
+							if (this.page === 'sum') return 'Просмотры и прослушивания'
+							if (this.page === 'audio') return 'Прослушивания аудио'
+							if (this.page === 'video') return 'Просмотры видео'
+						} else if (this.stats === 'metrics-sails') {
+							if (this.page === 'sum') return 'График продаж'
+							if (this.page === 'audio') return 'График продаж аудио'
+							if (this.page === 'video') return 'График продаж видео'
+						} else if (this.stats === 'metrics-views') {
+							if (this.page === 'sum') return 'График просмотров и прослушиваний'
+							if (this.page === 'audio') return 'График прослушиваний аудио'
+							if (this.page === 'video') return 'График просмотров видео'
+						} else {
+							return '';
+						}
+					},
 				}))
 			})
 		</script>

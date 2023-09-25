@@ -187,8 +187,8 @@
             <script>
                 document.addEventListener('alpine:init', () => {
                     Alpine.data('fragments', () => ({
-                        stats: 'sails', // ['sails', 'views', 'pres', 'metrics-sails', 'metrics-views', metrics-pres', 'geo']
-                        page: 'sum', // ['sum', 'audio', 'video']
+                        stats: 'files', // ['files']
+                        page: 'sum', // ['sum', 'audio', 'video', 'pres']
                         fragment: 'all', // ['all', 'fragment id']
                         title: 'Аудио фрагмента 1',
                         period: 'today',
@@ -218,10 +218,9 @@
                             }
                         },
                         stateChange() {
-                            this.stats = this.$event.detail.stats ?? this.stats;
                             this.page = this.$event.detail.page ?? this.page;
                             this.fragment = this.$event.detail.fragment ?? this.fragment;
-                            this.title = this.$event.detail.title ?? this.title;
+                            this.title = this.makeTitle();
 
                             this.$nextTick(() => {
                                 if (this.$event.detail.stats === 'geo') {
@@ -229,13 +228,6 @@
                                 }
                             })
 
-                        },
-                        periodChange(options) {
-                            this.start = options.detail.start;
-                            this.end = options.detail.end;
-                            this.period = options.detail.period;
-
-                            this.updatePopularFragments();
                         },
                         updatePopularFragments() {
                             if (this.fragment != 'all') {
@@ -265,8 +257,18 @@
                                 .then(response => {
                                     this.popularFragments = response.data;
                                 })
-                        }
-                    }))
+                        },
+						makeTitle() {
+							if (this.stats === 'files') {
+								if (this.page === 'sum') return 'Суммарные продажи'
+								if (this.page === 'audio') return 'Медиа файлы аудио'
+								if (this.page === 'video') return 'Медиа файлы видео'
+								if (this.page === 'pres') return 'Медиа файлы презентаций'
+							} else {
+								return '';
+							}
+						},
+					}))
                 })
             </script>
 
