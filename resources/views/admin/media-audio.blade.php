@@ -1,13 +1,10 @@
 @vite('resources/css/app.css')
 
 <div class="">
-	<div class="text-xl">
-		Аудио файлы
-	</div>
 	<div class="pt-10">
-		<div class="text-lg mb-7">{{ $lang }}</div>
+		<div class="text-lg mb-7"></div>
 	
-		<div class="flex gap-x-10 justify-around">
+		<div class="flex justify-around gap-x-10">
 	
 			<div class="">
 				<div class="">Стерео звук</div>

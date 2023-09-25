@@ -19,12 +19,14 @@
 
 	
     <ul class="relative">
-		<div class="absolute bottom-0 flex items-end w-full h-full bg-transparent">
-			<div class="w-full h-full bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 1"></div>
-			<div class="w-full h-[70%] bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 2"></div>
-			<div class="w-full h-[45%] bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 3"></div>
-			<div class="w-full h-1/4 bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 4"></div>
-		</div>
+		<template x-if="popularFragments">
+			<div class="absolute bottom-0 flex items-end w-full h-full bg-transparent">
+				<div class="w-full h-full bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 1"></div>
+				<div class="w-full h-[70%] bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 2"></div>
+				<div class="w-full h-[45%] bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 3"></div>
+				<div class="w-full h-1/4 bg-[#34476050]" x-show="popularFragments?.find(el => el.id === number)?.position === 4"></div>
+			</div>
+		</template>
 
         <li>
             <button type="button" data-type="total"
@@ -82,8 +84,6 @@
 		Alpine.data('fragment{{ $number }}', () => ({
 			number: {{ $number }},
 			activate(icon) {
-				
-
 				this.$dispatch(
 					'click-fragment', 
 					{
