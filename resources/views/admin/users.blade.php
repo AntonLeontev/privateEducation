@@ -3,17 +3,33 @@
 @section('title', 'Пользователи')
 
 @section('content')
-	<header class="my-4 header" x-data>
+	<header class="my-4 header" x-data="{
+		userStat: true,
+	}">
 		<div class="container container-header">
 			<span class="!mb-0 mr-10 player__title__bg">
 				Пользователи
 			</span>
-			<div class="flex gap-x-5">
-				<div class="">Всего: {{ $total }}</div>
-				<div class="">Активных: {{ $active }}</div>
-				<div class="">Неактивных: {{ $inactive }}</div>
-				<button class="ml-10" @click="$dispatch('toggleFilter')">Фильтр</button>
+			<div class="flex items-center gap-5 p-2 border">
+				<label class="swap swap-rotate">
+					<!-- this hidden checkbox controls the state -->
+					<input type="checkbox" x-model="userStat" />
+					
+					<div class="swap-on">За все время:</div>
+					<div class="swap-off">За сегодня:</div>
+				</label>
+				<div class="flex gap-x-5" x-show="userStat === true">
+					<div class="">Всего: {{ $total }}</div>
+					<div class="">Активных: {{ $active }}</div>
+					<div class="">Неактивных: {{ $inactive }}</div>
+				</div>
+				<div class="flex gap-x-5" x-show="userStat === false" style="display: none">
+					<div class="">Всего: {{ $totalToday }}</div>
+					<div class="">Активных: {{ $activeToday }}</div>
+					<div class="">Неактивных: {{ $inactiveToday }}</div>
+				</div>
 			</div>
+			<button class="ml-10" @click="$dispatch('toggleFilter')">Фильтр</button>
 			<div class="ml-auto burger">
 				<div class="">Меню</div>
 				<span></span>

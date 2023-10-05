@@ -44,9 +44,6 @@
 								@include('admin.media-video')
 							</div>
 
-
-
-
                         </div>
                     </div>
                     <div class="grid grid-cols-6 col-span-6 justify-items-center">

@@ -51,8 +51,8 @@ class AdminController extends Controller
 
         $users = User::query()
             ->whereIn('id', $lastSubsCollection->pluck('user_id')->toArray())
-            ->with(['views', 'presentationViews'])
-            ->withCount('activeSubscriptions')
+            ->with(['views', 'presentationViews', 'activeSubscriptions'])
+            // ->withCount('activeSubscriptions')
             ->withCount('subscriptions')
             ->withSum('subscriptions', 'price')
             ->get()
@@ -108,12 +108,20 @@ class AdminController extends Controller
         $active = User::whereHas('subscriptions')->count();
         $inactive = $total - $active;
 
+        $totalToday = User::where('created_at', '>', now()->startOfDay())->count();
+        $activeToday = User::where('created_at', '>', now()->startOfDay())->whereHas('subscriptions')->count();
+        $inactiveToday = $totalToday - $activeToday;
+
+        // dd($users);
         return view('admin.users', [
             'users' => $users,
             'paginator' => $usersLastSubs,
             'total' => $total,
             'active' => $active,
             'inactive' => $inactive,
+            'totalToday' => $totalToday,
+            'activeToday' => $activeToday,
+            'inactiveToday' => $inactiveToday,
         ]);
     }
 

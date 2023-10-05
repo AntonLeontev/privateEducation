@@ -12,7 +12,7 @@
 		<div class="w-[18%] text-center grow-0 shrink-0 overflow-hidden truncate" title="{{ $user->email }}">{{ $user->email }}</div>
 		<div class="w-[10%] text-center" title="Страна">Россия</div>
 		<div class="w-[10%] text-center" title="Город">Москва</div>
-		<div class="w-[10%] text-center" title="Количество дейчтвующих сейчас подписок подписок">{{ $user->active_subscriptions_count }}</div>
+		<div class="w-[10%] text-center" title="Количество дейчтвующих сейчас подписок подписок">{{ $user->activeSubscriptions->count() }}</div>
 		<div class="w-[10%] text-center" title="Всего куплено подписок за все время">{{ $user->subscriptions_count }}</div>
 		<div class="w-[10%] text-center" title="Сумма покупок за все время">{{ $user->subscriptions_sum_price }} €</div>
 		<div class="w-[15%] text-center" title="Дата последней покупки">{{ $user->last_sub->format('d.m.Y') }}</div>
