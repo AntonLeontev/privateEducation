@@ -10,8 +10,8 @@
 			<span class="!mb-0 mr-10 player__title__bg">
 				Пользователи
 			</span>
-			<div class="flex items-center gap-5 p-2 border">
-				<label class="swap swap-rotate">
+			<div class="flex items-center gap-5 border">
+				<label class="p-2 text-center swap swap-rotate">
 					<!-- this hidden checkbox controls the state -->
 					<input type="checkbox" x-model="userStat" />
 					
