@@ -4,7 +4,7 @@
 
 @section('content')
 	<header class="my-4 header" x-data="{
-		usersStat: true,
+		usersStat: false,
 	}">
 		<div class="container container-header">
 			<span class="!mb-0 mr-10 player__title__bg">

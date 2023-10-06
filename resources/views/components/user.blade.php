@@ -171,7 +171,7 @@
 			show: false,
 			history: false,
 			historyText: 'Показать историю покупок',
-			userStat: true,
+			userStat: false,
 
 			toggleHistory() {
 				this.history = !this.history;
