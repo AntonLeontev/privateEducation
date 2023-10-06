@@ -17,12 +17,12 @@
 					<div class="swap-on">За все время:</div>
 					<div class="swap-off">За сегодня:</div>
 				</label>
-				<div class="flex p-2 gap-x-5" x-show="userStat === true">
+				<div class="flex p-2 gap-x-5" x-show="usersStat === true">
 					<div class="">Всего: {{ $total }}</div>
 					<div class="">Активных: {{ $active }}</div>
 					<div class="">Неактивных: {{ $inactive }}</div>
 				</div>
-				<div class="flex p-2 gap-x-5" x-show="userStat === false" style="display: none">
+				<div class="flex p-2 gap-x-5" x-show="usersStat === false" style="display: none">
 					<div class="">Всего: {{ $totalToday }}</div>
 					<div class="">Активных: {{ $activeToday }}</div>
 					<div class="">Неактивных: {{ $inactiveToday }}</div>
