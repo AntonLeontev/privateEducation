@@ -2,19 +2,19 @@
 
     <form class="flex justify-between" x-ref="form">
         <select 
-			class="bg-transparent border cursor-pointer rounded-none px-1 py-2 text-[16px]" 
+			class="bg-transparent border cursor-pointer rounded-none px-1 py-2 text-[16px] focus:outline-none" 
 			name="period"
 			x-model="period"
 			@change="changePeriod" 
 			x-ref="select"
 		>
-            <option value="today">За сегодня на {{ now()->format('H:i') }}</option>
-            <option value="yesterday">За вчера</option>
-            <option value="week">За эту неделю</option>
-            <option value="month">За этот месяц</option>
-            <option value="quarter">За этот квартал</option>
-            <option value="year">За этот год</option>
-            <option value="custom">За произвольный период</option>
+            <option class="text-black" value="today">За сегодня на {{ now()->format('H:i') }}</option>
+            <option class="text-black" value="yesterday">За вчера</option>
+            <option class="text-black" value="week">За эту неделю</option>
+            <option class="text-black" value="month">За этот месяц</option>
+            <option class="text-black" value="quarter">За этот квартал</option>
+            <option class="text-black" value="year">За этот год</option>
+            <option class="text-black" value="custom">За произвольный период</option>
         </select>
 
 		<label class="w-min text-[14px] flex gap-x-1 items-center">

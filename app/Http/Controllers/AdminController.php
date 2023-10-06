@@ -51,8 +51,7 @@ class AdminController extends Controller
 
         $users = User::query()
             ->whereIn('id', $lastSubsCollection->pluck('user_id')->toArray())
-            ->with(['views', 'presentationViews', 'activeSubscriptions'])
-            // ->withCount('activeSubscriptions')
+            ->with(['views', 'presentationViews', 'activeSubscriptions', 'subscriptions'])
             ->withCount('subscriptions')
             ->withSum('subscriptions', 'price')
             ->get()
@@ -67,19 +66,6 @@ class AdminController extends Controller
                 foreach ($userSubs as $sub) {
                     $key = $sub->subscribable_id.'.'.$sub->subscribable_type;
 
-                    if (! $fragments->has($sub->subscribable_id.'.presentation')) {
-                        $fragments->put($sub->subscribable_id.'.presentation', [
-                            'views' => $user->presentationViews
-                                ->where('presentation_id', $sub->subscribable_id)
-                                ->where('is_reading', false)
-                                ->count(),
-                            'readings' => $user->presentationViews
-                                ->where('presentation_id', $sub->subscribable_id)
-                                ->where('is_reading', true)
-                                ->count(),
-                        ]);
-                    }
-
                     if ($fragments->has($key)) {
                         continue;
                     }
@@ -87,10 +73,11 @@ class AdminController extends Controller
                     $fragments->put($key, [
                         'created_at' => $sub->created_at,
                         'ends_at' => $sub->ends_at,
-                        'sum_price' => $userSubs
+                        'price' => $userSubs
                             ->where('subscribable_id', $sub->subscribable_id)
                             ->where('subscribable_type', $sub->subscribable_type)
-                            ->sum('price'),
+                            ->first()
+                            ->price,
                         'views' => $user->views
                             ->where('viewable_id', $sub->subscribable_id)
                             ->where('viewable_type', $sub->subscribable_type)
@@ -108,11 +95,11 @@ class AdminController extends Controller
         $active = User::whereHas('subscriptions')->count();
         $inactive = $total - $active;
 
-        $totalToday = User::where('created_at', '>', now()->startOfDay())->count();
-        $activeToday = User::where('created_at', '>', now()->startOfDay())->whereHas('subscriptions')->count();
+        $totalToday = User::where('created_at', '>', today())->count();
+        $activeToday = User::where('created_at', '>', today())->whereHas('subscriptions')->count();
         $inactiveToday = $totalToday - $activeToday;
 
-        // dd($users);
+        // dd($users->first()->fragments->first());
         return view('admin.users', [
             'users' => $users,
             'paginator' => $usersLastSubs,

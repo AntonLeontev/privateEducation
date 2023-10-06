@@ -4,16 +4,15 @@
 
 @section('content')
 	<header class="my-4 header" x-data="{
-		userStat: true,
+		usersStat: true,
 	}">
 		<div class="container container-header">
 			<span class="!mb-0 mr-10 player__title__bg">
 				Пользователи
 			</span>
-			<div class="flex items-center gap-5 border">
+			<div class="flex items-center gap-5 border rounded-lg">
 				<label class="p-2 text-center swap swap-rotate">
-					<!-- this hidden checkbox controls the state -->
-					<input type="checkbox" x-model="userStat" />
+					<input type="checkbox" x-model="usersStat" />
 					
 					<div class="swap-on">За все время:</div>
 					<div class="swap-off">За сегодня:</div>
