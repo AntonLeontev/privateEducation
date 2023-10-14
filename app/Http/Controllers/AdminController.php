@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fragment;
 use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
@@ -139,5 +140,14 @@ class AdminController extends Controller
             });
 
         return view('admin.files', compact('fragments'));
+    }
+
+    public function prices()
+    {
+        $fragments = Fragment::with(['audio', 'video'])->get();
+        //TODO currency rates
+        $rates = ['usd' => 1.12, 'rub' => 107.3];
+
+        return view('admin.prices', compact('fragments', 'rates'));
     }
 }

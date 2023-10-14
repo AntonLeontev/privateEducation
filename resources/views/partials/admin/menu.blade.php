@@ -42,4 +42,14 @@
 			</a>
 		</li>
 	@endif
+
+	@if (Route::has('admin.prices'))
+		<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.prices')) !bg-[#50657c] @endif">
+			<a class="right-menu__link" href="{{ route('admin.prices') }}">
+				<span class="right-menu-link__wrapper">
+					<span class="right-menu-link__text @if (Route::is('admin.prices')) !text-primary @endif">Цены</span>
+				</span>
+			</a>
+		</li>
+	@endif
 </ul>
