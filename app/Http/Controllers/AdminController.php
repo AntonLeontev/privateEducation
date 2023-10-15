@@ -73,6 +73,19 @@ class AdminController extends Controller
                 foreach ($userSubs as $sub) {
                     $key = $sub->subscribable_id.'.'.$sub->subscribable_type;
 
+                    if (! $fragments->has($sub->subscribable_id.'.presentation')) {
+                        $fragments->put($sub->subscribable_id.'.presentation', [
+                            'views' => $user->presentationViews
+                                ->where('presentation_id', $sub->subscribable_id)
+                                ->where('is_reading', false)
+                                ->count(),
+                            'readings' => $user->presentationViews
+                                ->where('presentation_id', $sub->subscribable_id)
+                                ->where('is_reading', true)
+                                ->count(),
+                        ]);
+                    }
+
                     if ($fragments->has($key)) {
                         continue;
                     }
