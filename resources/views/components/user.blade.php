@@ -9,11 +9,11 @@
 		@click="show = !show"
 	>
 		<div class="w-[5%] text-center" title="Порядковый номер">{{ $user->id }}</div>
-		<div class="w-[18%] text-center grow-0 shrink-0 overflow-hidden truncate" title="{{ $user->email }}">{{ $user->email }}</div>
+		<div class="w-[18%] grow-0 shrink-0 overflow-hidden truncate" title="{{ $user->email }}">{{ $user->email }}</div>
 		<div class="w-[10%] text-center" title="Страна">Россия</div>
 		<div class="w-[10%] text-center" title="Город">Москва</div>
 		<div class="flex gap-1 justify-between w-[35%]">
-			<label class="text-center swap swap-rotate">
+			<label class="px-1 text-center transition swap swap-rotate rounded-xl hover:bg-primary">
 				<input type="checkbox" x-model="userStat" />
 				
 				<div class="swap-on">За все время:</div>
@@ -32,7 +32,8 @@
 				{{ $user->subscriptions_sum_price }} €
 			</div>
 		</div>
-		<div class="w-[15%] text-center" title="Дата последней покупки">{{ $user->last_sub->format('d.m.Y') }}</div>
+		<div class="w-[15%] text-center" title="Дата последней покупки" x-show="!userStat">{{ $user->last_sub->format('d.m.Y') }}</div>
+		<div class="w-[15%] text-center" title="Дата первой покупки" x-show="userStat">{{ $user->first_sub->format('d.m.Y') }}</div>
 		<div class="w-[15%] text-center" title="Дата регистрации">{{ $user->created_at->format('d.m.Y') }}</div>
 		<div class="w-[5%] text-center cursor-pointer flex justify-center">
 			<svg class="w-6 h-6 transition duration-500" :class="show && 'rotate-180'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -81,7 +82,7 @@
 											</svg>
 											{{ $fragment['audio']['views'] }}
 										</div>
-										<div class="flex items-center gap-1 min-w-[100px]" title="Стоимость подписки аудио фрагмента №{{ $id }}">
+										<div class="flex items-center gap-1 min-w-[80px]" title="Стоимость подписки аудио фрагмента №{{ $id }}">
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 												<path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 100 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 											</svg>
@@ -95,7 +96,7 @@
 												<path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
 												<circle cx="11" cy="8" r="4" fill="#E9742B"/>
 											</svg>
-											<span>до {{ $fragment['audio']['ends_at']->format('d.m.Y') }}</span>
+											<span>осталось: {{ $fragment['audio']['ends_at']->diffForHumans(null, 1) }}</span>
 										</div>
 									@endif
 								</div>
@@ -109,7 +110,7 @@
 											</svg>
 											{{ $fragment['video']['views'] }}
 										</div>
-										<div class="flex items-center gap-1 min-w-[100px]" title="Стоимость подписки видео фрагмента №{{ $id }}">
+										<div class="flex items-center gap-1 min-w-[80px]" title="Стоимость подписки видео фрагмента №{{ $id }}">
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 												<path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 100 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 											</svg>
@@ -123,7 +124,7 @@
 												<path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
 												<circle cx="11" cy="8" r="4" fill="#E9742B"/>
 											</svg>
-											<span>до {{ $fragment['video']['ends_at']->format('d.m.Y') }}</span>
+											<span>осталось: {{ $fragment['video']['ends_at']->diffForHumans(null, 1) }}</span>
 										</div>
 									@endif
 								</div>
@@ -135,10 +136,10 @@
 			<div class="">
 				<div 
 					class="py-1 text-sm text-center transition cursor-pointer hover:text-white rounded-xl"
-					x-text="historyText"
-					@click="toggleHistory"
+					x-text="userStat ? 'Скрыть историю покупок' : 'Показать историю покупок'"
+					@click="userStat = !userStat"
 				>Показать историю покупок</div>
-				<div class="grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows] duration-500" :class="history && 'grid-rows-[1fr]'">
+				<div class="grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows] duration-500" :class="userStat && 'grid-rows-[1fr]'">
 					<div class="overflow-hidden rounded-xl bg-white/20">
 						<div class="p-2">
 							@foreach ($user->subscriptions as $subscription)
@@ -169,19 +170,8 @@
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('user{{ $user->id }}', () => ({
 			show: false,
-			history: false,
 			historyText: 'Показать историю покупок',
 			userStat: false,
-
-			toggleHistory() {
-				this.history = !this.history;
-
-				if (this.history) {
-					this.historyText = 'Скрыть историю покупок'
-				} else {
-					this.historyText = 'Показать историю покупок'
-				}
-			},
 		}))
 	})
 </script>

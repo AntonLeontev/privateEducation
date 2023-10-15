@@ -37,7 +37,11 @@ class AdminController extends Controller
     public function users()
     {
         $usersLastSubs = DB::table('subscriptions')
-            ->select('subscriptions.user_id', DB::raw('MAX(subscriptions.created_at) AS last_sub'))
+            ->select(
+                'subscriptions.user_id',
+                DB::raw('MAX(subscriptions.created_at) AS last_sub'),
+                DB::raw('MIN(subscriptions.created_at) AS first_sub')
+            )
             ->groupBy('subscriptions.user_id')
             ->orderByDesc('last_sub')
             ->simplePaginate(15)
@@ -58,8 +62,10 @@ class AdminController extends Controller
             ->get()
             ->map(function (User $user) use ($lastSubsCollection, $subs) {
                 $user->last_sub = $lastSubsCollection->where('user_id', $user->id)->first()->last_sub;
+                $user->first_sub = $lastSubsCollection->where('user_id', $user->id)->first()->first_sub;
                 $user->subscriptions_sum_price /= 100;
                 $user->last_sub = Carbon::parse($user->last_sub);
+                $user->first_sub = Carbon::parse($user->first_sub);
 
                 $fragments = collect();
                 $userSubs = $subs->where('user_id', $user->id);
@@ -93,23 +99,15 @@ class AdminController extends Controller
             ->sortByDesc('last_sub');
 
         $total = User::count();
-        $active = User::whereHas('subscriptions')->count();
-        $inactive = $total - $active;
+        $buyers = User::whereHas('subscriptions')->count();
+        $active = User::whereHas('activeSubscriptions')->count();
 
-        $totalToday = User::where('created_at', '>', today())->count();
-        $activeToday = User::where('created_at', '>', today())->whereHas('subscriptions')->count();
-        $inactiveToday = $totalToday - $activeToday;
-
-        // dd($users->first()->fragments->first());
         return view('admin.users', [
             'users' => $users,
             'paginator' => $usersLastSubs,
             'total' => $total,
+            'buyers' => $buyers,
             'active' => $active,
-            'inactive' => $inactive,
-            'totalToday' => $totalToday,
-            'activeToday' => $activeToday,
-            'inactiveToday' => $inactiveToday,
         ]);
     }
 
