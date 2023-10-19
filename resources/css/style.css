@@ -948,9 +948,12 @@ ol li {
 
 .auth-modal {
   position: absolute;
-  top: 17.7vh;
-  left: 29.3vw;
-  width: 58.2vw;
+  /* top: 17.7vh; */
+  top: calc(1.2vw + 32px + 10px);
+  /* left: 29.3vw; */
+  left: calc(3% + 23vw + 5vw);
+  right: 3%;
+  /* width: 58.2vw; */
   height: 37.7vw;
   overflow: hidden;
   border-radius: 15px;
