@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ app()->getLocale() }}">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8">
 
 <head>
@@ -15,29 +15,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500&display=swap" rel="stylesheet">
 
-    <style>
+	<style>
         [x-cloak] {display: none; !important}
     </style>
 
-    @routes
-    @vite(['resources/css/tailwind.css', 'resources/css/admin.css', 'resources/js/app.js', 'resources/js/metrics.js'])
+	@routes
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+	<!-- The Perfect Scrollbar JS files --><script src="js/perfectScroll/perfect-scrollbar.js"></script>
 </head>
 
 <body class="page page--index">
+	@include('partials.app.header')
+	
+    @yield('content')
 
-    <div id="panel"></div>
-    <div class="main main--index">
-
-        @yield('content')
-    </div>
-
-
-    @yield('modals')
-    @yield('body-scripts')
-
-
-
-
+	<script>
+		if (document.querySelector(".content-block")) {
+			new PerfectScrollbar(".content-block", {
+				wheelSpeed: 1.2,
+				wheelPropagation: true,
+				minScrollbarLength: 100,
+			});
+		}
+	</script>
 </body>
 
 </html>

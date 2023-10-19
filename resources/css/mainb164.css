@@ -3717,13 +3717,16 @@ header {
 }
 
 .user_link {
-    display: flex;
-
+	display: flex;
+	
     align-items: center;
-
+	width: 175px;
+	padding: 0;
     text-decoration: none;
     margin-right: 20px;
     color: #fff;
+	border: none;
+	background-color: transparent;
 
     justify-content: flex-end;
 }
@@ -3731,7 +3734,7 @@ header {
 @media only screen and (max-width: 1366px) {
     .user_link {
         margin-right: 1.7vw;
-        width: 139px;
+        
         margin-top: 0;
     }
 }

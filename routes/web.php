@@ -2,12 +2,12 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AudioController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PresentationViewController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ViewController;
-use App\Models\Subscription;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,34 +21,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+if (app()->isLocal()) {
+    Route::get('/test', function () {
+        return 'test';
+    });
+}
 
-    $fragments = collect();
+Route::get('/', HomeController::class)->name('home');
+Route::view('about', 'about')->name('about');
+Route::view('copyright', 'copyright')->name('copyright');
+Route::view('commercial', 'commercial')->name('commercial');
+Route::view('privacy', 'privacy')->name('privacy');
+Route::view('contacts', 'contacts')->name('contacts');
 
-    $subs = Subscription::query()
-        ->where('user_id', 25)
-        ->orderByDesc('created_at')
-        ->get();
+Route::prefix('my')
+    ->group(function () {
 
-    foreach ($subs as $sub) {
-        $key = $sub->subscribable_id.'.'.str($sub->subscribable_type)->afterLast('\\')->lower();
-
-        if ($fragments->has($key)) {
-            continue;
-        }
-
-        $fragments->put($key, [
-            'created_at' => $sub->created_at,
-            'ends_at' => $sub->ends_at,
-        ]);
-    }
-
-    $fragments = $fragments->undot();
-
-    dd($fragments);
-
-    return view('welcome');
-});
+    });
 
 Route::prefix('admin')
     ->as('admin.')
