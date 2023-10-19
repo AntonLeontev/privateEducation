@@ -37,7 +37,7 @@
 
 	<div class="auth-modal--cover" x-show="authModal" x-cloak >
 		<div 
-			class="auth-modal auth-modal--main auth-modal--on-text-pages auth-modal--continue js-restore-success-modal" 
+			class="auth-modal" 
 			@modal-auth.window="section = 'login'"
 			x-data="authModal"
 		>
@@ -46,82 +46,84 @@
 				<button class="myBtn modal-close-btn" @click="authModal = false"></button>
 	
 			</div>
-			<div class="modal-step">
-				<!--  Шаг 3 из 5 --> &nbsp;
-			</div>
-			<div x-show="section === 'login' || section === 'registration'">
-				<div class="modal-title">
-					Авторизация
+			<div class="modal-body">
+				<div class="modal-step">
+					<!--  Шаг 3 из 5 --> &nbsp;
 				</div>
-				<div class="modal-reg-buttons-wrapper">
-		
-					<div 
-						class="modal-auth-btn modal-auth-btn--user"
-						:class="section === 'login' ? 'active' : 'disable'"
-						@click="section = 'login'"
-					>
-						<img src="{{ Vite::asset('resources/images/user-active.png') }}" alt="login button" x-show="section === 'login'"> 
-						<img src="{{ Vite::asset('resources/images/user-disabled.png') }}" alt="login button" x-show="section === 'registration'"> 
-						<span class="modal-regbtn-text">Я пользователь</span>
+				<div x-show="section === 'login' || section === 'registration'">
+					<div class="modal-title">
+						Авторизация
 					</div>
-					<div 
-						class="modal-auth-btn modal-auth-btn--reg"
-						:class="section === 'registration' ? 'active' : 'disable'"
-						@click="section = 'registration'"
-					>
-						<img src="{{ Vite::asset('resources/images/user-active.png') }}" alt="registration button" x-show="section === 'registration'">
-						<img src="{{ Vite::asset('resources/images/user-disabled.png') }}" alt="registration button" x-show="section === 'login'">
-						<span class="modal-regbtn-text modal-regbtn-text--reg">Регистрация</span>
-					</div>
-				</div>
-		
-				<form class="modal-auth-form" x-show="section === 'login'" x-cloak>
-					<div style="width: 100%">
-						<div class="modal-email-label">
-							Адрес электронной почты:
+					<div class="modal-reg-buttons-wrapper">
+			
+						<div 
+							class="modal-auth-btn modal-auth-btn--user"
+							:class="section === 'login' ? 'active' : 'disable'"
+							@click="section = 'login'"
+						>
+							<img src="{{ Vite::asset('resources/images/user-active.png') }}" alt="login button" x-show="section === 'login'"> 
+							<img src="{{ Vite::asset('resources/images/user-disabled.png') }}" alt="login button" x-show="section === 'registration'"> 
+							<span class="modal-regbtn-text">Я пользователь</span>
+						</div>
+						<div 
+							class="modal-auth-btn modal-auth-btn--reg"
+							:class="section === 'registration' ? 'active' : 'disable'"
+							@click="section = 'registration'"
+						>
+							<img src="{{ Vite::asset('resources/images/user-active.png') }}" alt="registration button" x-show="section === 'registration'">
+							<img src="{{ Vite::asset('resources/images/user-disabled.png') }}" alt="registration button" x-show="section === 'login'">
+							<span class="modal-regbtn-text modal-regbtn-text--reg">Регистрация</span>
 						</div>
 					</div>
-					<input class="modal-input" type="email" name="email" placeholder="* * * * * * * * * * * * * * * * * * * *">
-		
-					<div class="modal-password-wrapper">
-						<span class="modal-email-label">
-							Пароль:
-						</span>
-						<button type="button" class="modal-password-forgotten" @click.prevent="section = 'restore'">Забыли пароль?</button>
-					</div>
-					<input class="modal-input modal-input--password" type="password" name="password"
-						placeholder="* * * * * * * * * * * * * * * * * * * *">
-					<div class="login-error-message">
-						Не удалось войти в аккаунт, введенные e-mail или пароль неверны
-					</div>
-					<button class="myBtn action-btn auth-modal__login-btn">ВХОД</button>
-				</form>
-		
-				<form class="modal-auth-form" x-show="section === 'registration'" x-cloak>
-					<div style="width: 100%">
-						<div class="modal-email-label" for="modal-email">
-							Адрес электронной почты:
+			
+					<form class="modal-auth-form" x-show="section === 'login'" x-cloak>
+						<div style="width: 100%">
+							<div class="modal-email-label">
+								Адрес электронной почты:
+							</div>
 						</div>
-					</div>
-					<input id="modal-email" class="modal-input" type="email" name="email"
-						placeholder="* * * * * * * * * * * * * * * * * * * *">
-		
-					<button class="myBtn action-btn auth-modal__reg-btn">ПРОДОЛЖИТЬ</button>
-				</form>
-			</div>
-			<div x-show="section === 'restore'" x-cloak>
-				<div class="modal-title modal-title--restore"> Восстановить пароль </div>
-				<form class="modal-auth-form modal-auth-form--restore">
-					<div class="modal-email-label"> Адрес электронной почты: </div> <input class="modal-input modal-input--restore"
-						type="email" name="email" placeholder="* * * * * * * * * * * * * * * * * * * *"> <button
-						class="myBtn action-btn auth-modal__reg-btn auth-modal__restore-btn js-restore-button">ВОССТАНОВИТЬ</button>
-				</form>
-			</div>
-			<div class="continue" x-show="section === 'restore-next'">
-				<div class="continue-reg"> 
-					На вашу почту отправлен новый пароль для входа на сервис 
+						<input class="modal-input" type="email" name="email" placeholder="* * * * * * * * * * * * * * * * * * * *">
+			
+						<div class="modal-password-wrapper">
+							<span class="modal-email-label">
+								Пароль:
+							</span>
+							<button type="button" class="modal-password-forgotten" @click.prevent="section = 'restore'">Забыли пароль?</button>
+						</div>
+						<input class="modal-input modal-input--password" type="password" name="password"
+							placeholder="* * * * * * * * * * * * * * * * * * * *">
+						<div class="login-error-message">
+							Не удалось войти в аккаунт, введенные e-mail или пароль неверны
+						</div>
+						<button class="myBtn action-btn auth-modal__login-btn">ВХОД</button>
+					</form>
+			
+					<form class="modal-auth-form" x-show="section === 'registration'" x-cloak>
+						<div style="width: 100%">
+							<div class="modal-email-label" for="modal-email">
+								Адрес электронной почты:
+							</div>
+						</div>
+						<input id="modal-email" class="modal-input" type="email" name="email"
+							placeholder="* * * * * * * * * * * * * * * * * * * *">
+			
+						<button class="myBtn action-btn auth-modal__reg-btn">ПРОДОЛЖИТЬ</button>
+					</form>
 				</div>
-				<button class="myBtn action-btn auth-modal__reg-btn" @click="section = 'login'">АВТОРИЗАЦИЯ</button>
+				<div x-show="section === 'restore'" x-cloak>
+					<div class="modal-title modal-title--restore"> Восстановить пароль </div>
+					<form class="modal-auth-form modal-auth-form--restore">
+						<div class="modal-email-label"> Адрес электронной почты: </div> <input class="modal-input modal-input--restore"
+							type="email" name="email" placeholder="* * * * * * * * * * * * * * * * * * * *"> <button
+							class="myBtn action-btn auth-modal__reg-btn auth-modal__restore-btn js-restore-button">ВОССТАНОВИТЬ</button>
+					</form>
+				</div>
+				<div class="continue" x-show="section === 'restore-next'">
+					<div class="continue-reg"> 
+						На вашу почту отправлен новый пароль для входа на сервис 
+					</div>
+					<button class="myBtn action-btn auth-modal__reg-btn" @click="section = 'login'">АВТОРИЗАЦИЯ</button>
+				</div>
 			</div>
 		</div>
 	</div>

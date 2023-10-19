@@ -1741,9 +1741,14 @@ ol li {
   .auth-modal {
     top: 3.5vw;
     left: 26.1vw;
+	bottom: 3.5vw;
     width: 66vw;
-    height: 44.7vw;
+    height: auto;
     border-radius: 4px;
+  }
+  .auth-modal .modal-body {
+	max-height: calc(100% - 0.6vw - 0.7vw - 2.2vw);
+    overflow-y: auto;
   }
   .auth-modal .modal-header {
     padding: 0.6vw 0.5vw 0.7vw 1.7vw;
