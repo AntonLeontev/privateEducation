@@ -3906,7 +3906,7 @@ header {
 
 @media (max-width: 500px) {
     body {
-        overflow: hidden;
+        overflow: auto;
         background: url(../images/bg_mob.jpg);
         background-size: cover;
     }

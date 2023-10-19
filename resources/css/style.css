@@ -1764,7 +1764,7 @@ ol li {
     padding-left: 0.5vw;
   }
   .auth-modal .modal-reg-buttons-wrapper {
-    padding: 1.6vw 11vw 1.4vw;
+    /* padding: 1.6vw 11vw 1.4vw; */
   }
   .auth-modal .modal-reg-buttons-wrapper img {
     width: 5.7vw;
@@ -3247,10 +3247,12 @@ a:focus {
   position: fixed;
   top: 0;
   right: 0;
-  background-color: rgba(201, 199, 199, 0.7);
+  bottom: 0;
+  background-color: #7e90a5;
   text-align: center;
   width: 19.2vw;
   z-index: 10;
+  overflow-y: auto;
 }
 @media (max-width: 897px) {
   .right-menu {
@@ -3281,11 +3283,15 @@ a:focus {
   align-items: center;
   justify-content: center;
   height: 4.89vw;
+  border-top: 2px solid rgba(201, 199, 199, 0.7);
+}
+.right-menu .right-menu__item:last-child {
+	border-bottom: 2px solid rgba(201, 199, 199, 0.7);
 }
 @media (max-width: 897px) {
   .right-menu .right-menu__item {
     height: 7.85vw;
-    padding: 0.1vw 1vw 0.6vw 3.7vw;
+    padding: 0.1vw 1vw 0.1vw 1vw;
     font-size: 2.4vw;
     line-height: 2vw;
     margin-bottom: 0.23vw;
@@ -3294,7 +3300,7 @@ a:focus {
 @media (max-width: 500px) {
   .right-menu .right-menu__item {
     height: 12.15vw;
-    padding: 0.9vw 1vw 0.6vw 2.6vw;
+    padding: 0.6vw 1vw 0.6vw 1vw;
     font-size: 4.3vw;
     line-height: 3.5vw;
     margin-bottom: 0.33vw;

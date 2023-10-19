@@ -51,8 +51,8 @@
 					<!--  Шаг 3 из 5 --> &nbsp;
 				</div>
 				<div x-show="section === 'login' || section === 'registration'">
-					<div class="modal-title">
-						Авторизация
+					<div class="modal-title" x-text="section === 'login' ? 'Авторизация' : 'Регистрация'">
+						Регистрация
 					</div>
 					<div class="modal-reg-buttons-wrapper">
 			

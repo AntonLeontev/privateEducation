@@ -63,16 +63,4 @@
 		</li>
 	@endif
 
-    <li class="right-menu__item right-menu__item--empty">
-        <span class="right-menu-link__wrapper"></span>
-    </li>
-    <li class="right-menu__item right-menu__item--empty">
-        <span class="right-menu-link__wrapper"></span>
-    </li>
-    <li class="right-menu__item right-menu__item--empty">
-        <span class="right-menu-link__wrapper"></span>
-    </li>
-    <li class="right-menu__item right-menu__item--empty">
-        <span class="right-menu-link__wrapper"></span>
-    </li>
 </ul>
