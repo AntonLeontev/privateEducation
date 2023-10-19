@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 if (app()->isLocal()) {
     Route::get('/test', function () {
-        return 'test';
+        return str()->password(12);
     });
 }
 
@@ -35,8 +35,11 @@ Route::view('privacy', 'privacy')->name('privacy');
 Route::view('contacts', 'contacts')->name('contacts');
 
 Route::prefix('my')
+    ->middleware('auth')
     ->group(function () {
-
+        Route::view('account', 'my.account')->name('my.account');
+        Route::view('media', 'my.media')->name('my.media');
+        Route::view('password', 'my.password')->name('my.password');
     });
 
 Route::prefix('admin')

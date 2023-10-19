@@ -23,16 +23,27 @@
                 @endif
             </ul>
         </nav>
-        <button class="user_link" @click="openAuthModal">
-            <img src="{{ Vite::asset('resources/images/user.png') }}" alt="Иконка личного кабинета">
-            <div class="lk">
-                {{ __('header.personal') }}
-            </div>
-        </button>
-        <div class="burger menu" @click="menuModal=true">
-            <div class="menu-text">{{ __('header.menuBtn') }}</div>
-            <span></span>
-        </div>
+		<div style="display: flex">
+			@auth
+				<a href="{{ route('my.media') }}" class="user_link" @click="openAuthModal">
+					<img src="{{ Vite::asset('resources/images/user.png') }}" alt="Иконка личного кабинета">
+					<div class="lk">
+						{{ auth()->user()->email }}
+					</div>
+				</a>
+			@else
+				<button class="user_link" @click="openAuthModal">
+					<img src="{{ Vite::asset('resources/images/user.png') }}" alt="Иконка личного кабинета">
+					<div class="lk">
+						{{ __('header.personal') }}
+					</div>
+				</button>
+			@endauth
+			<div class="burger menu" @click="menuModal=true">
+				<div class="menu-text">{{ __('header.menuBtn') }}</div>
+				<span></span>
+			</div>
+		</div>
     </div>
 
 	<div class="auth-modal--cover" x-show="authModal" x-cloak >
@@ -98,7 +109,7 @@
 						<button class="myBtn action-btn auth-modal__login-btn">ВХОД</button>
 					</form>
 			
-					<form class="modal-auth-form" x-show="section === 'registration'" x-cloak>
+					<form class="modal-auth-form" x-show="section === 'registration'" x-cloak @submit.prevent="register">
 						<div style="width: 100%">
 							<div class="modal-email-label" for="modal-email">
 								Адрес электронной почты:
@@ -124,6 +135,11 @@
 					</div>
 					<button class="myBtn action-btn auth-modal__reg-btn" @click="section = 'login'">АВТОРИЗАЦИЯ</button>
 				</div>
+				<div class="continue" x-show="section === 'register-next'">
+					<div class="continue-reg"> 
+						Для продолжения регистрации перейдите по ссылке в письме и подтвердите e-mail
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -131,7 +147,16 @@
 	<script>
 		document.addEventListener('alpine:init', () => {
 			Alpine.data('authModal', () => ({
-				section: 'login'
+				section: 'register-next',
+
+				login() {},
+				register() {
+					let data = new FormData(this.$event.target)
+					axios
+						.post('/register', data)
+						.then(response => this.section = 'register-next')
+				},
+				reset() {},
 			}))
 		})
 	</script>
