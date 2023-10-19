@@ -3841,7 +3841,7 @@ header {
         background-color: rgba(154, 137, 132, 0.7);
     }
     body {
-        background: url(../images/bg_hor.jpg);
+        background: url(../images/bg_hor.webp);
         background-size: cover;
     }
 
@@ -3907,7 +3907,7 @@ header {
 @media (max-width: 500px) {
     body {
         overflow: auto;
-        background: url(../images/bg_mob.jpg);
+        background: url(../images/bg_mob.webp);
         background-size: cover;
     }
 
