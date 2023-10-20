@@ -111,7 +111,7 @@
 					</form>
 			
 					<form class="modal-auth-form" x-show="section === 'registration'" x-cloak @submit.prevent="register">
-						<div style="width: 100%">
+						<div>
 							<div class="modal-email-label" for="modal-email">
 								Адрес электронной почты:
 							</div>
