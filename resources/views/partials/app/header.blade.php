@@ -45,6 +45,9 @@
 			</div>
 		</div>
     </div>
+	@if (Route::is('my.*'))
+		@include('partials.app.personal-menu')
+	@endif
 
 	<div class="auth-modal--cover" x-show="authModal" x-cloak >
 		<div 
@@ -87,23 +90,21 @@
 						</div>
 					</div>
 			
-					<form class="modal-auth-form" x-show="section === 'login'" x-cloak>
-						<div style="width: 100%">
-							<div class="modal-email-label">
-								Адрес электронной почты:
-							</div>
+					<form class="modal-auth-form" x-show="section === 'login'" x-cloak @submit.prevent="login">
+						<div class="modal-email-label">
+							Адрес электронной почты:
 						</div>
 						<input class="modal-input" type="email" name="email" placeholder="* * * * * * * * * * * * * * * * * * * *">
 			
 						<div class="modal-password-wrapper">
-							<span class="modal-email-label">
+							<span style="width: auto" class="modal-email-label">
 								Пароль:
 							</span>
 							<button type="button" class="modal-password-forgotten" @click.prevent="section = 'restore'">Забыли пароль?</button>
 						</div>
 						<input class="modal-input modal-input--password" type="password" name="password"
 							placeholder="* * * * * * * * * * * * * * * * * * * *">
-						<div class="login-error-message">
+						<div style="margin-top: 10px" class="login-error-message" x-show="loginError">
 							Не удалось войти в аккаунт, введенные e-mail или пароль неверны
 						</div>
 						<button class="myBtn action-btn auth-modal__login-btn">ВХОД</button>
@@ -123,7 +124,7 @@
 				</div>
 				<div x-show="section === 'restore'" x-cloak>
 					<div class="modal-title modal-title--restore"> Восстановить пароль </div>
-					<form class="modal-auth-form modal-auth-form--restore">
+					<form class="modal-auth-form modal-auth-form--restore" @submit.prevent="reset">
 						<div class="modal-email-label"> Адрес электронной почты: </div> <input class="modal-input modal-input--restore"
 							type="email" name="email" placeholder="* * * * * * * * * * * * * * * * * * * *"> <button
 							class="myBtn action-btn auth-modal__reg-btn auth-modal__restore-btn js-restore-button">ВОССТАНОВИТЬ</button>
@@ -148,8 +149,17 @@
 		document.addEventListener('alpine:init', () => {
 			Alpine.data('authModal', () => ({
 				section: 'login',
+				loginError: false,
 
-				login() {},
+				login() {
+					let data = new FormData(this.$event.target)
+					this.loginError = false
+					
+					axios
+						.post('/login', data)
+						.then(response => window.location.href = route('my.media'))
+						.catch(error => this.loginError = true)
+				},
 				register() {
 					let data = new FormData(this.$event.target)
 					axios
@@ -157,7 +167,13 @@
 						.then(response => this.section = 'register-next')
 						.catch(error => console.log(error))
 				},
-				reset() {},
+				reset() {
+					let data = new FormData(this.$event.target)
+					axios
+						.post(route('password.reset'), data)
+						.then(response => this.section = 'restore-next')
+						.catch(error => console.log(error))
+				},
 			}))
 		})
 	</script>

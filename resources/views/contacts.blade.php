@@ -51,7 +51,7 @@
                                 Bank
                             </div>
                             <div class="bank-data-text">
-                                AS&nbsp;&nbsp;Citadele banka
+                                AS&nbsp;Citadele banka
                             </div>
 
                             <div class="bank-data-title">

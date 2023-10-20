@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PresentationViewController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SubscriptionController;
@@ -34,7 +35,10 @@ Route::view('copyright', 'copyright')->name('copyright');
 Route::view('commercial', 'commercial')->name('commercial');
 Route::view('privacy', 'privacy')->name('privacy');
 Route::view('contacts', 'contacts')->name('contacts');
+
 Route::get('/verify-email/{user:email}', [UserController::class, 'verifyEmail'])->name('verify-email');
+Route::post('/password-reset', PasswordResetController::class)->name('password.reset');
+
 Route::middleware('guest')
     ->post('register', [RegisterUserController::class, 'store'])
     ->name('register');
