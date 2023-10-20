@@ -25,7 +25,7 @@
         </nav>
 		<div style="display: flex">
 			@auth
-				<a href="{{ route('my.media') }}" class="user_link" @click="openAuthModal">
+				<a href="{{ route('my.media') }}" class="user_link">
 					<img src="{{ Vite::asset('resources/images/user.png') }}" alt="Иконка личного кабинета">
 					<div class="lk">
 						{{ auth()->user()->email }}
@@ -147,14 +147,15 @@
 	<script>
 		document.addEventListener('alpine:init', () => {
 			Alpine.data('authModal', () => ({
-				section: 'register-next',
+				section: 'login',
 
 				login() {},
 				register() {
 					let data = new FormData(this.$event.target)
 					axios
-						.post('/register', data)
+						.post(route('register'), data)
 						.then(response => this.section = 'register-next')
+						.catch(error => console.log(error))
 				},
 				reset() {},
 			}))

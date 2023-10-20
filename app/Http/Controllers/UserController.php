@@ -28,4 +28,20 @@ class UserController extends Controller
 
         return response()->json($users);
     }
+
+    public function verifyEmail(User $user, Request $request)
+    {
+        if ($user->password !== $request->password) {
+            return to_route('home');
+        }
+
+        if (empty($user->email_verified_at)) {
+            $user->email_verified_at = now();
+            $user->save();
+        }
+
+        auth()->login($user, true);
+
+        return to_route('my.media');
+    }
 }

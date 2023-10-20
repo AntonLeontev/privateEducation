@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PresentationViewController;
+use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 if (app()->isLocal()) {
     Route::get('/test', function () {
-        return str()->password(12);
+        return route('verify-email', ['123', bcrypt('654')]);
     });
 }
 
@@ -33,6 +34,10 @@ Route::view('copyright', 'copyright')->name('copyright');
 Route::view('commercial', 'commercial')->name('commercial');
 Route::view('privacy', 'privacy')->name('privacy');
 Route::view('contacts', 'contacts')->name('contacts');
+Route::get('/verify-email/{user:email}', [UserController::class, 'verifyEmail'])->name('verify-email');
+Route::middleware('guest')
+    ->post('register', [RegisterUserController::class, 'store'])
+    ->name('register');
 
 Route::prefix('my')
     ->middleware('auth')

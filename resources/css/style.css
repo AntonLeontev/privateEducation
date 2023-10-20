@@ -1285,13 +1285,13 @@ ol li {
   overflow: hidden;
 }
 
-.auth-modal--continue .continue {
+.auth-modal .continue {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
-.auth-modal--continue .continue-reg {
+.auth-modal .continue-reg {
   border-radius: 23px;
   background-color: rgba(239, 255, 255, 0.5);
   color: #000;
@@ -1846,7 +1846,7 @@ ol li {
     top: 0.3vw;
     left: 25.9vw;
   }
-  .auth-modal--continue .continue-reg {
+  .auth-modal .continue-reg {
     text-align: center;
     font-size: 2.66vw;
     margin: 15vw 3.5vw 3vw;
@@ -2356,7 +2356,7 @@ ol li {
   }
 }
 @media (max-width: 500px) {
-  .auth-modal--continue .continue-reg {
+  .auth-modal .continue-reg {
     font-size: 3.73vw;
     margin: 26vw 5.9vw 3vw;
     border-radius: 12.2px;

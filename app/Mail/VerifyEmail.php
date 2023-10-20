@@ -27,7 +27,7 @@ class VerifyEmail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Регистрация на сайте частного образования',
+            subject: __('emails/verify-email.subject'),
         );
     }
 
