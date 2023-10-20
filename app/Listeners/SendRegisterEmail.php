@@ -6,7 +6,7 @@ use App\Events\UserRegistered;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
 
-class SendEmailVerificationNotification
+class SendRegisterEmail
 {
     public function handle(UserRegistered $event)
     {
