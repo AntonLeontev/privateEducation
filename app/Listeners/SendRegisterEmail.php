@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Auth\Listeners;
+namespace App\Listeners;
 
 use App\Events\UserRegistered;
 use App\Mail\VerifyEmail;
