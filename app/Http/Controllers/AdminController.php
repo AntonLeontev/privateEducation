@@ -137,10 +137,22 @@ class AdminController extends Controller
         }
 
         $users = User::query()
+            ->select(['id', 'email', 'last_subscription_time', 'created_at'])
             ->with(['lastSubscriptions', 'presentationViews', 'views'])
             ->withCount(['activeSubscriptions', 'subscriptions'])
             ->withSum('activeSubscriptions', 'price')
             ->withSum('subscriptions', 'price')
+            ->when($request->users_category === 'active', function ($query) {
+                $query->whereHas('activeSubscriptions')
+                    ->orderByDesc('last_subscription_time');
+            })
+            ->when($request->users_category === 'customers', function ($query) {
+                $query->whereHas('subscriptions')
+                    ->orderByDesc('last_subscription_time');
+            })
+            ->when($request->users_category === 'all', function ($query) {
+                $query->orderByDesc('id');
+            })
             ->cursorPaginate();
 
         $users = UserResource::collection($users);

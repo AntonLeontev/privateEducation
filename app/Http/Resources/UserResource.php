@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             [
                 'subscriptions_sum_price' => $this->subscriptions_sum_price / 100,
                 'active_subscriptions_sum_price' => $this->active_subscriptions_sum_price / 100,
-                'last_subscription_created_at' => $this->lastSubscriptions->first()?->created_at->format('d.m.Y'),
+                'last_subscription_time' => $this->last_subscription_time?->format('d.m.Y'),
                 'first_subscription_created_at' => $this->lastSubscriptions->last()?->created_at->format('d.m.Y'),
                 'created_at' => $this->created_at->format('d.m.Y'),
                 'fragments' => $this->fragments(),

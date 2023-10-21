@@ -25,7 +25,7 @@
 			<div class="text-center min-w-[50px]" title="Сумма покупок за все время" x-text="user.subscriptions_sum_price + ' €'" x-show="userStat">
 			</div>
 		</div>
-		<div class="w-[15%] text-center" title="Дата последней покупки" x-show="!userStat" x-text="user.last_subscription_created_at"></div>
+		<div class="w-[15%] text-center" title="Дата последней покупки" x-show="!userStat" x-text="user.last_subscription_time"></div>
 		<div class="w-[15%] text-center" title="Дата первой покупки" x-show="userStat" x-text="user.first_subscription_created_at"></div>
 		<div class="w-[15%] text-center" title="Дата регистрации" x-text="user.created_at"></div>
 		<div class="w-[5%] text-center cursor-pointer flex justify-center">

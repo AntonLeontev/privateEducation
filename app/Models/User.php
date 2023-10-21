@@ -30,6 +30,7 @@ class User extends Authenticatable
         'building',
         'apartment',
         'zip',
+        'last_subscription_time',
     ];
 
     /**
@@ -49,6 +50,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'last_subscription_time' => 'datetime',
         'password' => 'hashed',
     ];
 
