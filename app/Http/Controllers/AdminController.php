@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\Fragment;
 use App\Models\Subscription;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -34,7 +36,7 @@ class AdminController extends Controller
         return view('admin.custom', compact('fragments'));
     }
 
-    public function users()
+    public function users123()
     {
         $usersLastSubs = DB::table('subscriptions')
             ->select(
@@ -124,9 +126,27 @@ class AdminController extends Controller
         ]);
     }
 
-    public function dashboard()
+    public function users(Request $request)
     {
-        return view('admin.dashboard');
+        if (! $request->ajax()) {
+            $total = User::count();
+            $buyers = User::whereHas('subscriptions')->count();
+            $active = User::whereHas('activeSubscriptions')->count();
+
+            return view('admin.users', compact('total', 'buyers', 'active'));
+        }
+
+        $users = User::query()
+            ->with(['lastSubscriptions', 'presentationViews', 'views'])
+            ->withCount(['activeSubscriptions', 'subscriptions'])
+            ->withSum('activeSubscriptions', 'price')
+            ->withSum('subscriptions', 'price')
+            ->cursorPaginate();
+
+        $users = UserResource::collection($users);
+
+        return $users;
+
     }
 
     public function files()

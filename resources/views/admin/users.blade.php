@@ -55,36 +55,63 @@
 			</div>
 		</div>
         <div class="relative w-full max-h-screen text-md">
-			{{-- 64px --}}
-			{{-- <div class="flex py-1 gap-x-1">
-				<div class="w-[5%] flex items-center justify-center text-center">№</div>
-				<div class="w-[18%] flex items-center justify-center text-center shrink-0 grow-0">email</div>
-				<div class="w-[10%] flex items-center justify-center text-center">Страна</div>
-				<div class="w-[10%] flex items-center justify-center text-center">Город</div>
-				<div class="w-[10%] flex items-center justify-center text-center">Количество активных подписок</div>
-				<div class="w-[10%] flex items-center justify-center text-center">Всего куплено подписок</div>
-				<div class="w-[10%] flex items-center justify-center text-center">Сумма покупок</div>
-				<div class="w-[15%] flex items-center justify-center text-center">Дата последней покупки</div>
-				<div class="w-[15%] flex items-center justify-center text-center">Дата регистрации</div>
-				<div class="w-[5%] flex items-center justify-center text-center"></div>
-			</div> --}}
             <div class="text-lg text-black max-h-[calc(100vh-91px-58px)] overflow-y-auto">
-				@foreach ($users as $user)
-					<x-user :user="$user" />
-				@endforeach
+				<template x-for="user in users">
+					<x-user />
+				</template>
             </div>
         </div>
 
-		<div class="px-8 py-4 mb-2">
-			{{ $paginator->links() }}
-		</div>
+		<nav role="navigation" aria-label="Pagination Navigation" class="flex justify-start pt-3 pb-4 gap-x-5">
+			<span class="text-gray-400" x-show="paginatorMeta?.prev_cursor === null">
+				{!! __('pagination.previous') !!}
+			</span>
+			<button class="" x-show="paginatorMeta?.prev_cursor" @click="prevPage">
+				{!! __('pagination.previous') !!}
+			</button>
+
+			<div x-text="page"></div>
+
+			<button class="" x-show="paginatorMeta?.next_cursor" @click="nextPage">
+				{!! __('pagination.next') !!}
+			</button>
+			<span class="text-gray-400" x-show="paginatorMeta?.next_cursor === null">
+				{!! __('pagination.next') !!}
+			</span>
+		</nav>
     </div>
 
 	<script>
 		document.addEventListener('alpine:init', () => {
 			Alpine.data('users', () => ({
 				showFilter: false,
+				users: [],
+				paginatorMeta: null,
+				cursor: null,
+				page: 1,
 
+				init() {
+					this.$watch('cursor', value => this.update());
+					this.update()
+				},
+				update() {
+					axios
+						.get(route('admin.users'), {params: {cursor: this.cursor}})
+						.then(response => {
+							this.users = response.data.data
+							this.paginatorMeta = response.data.meta
+						})
+				},
+				prevPage() {
+					this.cursor = this.paginatorMeta.prev_cursor
+					this.paginatorMeta.prev_cursor = null
+					this.page--
+				},
+				nextPage() {
+					this.cursor = this.paginatorMeta.next_cursor
+					this.paginatorMeta.next_cursor = null
+					this.page++
+				},
 			}))
 		})
 	</script>
