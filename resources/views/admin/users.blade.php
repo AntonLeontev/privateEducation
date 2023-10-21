@@ -19,7 +19,7 @@
 				</div>
 			</div>
 			<button class="px-3 py-2 ml-10 transition border rounded-xl hover:bg-primary hover:border-primary" @click="showFilter = !showFilter">Фильтр</button>
-			<span class="ml-3 loading loading-spinner loading-sm" x-show="loadingFilter" x-cloak></span>
+			<span class="ml-3 loading loading-dots loading-sm" x-show="loadingFilter" x-cloak></span>
 			<div class="ml-auto burger">
 				<div class="">Меню</div>
 				<span></span>
@@ -82,7 +82,7 @@
 			<span class="text-gray-400" x-show="paginatorMeta?.next_cursor === null">
 				{!! __('pagination.next') !!}
 			</span>
-			<span class="ml-1 loading loading-spinner loading-sm" x-show="loadingPagination" x-cloak></span>
+			<span class="ml-1 loading loading-dots loading-sm" x-show="loadingPagination" x-cloak></span>
 		</nav>
     </div>
 </div>
@@ -100,8 +100,11 @@
 
 				init() {
 					this.$watch('cursor', value => this.update());
-					this.$watch('loadingFilter', value => this.$dispatch('loading-filter', value));
-					this.$watch('usersCategory', value => {this.cursor = null;this.update()});
+					this.$watch('usersCategory', value => {
+						this.cursor = null
+						this.loadingFilter = true
+						this.update()
+					});
 					this.update()
 				},
 				update() {

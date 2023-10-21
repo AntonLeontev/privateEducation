@@ -31,7 +31,7 @@ class UserResource extends JsonResource
     {
         $fragments = collect();
 
-        foreach ($this->lastSubscriptions as $sub) {
+        foreach ($this->lastSubscriptions->sortByDesc('created_at') as $sub) {
             $key = $sub->subscribable_id.'.'.$sub->subscribable_type;
 
             if (! $fragments->has($sub->subscribable_id.'.presentation')) {
