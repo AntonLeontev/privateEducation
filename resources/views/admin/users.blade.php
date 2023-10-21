@@ -118,7 +118,11 @@
 						.then(response => {
 							this.users = response.data.data
 							this.paginatorMeta = response.data.meta
-
+						})
+						.catch(error => {
+							console.log(error);
+						})
+						.finally(() => {
 							this.loadingPagination = false
 							this.loadingFilter = false
 						})
