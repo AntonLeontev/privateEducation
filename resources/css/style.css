@@ -2270,9 +2270,11 @@ ol li {
   .auth-modal .modal-email-label {
     font-size: 3.5vw;
     padding-left: 1vw;
+	width: 100%;
   }
   .auth-modal .modal-password-wrapper {
     margin-top: 1.3vw;
+	width: 100%;
   }
   .auth-modal .modal-password-forgotten {
     font-size: 2.18vw;
@@ -2280,6 +2282,7 @@ ol li {
   .auth-modal .modal-input {
     font-size: 3.2vw;
     padding: 1.6vw 4vw 1.5vw;
+	width: 100%;
   }
   .auth-modal .modal-input::-moz-placeholder {
     font-size: 2.75vw;
