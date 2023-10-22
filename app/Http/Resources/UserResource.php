@@ -35,6 +35,7 @@ class UserResource extends JsonResource
             $key = $sub->subscribable_id.'.'.$sub->subscribable_type;
 
             if (! $fragments->has($sub->subscribable_id.'.presentation')) {
+                $fragments->put($sub->subscribable_id.'.id', $sub->subscribable_id);
                 $fragments->put($sub->subscribable_id.'.presentation', [
                     'views' => $this->presentationViews
                         ->where('presentation_id', $sub->subscribable_id)
@@ -69,6 +70,6 @@ class UserResource extends JsonResource
             ]);
         }
 
-        return $fragments->undot();
+        return $fragments->undot()->values()->toArray();
     }
 }

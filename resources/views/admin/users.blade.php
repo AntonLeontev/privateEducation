@@ -11,11 +11,14 @@
 			<span class="!mb-0 mr-10 player__title__bg">
 				Пользователи
 			</span>
-			<div class="flex items-center gap-5 border rounded-lg">
+			<div class="flex items-center gap-5 border rounded-xl">
 				<div class="!bg-transparent join">
-					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" name="options" aria-label="С активной сейчас подпиской: {{ $active }}" checked @click="usersCategory = 'active'" />
-					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" name="options" aria-label="Покупателей: {{ $buyers }}" @click="usersCategory = 'customers'" />
-					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" name="options" aria-label="Всего: {{ $total }}" @click="usersCategory = 'all'" />
+					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" aria-label="С активной сейчас подпиской: {{ $active }}" 
+					:checked="usersCategory === 'active'" @click="usersCategory = 'active'" />
+					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" aria-label="Покупателей: {{ $buyers }}"
+					:checked="usersCategory === 'customers'" @click="usersCategory = 'customers'" />
+					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" aria-label="Всего: {{ $total }}"
+					:checked="usersCategory === 'all'" @click="usersCategory = 'all'" />
 				</div>
 			</div>
 			<button class="px-3 py-2 ml-10 transition border rounded-xl hover:bg-primary hover:border-primary" @click="showFilter = !showFilter">Фильтр</button>
@@ -118,6 +121,7 @@
 						.then(response => {
 							this.users = response.data.data
 							this.paginatorMeta = response.data.meta
+							// console.log(response.data.data);
 						})
 						.catch(error => {
 							console.log(error);

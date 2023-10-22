@@ -52,4 +52,14 @@
 			</a>
 		</li>
 	@endif
+
+	@if (Route::has('home'))
+		<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('home')) !bg-[#50657c] @endif">
+			<a class="right-menu__link" href="{{ route('home') }}" target="_blank">
+				<span class="right-menu-link__wrapper">
+					<span class="right-menu-link__text @if (Route::is('homes')) !text-primary @endif">На сайт</span>
+				</span>
+			</a>
+		</li>
+	@endif
 </ul>

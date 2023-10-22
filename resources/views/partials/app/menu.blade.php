@@ -26,20 +26,20 @@
 			</a>
 		</li>
 	@endif
-	@if (Route::has('commercial'))
-		<li class="right-menu__item">
-			<a class="right-menu__link" href="{{ route('commercial') }}">
-				<span class="right-menu-link__wrapper">
-					<span class="right-menu-link__text">{{ __('header.menu.commercial') }}</span>
-				</span>
-			</a>
-		</li>
-	@endif
 	@if (Route::has('copyright'))
 		<li class="right-menu__item">
 			<a class="right-menu__link" href="{{ route('copyright') }}">
 				<span class="right-menu-link__wrapper">
-					<span class="right-menu-link__text">{{ __('header.menu.copyright') }}</span>
+					<span class="right-menu-link__text">{{ __('header.menu.copyright_side') }}</span>
+				</span>
+			</a>
+		</li>
+	@endif
+	@if (Route::has('commercial'))
+		<li class="right-menu__item">
+			<a class="right-menu__link" href="{{ route('commercial') }}">
+				<span class="right-menu-link__wrapper">
+					<span class="right-menu-link__text">{{ __('header.menu.commercial_side') }}</span>
 				</span>
 			</a>
 		</li>
@@ -48,7 +48,7 @@
 		<li class="right-menu__item">
 			<a class="right-menu__link" href="{{ route('privacy') }}">
 				<span class="right-menu-link__wrapper">
-					<span class="right-menu-link__text">{{ __('header.menu.privacy') }}</span>
+					<span class="right-menu-link__text">{{ __('header.menu.privacy_side') }}</span>
 				</span>
 			</a>
 		</li>
