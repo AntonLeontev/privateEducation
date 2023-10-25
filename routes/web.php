@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AudioController;
+use App\Http\Controllers\FragmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PresentationViewController;
@@ -73,6 +74,8 @@ Route::prefix('admin')
         Route::get('presentation-views', [PresentationViewController::class, 'index'])->name('pres');
         Route::get('pres/popular-fragments', [PresentationViewController::class, 'popularFragments'])->name('pres.popular-fragments');
         Route::get('metrics/pres', [PresentationViewController::class, 'metrics'])->name('metrics.pres');
+
+        Route::post('fragments/{fragment}/update', [FragmentController::class, 'update'])->name('fragments.update');
 
         Route::post('fragments/{id}/audio/price', [AudioController::class, 'price'])->name('audio.update.price');
         Route::post('audio/{audio}/update', [AudioController::class, 'update'])->name('audio.update');

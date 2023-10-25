@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('audio', function (Blueprint $table) {
-            $table->boolean('is_active')->default(1);
+        Schema::table('fragments', function (Blueprint $table) {
+            $table->boolean('is_active')->after('title_en')->default(1);
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('audio', function (Blueprint $table) {
+        Schema::table('fragments', function (Blueprint $table) {
             $table->dropColumn('is_active');
         });
     }

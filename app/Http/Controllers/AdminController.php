@@ -104,7 +104,7 @@ class AdminController extends Controller
 
     public function deactivation()
     {
-        $fragments = Fragment::with(['audio', 'video'])->get();
+        $fragments = Fragment::all();
 
         return view('admin.deactivation', compact('fragments'));
     }

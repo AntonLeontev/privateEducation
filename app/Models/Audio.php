@@ -17,7 +17,6 @@ class Audio extends Model
         'title_ru',
         'title_en',
         'price',
-        'is_active',
     ];
 
     protected $with = [

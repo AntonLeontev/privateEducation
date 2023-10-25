@@ -13,6 +13,11 @@ class Fragment extends Model
     protected $fillable = [
         'title_ru',
         'title_en',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
     ];
 
     public function presentation(): HasOne

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AudioUpdateRequest extends FormRequest
+class FragmentUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,9 @@ class AudioUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'is_active' => ['sometimes', 'boolean'],
             'title_ru' => ['sometimes', 'string', 'max:255'],
             'title_en' => ['sometimes', 'string', 'max:255'],
-            'price' => ['sometimes', 'numeric', 'min:0', 'max:42949671'],
         ];
     }
 }

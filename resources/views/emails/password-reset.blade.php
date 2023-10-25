@@ -5,8 +5,10 @@
 	<div>{{ __('emails/password-reset.thanks') }} <span style="font-weight: bold; color: #e9752c">{{ __('emails/password-reset.site') }}</span></div>
 	<br>
 	<br>
-	<div><span style="font-weight: bold">{{ __('emails/password-reset.password') }}</span></div>
-	<div>{{ $password }}</div>
+	<div>
+		<span style="font-weight: bold; margin-right: 2px">{{ __('emails/password-reset.password') }}</span>
+		<span>{{ $password }}</span>
+	</div>
 	<br>
 	<br>
 	<div>{{ __('emails/password-reset.finish') }}</div>
