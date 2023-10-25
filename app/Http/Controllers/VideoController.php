@@ -11,4 +11,9 @@ class VideoController extends Controller
     {
         Video::find($id)->update(['price' => $request->get('price')]);
     }
+
+    public function update(int $id)
+    {
+
+    }
 }

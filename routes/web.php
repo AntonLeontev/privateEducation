@@ -60,6 +60,7 @@ Route::prefix('admin')
         Route::post('users/subscriptions/search', [UserController::class, 'subscriptionsSearch'])->name('users.subscriptions.search');
         Route::get('files', [AdminController::class, 'files'])->name('files');
         Route::get('prices', [AdminController::class, 'prices'])->name('prices');
+        Route::get('deactivation', [AdminController::class, 'deactivation'])->name('deactivation');
 
         Route::get('sales', [SubscriptionController::class, 'sales'])->name('sales');
         Route::get('sales/popular-fragments', [SubscriptionController::class, 'popularFragments'])->name('sales.popular-fragments');
@@ -74,6 +75,8 @@ Route::prefix('admin')
         Route::get('metrics/pres', [PresentationViewController::class, 'metrics'])->name('metrics.pres');
 
         Route::post('fragments/{id}/audio/price', [AudioController::class, 'price'])->name('audio.update.price');
+        Route::post('audio/{audio}/update', [AudioController::class, 'update'])->name('audio.update');
 
         Route::post('fragments/{id}/video/price', [VideoController::class, 'price'])->name('video.update.price');
+        Route::post('fragments/{id}/video/update', [VideoController::class, 'update'])->name('video.update');
     });

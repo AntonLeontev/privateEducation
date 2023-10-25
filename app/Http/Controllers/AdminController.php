@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\Fragment;
-use App\Models\Subscription;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -34,96 +32,6 @@ class AdminController extends Controller
             });
 
         return view('admin.custom', compact('fragments'));
-    }
-
-    public function users123()
-    {
-        $usersLastSubs = DB::table('subscriptions')
-            ->select(
-                'subscriptions.user_id',
-                DB::raw('MAX(subscriptions.created_at) AS last_sub'),
-                DB::raw('MIN(subscriptions.created_at) AS first_sub')
-            )
-            ->groupBy('subscriptions.user_id')
-            ->orderByDesc('last_sub')
-            ->simplePaginate(15)
-            ->withQueryString();
-
-        $lastSubsCollection = collect($usersLastSubs->items());
-
-        $subs = Subscription::query()
-            ->whereIn('user_id', $lastSubsCollection->pluck('user_id')->toArray())
-            ->orderByDesc('created_at')
-            ->get();
-
-        $users = User::query()
-            ->whereIn('id', $lastSubsCollection->pluck('user_id')->toArray())
-            ->with(['views', 'presentationViews', 'activeSubscriptions', 'subscriptions'])
-            ->withCount('subscriptions')
-            ->withSum('subscriptions', 'price')
-            ->get()
-            ->map(function (User $user) use ($lastSubsCollection, $subs) {
-                $user->last_sub = $lastSubsCollection->where('user_id', $user->id)->first()->last_sub;
-                $user->first_sub = $lastSubsCollection->where('user_id', $user->id)->first()->first_sub;
-                $user->subscriptions_sum_price /= 100;
-                $user->last_sub = Carbon::parse($user->last_sub);
-                $user->first_sub = Carbon::parse($user->first_sub);
-
-                $fragments = collect();
-                $userSubs = $subs->where('user_id', $user->id);
-
-                foreach ($userSubs as $sub) {
-                    $key = $sub->subscribable_id.'.'.$sub->subscribable_type;
-
-                    if (! $fragments->has($sub->subscribable_id.'.presentation')) {
-                        $fragments->put($sub->subscribable_id.'.presentation', [
-                            'views' => $user->presentationViews
-                                ->where('presentation_id', $sub->subscribable_id)
-                                ->where('is_reading', false)
-                                ->count(),
-                            'readings' => $user->presentationViews
-                                ->where('presentation_id', $sub->subscribable_id)
-                                ->where('is_reading', true)
-                                ->count(),
-                        ]);
-                    }
-
-                    if ($fragments->has($key)) {
-                        continue;
-                    }
-
-                    $fragments->put($key, [
-                        'created_at' => $sub->created_at,
-                        'ends_at' => $sub->ends_at,
-                        'price' => $userSubs
-                            ->where('subscribable_id', $sub->subscribable_id)
-                            ->where('subscribable_type', $sub->subscribable_type)
-                            ->first()
-                            ->price,
-                        'views' => $user->views
-                            ->where('viewable_id', $sub->subscribable_id)
-                            ->where('viewable_type', $sub->subscribable_type)
-                            ->count(),
-                    ]);
-                }
-
-                $user->fragments = $fragments->undot();
-
-                return $user;
-            })
-            ->sortByDesc('last_sub');
-
-        $total = User::count();
-        $buyers = User::whereHas('subscriptions')->count();
-        $active = User::whereHas('activeSubscriptions')->count();
-
-        return view('admin.users', [
-            'users' => $users,
-            'paginator' => $usersLastSubs,
-            'total' => $total,
-            'buyers' => $buyers,
-            'active' => $active,
-        ]);
     }
 
     public function users(Request $request)
@@ -192,5 +100,12 @@ class AdminController extends Controller
         $rates = ['usd' => 1.12, 'rub' => 107.3];
 
         return view('admin.prices', compact('fragments', 'rates'));
+    }
+
+    public function deactivation()
+    {
+        $fragments = Fragment::with(['audio', 'video'])->get();
+
+        return view('admin.deactivation', compact('fragments'));
     }
 }

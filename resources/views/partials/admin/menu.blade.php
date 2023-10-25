@@ -53,6 +53,16 @@
 		</li>
 	@endif
 
+	@if (Route::has('admin.prices'))
+		<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.deactivation')) !bg-[#50657c] @endif">
+			<a class="right-menu__link" href="{{ route('admin.deactivation') }}">
+				<span class="right-menu-link__wrapper">
+					<span class="right-menu-link__text @if (Route::is('admin.deactivation')) !text-primary @endif">Деактивация фрагментов</span>
+				</span>
+			</a>
+		</li>
+	@endif
+
 	@if (Route::has('home'))
 		<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('home')) !bg-[#50657c] @endif">
 			<a class="right-menu__link" href="{{ route('home') }}" target="_blank">

@@ -121,7 +121,6 @@
 						.then(response => {
 							this.users = response.data.data
 							this.paginatorMeta = response.data.meta
-							// console.log(response.data.data);
 						})
 						.catch(error => {
 							console.log(error);
