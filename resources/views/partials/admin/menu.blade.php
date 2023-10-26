@@ -3,11 +3,11 @@
 		<img src="/img/right-menu-close.png" alt="close-button">
 	</button> --}}
 
-	@if (Route::has('admin.custom'))
-		<li class="transition duration-300 right-menu__item border border-x-0 @if (Route::is('admin.custom')) !bg-[#50657c] @endif">
-			<a class="right-menu__link" href="{{ route('admin.custom') }}">
+	@if (Route::has('admin.fragments'))
+		<li class="transition duration-300 right-menu__item border border-x-0 @if (Route::is('admin.fragments')) !bg-[#50657c] @endif">
+			<a class="right-menu__link" href="{{ route('admin.fragments') }}">
 				<span class="right-menu-link__wrapper">
-					<span class="right-menu-link__text @if (Route::is('admin.custom')) !text-primary @endif">Фрагменты</span>
+					<span class="right-menu-link__text @if (Route::is('admin.fragments')) !text-primary @endif">Фрагменты</span>
 				</span>
 			</a>
 		</li>
@@ -64,12 +64,25 @@
 	@endif
 
 	@if (Route::has('home'))
-		<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('home')) !bg-[#50657c] @endif">
+		<li class="transition duration-300 border border-t-0 right-menu__item border-x-0">
 			<a class="right-menu__link" href="{{ route('home') }}" target="_blank">
 				<span class="right-menu-link__wrapper">
-					<span class="right-menu-link__text @if (Route::is('homes')) !text-primary @endif">На сайт</span>
+					<span class="right-menu-link__text">На сайт</span>
 				</span>
 			</a>
+		</li>
+	@endif
+
+	@if (Route::has('admin.logout'))
+		<li class="transition duration-300 border border-t-0 right-menu__item border-x-0">
+			<form action="{{ route('admin.logout') }}" method="post">
+				@csrf
+				<button class="right-menu__link" href="{{ route('admin.logout') }}">
+					<span class="right-menu-link__wrapper">
+						<span class="right-menu-link__text">Выйти</span>
+					</span>
+				</button>
+			</form>
 		</li>
 	@endif
 </ul>

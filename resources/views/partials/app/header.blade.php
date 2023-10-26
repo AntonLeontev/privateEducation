@@ -104,7 +104,7 @@
 						</div>
 						<input class="modal-input modal-input--password" type="password" name="password"
 							placeholder="* * * * * * * * * * * * * * * * * * * *">
-						<div style="margin-top: 10px" class="login-error-message" x-show="loginError">
+						<div class="login-error-message">
 							Не удалось войти в аккаунт, введенные e-mail или пароль неверны
 						</div>
 						<button class="myBtn action-btn auth-modal__login-btn">ВХОД</button>

@@ -953,7 +953,7 @@ ol li {
 .auth-modal {
   position: absolute;
   /* top: 17.7vh; */
-  top: calc(1.2vw + 32px + 10px);
+  top: calc(1.2vw + 32px + 10px + 0.96vw + 0.26042vw + 2.6vw * 1.15 + 0.78125vw);
   /* left: 29.3vw; */
   left: calc(3% + 23vw + 5vw);
   right: 3%;
@@ -964,6 +964,12 @@ ol li {
   background-color: rgba(220, 246, 210, 0.67);
   box-shadow: 0 1px 3px #757252;
   z-index: 10;
+}
+
+@media(min-width: 1601px) {
+	.auth-modal {
+		top: calc(1.2vw + 32px + 0.96vw + 0.26042vw + 2.6vw * 1.15 + 0.78125vw);
+	}
 }
 
 .auth-modal .modal-header {
@@ -1186,7 +1192,9 @@ ol li {
 .login-error-message {
   color: #E5854A;
   font-weight: 600;
+  height: calc(1.645vw * 1.15);
   font-size: 1.645vw;
+  margin-top: 1.4vw;
 }
 
 .login-error-message.show {
@@ -1217,7 +1225,7 @@ ol li {
 }
 
 .auth-modal .auth-modal__login-btn {
-  margin-top: 1.8vw;
+  margin-top: 1.4vw;
   padding: 1.2vw 5.7vw 1.3vw;
 }
 

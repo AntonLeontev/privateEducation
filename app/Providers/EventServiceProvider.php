@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\SubscriptionCreated;
+use App\Events\TwoFactorRequested;
 use App\Events\UserRegistered;
+use App\Listeners\SendAuthorizationCode;
 use App\Listeners\SendRegisterEmail;
 use App\Listeners\SyncCreatingDateInUsersTable;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +24,10 @@ class EventServiceProvider extends ServiceProvider
 
         SubscriptionCreated::class => [
             SyncCreatingDateInUsersTable::class,
+        ],
+
+        TwoFactorRequested::class => [
+            SendAuthorizationCode::class,
         ],
     ];
 

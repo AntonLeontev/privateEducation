@@ -3590,6 +3590,7 @@ header {
     background: #fff;
 
     border-radius: 0.2em;
+	flex-shrink: 0;
 }
 
 @media only screen and (max-width: 1600px) {
@@ -4475,15 +4476,22 @@ header {
         font-size: 17px;
     }
 
-    .burger span:before,
+    .burger span:before {
+        width: 22px;
+        height: 2.9px;
+		top: -8px;
+    }
+
     .burger span:after {
         width: 22px;
         height: 2.9px;
+		top: 8px;
     }
 
     .burger span {
         height: 2.9px;
         width: 22px;
+		flex-shrink: 0;
     }
 }
 @media (min-width: 1600px) and (max-width: 2000px) {

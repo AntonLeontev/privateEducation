@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    public function custom()
+    public function fragments()
     {
         $fragments = DB::table('subscriptions')
             ->select([
@@ -31,7 +31,7 @@ class AdminController extends Controller
                 ];
             });
 
-        return view('admin.custom', compact('fragments'));
+        return view('admin.fragments', compact('fragments'));
     }
 
     public function users(Request $request)
