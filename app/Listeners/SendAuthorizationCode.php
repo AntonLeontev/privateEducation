@@ -14,6 +14,6 @@ class SendAuthorizationCode
             return;
         }
 
-        Mail::to(config('auth.two_factor_email'))->send(new TwoFactorCodeEmail($event->code));
+        Mail::to(config('auth.two_factor_email'))->send(new TwoFactorCodeEmail($event->admin));
     }
 }

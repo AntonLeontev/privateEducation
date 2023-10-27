@@ -29,7 +29,7 @@ class AdminLoginController extends Controller
             'two_factor_code_is_used' => false,
         ]);
 
-        event(new TwoFactorRequested($admin->two_factor_code));
+        event(new TwoFactorRequested($admin));
 
         //TODO delete returning code
         return response()->json(['code' => $admin->two_factor_code]);

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Admin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,7 +17,7 @@ class TwoFactorCodeEmail extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $code)
+    public function __construct(public Admin $admin)
     {
     }
 
