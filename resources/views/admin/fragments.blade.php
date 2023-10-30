@@ -53,13 +53,13 @@
                 </div>
 				<div class="grid grid-cols-6 col-span-6 justify-items-center">
 					@foreach (range(1, 6) as $number)
-						<x-fragment :$number />
+						<x-admin.fragment :$number />
 					@endforeach
 				</div>
             </div>
             <div class="grid grid-cols-11 grid-rows-1 justify-items-center">
 				@foreach (range(7, 17) as $number)
-					<x-fragment :$number isPurple />
+					<x-admin.fragment :$number isPurple />
 				@endforeach
             </div>
         </div>

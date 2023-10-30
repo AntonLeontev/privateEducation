@@ -2176,7 +2176,7 @@ img {
 }
 
 .player__frame {
-    border-radius: 10px;
+    border-radius: 2.24vw;
 
     position: relative;
 
@@ -2185,7 +2185,7 @@ img {
     height: 100%;
 
 	overflow-y: auto;
-	
+	background: url("http://127.0.0.1:5173/resources/images/frame.png") 50% 50% no-repeat;
     -webkit-background-size: 100% 100%;
 
     -moz-background-size: 100% 100%;

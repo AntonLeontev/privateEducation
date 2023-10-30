@@ -20,7 +20,7 @@
     </style>
 
     @routes
-    @vite(['resources/css/tailwind.css', 'resources/css/admin.css', 'resources/js/app.js', 'resources/js/metrics.js'])
+    @vite(['resources/css/tailwind.css', 'resources/css/admin.css', 'resources/js/app.js', 'resources/js/metrics.js', 'resources/scss/app.scss'])
 </head>
 
 <body class="page page--index">

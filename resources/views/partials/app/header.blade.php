@@ -1,6 +1,6 @@
 <header class="header" x-data="header">
     <div class="container container-header">
-        <nav class="header__nav">
+        <nav @if (Route::is('home')) style="margin-left: 6.09vw" @endif class="header__nav">
             <ul class="header__list__nav">
                 @if (Route::has('home'))
                     <li class="header__nav__list-item"><a href="{{ route('home') }}">{{ __('header.menu.home') }}</a>

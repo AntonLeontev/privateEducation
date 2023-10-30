@@ -20,7 +20,7 @@
     </style>
 
 	@routes
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/scss/app.scss'])
 
 	<!-- The Perfect Scrollbar JS files --><script src="/js/perfectScroll/perfect-scrollbar.js"></script>
 </head>
