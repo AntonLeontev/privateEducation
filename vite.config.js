@@ -8,6 +8,7 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/css/admin.css",
                 "resources/css/tailwind.css",
+                "resources/scss/app.scss",
                 "resources/js/app.js",
                 "resources/js/metrics.js",
             ],
