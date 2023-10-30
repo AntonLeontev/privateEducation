@@ -62,22 +62,22 @@
 
 			<div class="fixed top-0 bottom-0 left-0 right-0" x-show="modal" x-cloak>
 			</div>
+
 			<div 
-				class="absolute !right-0 !top-[8.7vh] !w-auto auth-modal font-[Arimo] flex flex-col" 
+				class="auth-modal modal-content modal-content_audio" 
 				style="display: none"
 				x-show="modal && page === 'deactivation'"
 				x-cloak
 			>
-				<div class="modal-header">
+				<div class="modal-content__header">
 					<span class="modal-header-text" x-text="selectedFragment?.is_active ? `Деактивация фрагмента №${selectedFragment?.id}` : `Активация фрагмента №${selectedFragment?.id}`"></span>
-					<button class="myBtn modal-close-btn" @click="modal = false"></button>
+					<button class="myBtn modal-content__close-btn" @click="modal = false"></button>
 				</div>
-				<div class="flex items-center justify-center h-full modal-body">
+				<div class="justify-center modal-content__body">
 					<div>
-						<div class="modal-title" x-text="selectedFragment?.is_active ? `Уверены что хотите деактивировать фрагмент&nbsp№${selectedFragment?.id}?` : `Уверены что хотите активировать фрагмент&nbsp№${selectedFragment?.id}?`"></div>
+						<div class="modal-content__title" x-text="selectedFragment?.is_active ? `Уверены что хотите деактивировать фрагмент&nbsp№${selectedFragment?.id}?` : `Уверены что хотите активировать фрагмент&nbsp№${selectedFragment?.id}?`"></div>
 						<div class="modal-reg-buttons-wrapper gap-x-2">
-							<button class="myBtn action-btn auth-modal__login-btn" @click="changeActivation">ДА</button>
-							<button class="myBtn action-btn auth-modal__login-btn" @click="modal = false">ОТМЕНА</button>
+							<button class="myBtn action-btn auth-modal__login-btn" @click="changeActivation">ПОДТВЕРДИТЬ</button>
 						</div>
 					</div>
 				</div>

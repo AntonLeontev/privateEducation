@@ -10,7 +10,7 @@
 			x-show="show"
 		>
 			<div class="modal-header">
-				<span class="modal-header-text">Вход в админ панель</span>
+				<span class="modal-header-text">Вход в административную панель</span>
 				<button class="myBtn modal-close-btn" @click="show = false"></button>
 	
 			</div>
