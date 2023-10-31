@@ -154,7 +154,7 @@
 					></div>
 					<div class="grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows] duration-500" :class="userStat && 'grid-rows-[1fr]'">
 						<div class="overflow-hidden rounded-xl bg-white/20">
-							<div class="p-2">
+							<div class="">
 	
 								<template x-for="fragment in user?.fragments">
 									<template x-if="!fragment.audio?.is_active && !fragment.video?.is_active">
