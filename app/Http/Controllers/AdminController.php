@@ -53,20 +53,17 @@ class AdminController extends Controller
             ->when($request->filled('email'), function ($query) {
                 $query->where('email', 'LIKE', '%'.request('email').'%');
             })
-            ->when($request->filled('media'), function ($query) {
-                $media = 'App\\Models\\App\\Models\\'.ucfirst(request('media'));
-
+            ->when($request->filled('media') || $request->filled('fragment'), function ($query) {
                 $subscriptions = DB::table('subscriptions')
-                    ->select('user_id', 'subscribable_type')
-                    ->where('subscribable_type', $media)
-                    ->whereColumn('subscriptions.user_id', 'users.id');
+                    ->select('user_id', 'subscribable_type', 'subscribable_id')
+                    ->when(request()->filled('media'), function ($query) {
+                        $media = 'App\\Models\\App\\Models\\'.ucfirst(request('media'));
 
-                $query->whereExists($subscriptions);
-            })
-            ->when($request->filled('fragment'), function ($query) {
-                $subscriptions = DB::table('subscriptions')
-                    ->select('user_id', 'subscribable_id')
-                    ->where('subscribable_id', request('fragment'))
+                        $query->where('subscribable_type', $media);
+                    })
+                    ->when(request()->filled('fragment'), function ($query) {
+                        $query->where('subscribable_id', request('fragment'));
+                    })
                     ->whereColumn('subscriptions.user_id', 'users.id');
 
                 $query->whereExists($subscriptions);

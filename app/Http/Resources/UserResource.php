@@ -31,21 +31,15 @@ class UserResource extends JsonResource
     {
         $fragments = collect();
 
-        foreach ($this->lastSubscriptions->sortByDesc('created_at') as $sub) {
+        foreach ($this->lastSubscriptions as $sub) {
             $key = $sub->subscribable_id.'.'.$sub->subscribable_type;
 
-            if (! $fragments->has($sub->subscribable_id.'.presentation')) {
-                $fragments->put($sub->subscribable_id.'.id', $sub->subscribable_id);
-                $fragments->put($sub->subscribable_id.'.presentation', [
-                    'views' => $this->presentationViews
-                        ->where('presentation_id', $sub->subscribable_id)
-                        ->where('is_reading', false)
-                        ->count(),
-                    'readings' => $this->presentationViews
-                        ->where('presentation_id', $sub->subscribable_id)
-                        ->where('is_reading', true)
-                        ->count(),
-                ]);
+            if (request()->filled('media') && request('media') !== $sub->subscribable_type->value()) {
+                continue;
+            }
+
+            if (request()->filled('fragment') && request('fragment') != $sub->subscribable_id) {
+                continue;
             }
 
             if ($fragments->has($key)) {
@@ -68,6 +62,20 @@ class UserResource extends JsonResource
                     ->count(),
                 'is_active' => $sub->ends_at > now(),
             ]);
+
+            if (! $fragments->has($sub->subscribable_id.'.presentation')) {
+                $fragments->put($sub->subscribable_id.'.id', $sub->subscribable_id);
+                $fragments->put($sub->subscribable_id.'.presentation', [
+                    'views' => $this->presentationViews
+                        ->where('presentation_id', $sub->subscribable_id)
+                        ->where('is_reading', false)
+                        ->count(),
+                    'readings' => $this->presentationViews
+                        ->where('presentation_id', $sub->subscribable_id)
+                        ->where('is_reading', true)
+                        ->count(),
+                ]);
+            }
         }
 
         return $fragments->undot()->values()->toArray();
