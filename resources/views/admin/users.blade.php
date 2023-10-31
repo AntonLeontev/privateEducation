@@ -35,25 +35,40 @@
 			<div class="flex overflow-hidden gap-x-3 player__title">
 				
 				<form class="flex p-1 mb-5 gap-x-2">
-					<input type="text" placeholder="Поиск по email" class="w-full max-w-[250px] input input-bordered input-primary text-black rounded-xl" />
+					<input 
+						type="text" 
+						placeholder="email" 
+						class="w-full max-w-[250px] input input-bordered input-primary text-black rounded-xl"
+						x-ref="email"
+						x-model="filter.email"
+						@input.debounce.400ms="update"
+					/>
 					<select class="w-full max-w-[200px] select select-primary bg-primary rounded-xl">
-						<option selected>Страна</option>
+						<option value="" selected>Страна</option>
 						<option>Россия</option>
 						<option>США</option>
 					</select>
 					<select class="w-full max-w-[200px] select select-primary bg-primary rounded-xl">
-						<option selected>Город</option>
+						<option value="" selected>Регион</option>
 						<option>Москва</option>
 						<option>Волгоград</option>
 					</select>
-					<select class="w-full max-w-[400px] select select-primary bg-primary rounded-xl">
-						<option selected>Тип медиа</option>
-						<option>Любой</option>
-						<option>Аудио</option>
-						<option>Видео</option>
+					<select 
+						class="w-full max-w-[400px] select select-primary bg-primary rounded-xl"
+						x-ref="media"
+						x-model="filter.media"
+						@change="update"
+					>
+						<option value="" selected>Тип медиа</option>
+						<option value="audio">Аудио</option>
+						<option value="video">Видео</option>
 					</select>
-					<select class="w-full max-w-[400px] select select-primary bg-primary rounded-xl">
-						<option selected>Номер фрагмента</option>
+					<select 
+						class="w-full max-w-[400px] select select-primary bg-primary rounded-xl"
+						x-model="filter.fragment"
+						@change="update"
+					>
+						<option value="" selected>Номер фрагмента</option>
 						@foreach (range(1, 17) as $number)
 							<option value="{{ $number }}">Фрагмент {{ $number }}</option>
 						@endforeach
@@ -95,6 +110,11 @@
 			Alpine.data('users', () => ({
 				showFilter: false,
 				users: [],
+				filter: {
+					email: null,
+					media: null,
+					fragment: null,
+				},
 				usersCategory: 'active', //active, customers, all
 				paginatorMeta: null,
 				cursor: null,
@@ -114,8 +134,11 @@
 					axios
 						.get(route('admin.users'), {
 							params: {
-								cursor: this.cursor ?? '',
+								cursor: this.cursor,
 								users_category: this.usersCategory,
+								email: this.filter.email,
+								media: this.filter.media,
+								fragment: this.filter.fragment,
 							}
 						})
 						.then(response => {
@@ -124,6 +147,7 @@
 						})
 						.catch(error => {
 							console.log(error);
+							alert('Ошибка. Перезагрузите страницу');
 						})
 						.finally(() => {
 							this.loadingPagination = false

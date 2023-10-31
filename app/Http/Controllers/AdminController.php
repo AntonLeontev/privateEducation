@@ -50,6 +50,27 @@ class AdminController extends Controller
             ->withCount(['activeSubscriptions', 'subscriptions'])
             ->withSum('activeSubscriptions', 'price')
             ->withSum('subscriptions', 'price')
+            ->when($request->filled('email'), function ($query) {
+                $query->where('email', 'LIKE', '%'.request('email').'%');
+            })
+            ->when($request->filled('media'), function ($query) {
+                $media = 'App\\Models\\App\\Models\\'.ucfirst(request('media'));
+
+                $subscriptions = DB::table('subscriptions')
+                    ->select('user_id', 'subscribable_type')
+                    ->where('subscribable_type', $media)
+                    ->whereColumn('subscriptions.user_id', 'users.id');
+
+                $query->whereExists($subscriptions);
+            })
+            ->when($request->filled('fragment'), function ($query) {
+                $subscriptions = DB::table('subscriptions')
+                    ->select('user_id', 'subscribable_id')
+                    ->where('subscribable_id', request('fragment'))
+                    ->whereColumn('subscriptions.user_id', 'users.id');
+
+                $query->whereExists($subscriptions);
+            })
             ->when($request->users_category === 'active', function ($query) {
                 $query->whereHas('activeSubscriptions')
                     ->orderByDesc('last_subscription_time');
