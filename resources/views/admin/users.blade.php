@@ -131,6 +131,8 @@
 					this.update()
 				},
 				update() {
+					this.loadingFilter = true
+					
 					axios
 						.get(route('admin.users'), {
 							params: {
