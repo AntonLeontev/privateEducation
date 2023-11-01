@@ -154,6 +154,7 @@
 						.finally(() => {
 							this.loadingPagination = false
 							this.loadingFilter = false
+							this.$dispatch('users-update')
 						})
 				},
 				prevPage() {

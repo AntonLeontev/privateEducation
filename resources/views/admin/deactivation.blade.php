@@ -28,7 +28,7 @@
         <div 
 			class="relative content hidden-md" 
 		>
-            <div class="flex gap-x-[2.34vw] shrink-0 mb-5">
+            <div class="flex gap-x-[2.34vw] shrink-0 mb-3">
                 <div class="player basis-[27vw] !ml-0">
                     <div class="flex flex-col h-full gap-y-[0.26042vw]">
                         <div class="flex justify-between player__title align-center">

@@ -1,7 +1,14 @@
-<div class="mb-2" x-data="{
+<div 
+	class="mb-2"
+	@users-update.window="reset" 
+	x-data="{
 	show: false,
 	userStat: false,
 	
+	reset() {
+		this.show = false
+		this.userStat = false
+	},
 	hasHistory(user) {
 		let result = user.fragments.find(fragment => {
 			let activeAudio, activeVideo
