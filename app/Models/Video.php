@@ -22,7 +22,6 @@ class Video extends Model
     ];
 
     protected $with = [
-        'currency',
     ];
 
     protected $casts = [

@@ -20,7 +20,6 @@ class Audio extends Model
     ];
 
     protected $with = [
-        'currency',
     ];
 
     protected $casts = [
