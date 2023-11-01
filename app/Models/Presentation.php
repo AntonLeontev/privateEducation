@@ -14,8 +14,6 @@ class Presentation extends Model
 
     protected $fillable = [
         'id',
-        'title_ru',
-        'title_en',
         'text_ru',
         'text_en',
         'fragment_id',

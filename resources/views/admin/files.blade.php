@@ -4,17 +4,25 @@
 
 @section('content')
     <div class="w-full" x-data="container">
-        <header class="relative z-10 my-4 header">
-            <div class="container container-header">
-
-                <div class="">Управление файлами</div>
-
-                <div class="burger">
-                    <div class="">Меню</div>
-                    <span></span>
-                </div>
-            </div>
-        </header>
+		<header class="my-3 header">
+			<div class="container container-header">
+				<span class="!mb-0 mr-10 player__title__bg">
+					Контент
+				</span>
+				<div class="flex items-center gap-5 border rounded-xl">
+					<div class="!bg-transparent join">
+						<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" aria-label="Русский" 
+						:checked="lang === 'ru'" @click="lang = 'ru'" />
+						<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" aria-label="English"
+						:checked="lang === 'en'" @click="lang = 'en'" />
+					</div>
+				</div>
+				<div class="ml-auto burger">
+					<div class="">Меню</div>
+					<span></span>
+				</div>
+			</div>
+		</header>
 
         <div class="container">
             <div 
@@ -22,7 +30,7 @@
 				x-data="fragments" 
                 @click-fragment="fragmentClick"
 			>
-                <div class="grid grid-cols-11 grid-rows-1 mb-5">
+                <div class="grid grid-cols-11 grid-rows-1 mb-2">
                     <div class="col-span-5 player">
                         <div class="h-full">
                             <div class="flex justify-between player__title align-center">
@@ -111,6 +119,7 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('container', () => ({
                 modal: false,
+				lang: 'ru',
             }))
         })
     </script>

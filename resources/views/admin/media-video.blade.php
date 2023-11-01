@@ -1,12 +1,10 @@
-@vite('resources/css/app.css')
-
 <div class="">
     <div class="">
         <div class="mb-1 text-lg">Стерео звук</div>
 
         <div class="flex justify-around gap-x-10">
             <div class="">
-                <div class="">Для десктопа</div>
+                <div class="">Для ноутбука</div>
 
 
                 <div class="flex flex-col items-center cursor-pointer" x-data="{}" @click="$refs.file.click()">
@@ -67,7 +65,7 @@
 
         <div class="flex justify-around gap-x-10">
             <div class="">
-                <div class="">Для десктопа</div>
+                <div class="">Для ноутбука</div>
 
 
                 <div class="flex flex-col items-center cursor-pointer" x-data="{}"

@@ -14,11 +14,10 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
-            $table->string('title_ru');
-            $table->string('title_en');
             $table->unsignedInteger('price');
+            $table->unsignedInteger('price_rub');
+            $table->unsignedInteger('price_usd');
 
-            $table->foreignId('currency_id')->constrained('currencies')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignIdFor(Fragment::class)
                 ->constrained()
                 ->cascadeOnDelete()

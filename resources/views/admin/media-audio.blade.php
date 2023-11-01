@@ -1,5 +1,3 @@
-@vite('resources/css/app.css')
-
 <div class="">
 	<div class="pt-10">
 		<div class="text-lg mb-7"></div>

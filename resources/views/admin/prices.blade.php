@@ -29,7 +29,7 @@
 			<div class="text-lg text-black max-h-[calc(100vh-82px)] overflow-y-auto pb-2 flex flex-col gap-1">
 				<template x-for="fragment in fragments">
 					<div class="flex items-center justify-between px-2 py-3 transition gap-x-3 rounded-xl bg-white/20">
-						<div class="w-28" x-text="fragment.title_ru"></div>
+						<div class="w-28" x-text="'Фрагмент ' + fragment.id"></div>
 						<div class="flex items-center gap-2 min-w-[450px]" x-data="{
 							euro: fragment.audio.price,
 							savedShow: false,

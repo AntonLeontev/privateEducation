@@ -14,9 +14,9 @@ class Audio extends Model
 
     protected $fillable = [
         'id',
-        'title_ru',
-        'title_en',
         'price',
+        'price_rub',
+        'price_usd',
     ];
 
     protected $with = [
@@ -24,7 +24,8 @@ class Audio extends Model
 
     protected $casts = [
         'price' => PriceCast::class,
-        'is_active' => 'boolean',
+        'price_rub' => PriceCast::class,
+        'price_usd' => PriceCast::class,
     ];
 
     public function media(): MorphMany

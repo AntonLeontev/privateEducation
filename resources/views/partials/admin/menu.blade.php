@@ -37,7 +37,7 @@
 		<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.files')) !bg-[#50657c] @endif">
 			<a class="right-menu__link" href="{{ route('admin.files') }}">
 				<span class="right-menu-link__wrapper">
-					<span class="right-menu-link__text @if (Route::is('admin.files')) !text-primary @endif">Управление файлами</span>
+					<span class="right-menu-link__text @if (Route::is('admin.files')) !text-primary @endif">Контент</span>
 				</span>
 			</a>
 		</li>
@@ -57,7 +57,7 @@
 		<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.deactivation')) !bg-[#50657c] @endif">
 			<a class="right-menu__link" href="{{ route('admin.deactivation') }}">
 				<span class="right-menu-link__wrapper">
-					<span class="right-menu-link__text @if (Route::is('admin.deactivation')) !text-primary @endif">Деактивация фрагментов</span>
+					<span class="right-menu-link__text @if (Route::is('admin.deactivation')) !text-primary @endif">Просмотр и деактивация фрагментов</span>
 				</span>
 			</a>
 		</li>

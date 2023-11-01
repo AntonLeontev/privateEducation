@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Video;
+use Database\Factories\VideoFactory;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class VideoSeeder extends Seeder
@@ -12,14 +13,17 @@ class VideoSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (range(1, 17) as $val) {
-            Video::create([
-                'title_ru' => 'Аудио '.$val,
-                'title_en' => 'Audio '.$val,
-                'price' => fake()->numberBetween(4, 10),
-                'currency_id' => 3,
-                'fragment_id' => $val,
-            ]);
+        $sequense = [];
+
+        foreach (range(1, 17) as $value) {
+            $sequense[] = ['fragment_id' => $value];
+        }
+
+        foreach (range(1, 17) as $value) {
+            VideoFactory::new()
+                ->count(17)
+                ->state(new Sequence(...$sequense))
+                ->create();
         }
     }
 }

@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Audio;
+use Database\Factories\AudioFactory;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class AudioSeeder extends Seeder
@@ -12,14 +13,17 @@ class AudioSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (range(1, 17) as $val) {
-            Audio::create([
-                'title_ru' => 'Аудио '.$val,
-                'title_en' => 'Audio '.$val,
-                'price' => fake()->numberBetween(5, 10),
-                'currency_id' => 3,
-                'fragment_id' => $val,
-            ]);
+        $sequense = [];
+
+        foreach (range(1, 17) as $value) {
+            $sequense[] = ['fragment_id' => $value];
+        }
+
+        foreach (range(1, 17) as $value) {
+            AudioFactory::new()
+                ->count(17)
+                ->state(new Sequence(...$sequense))
+                ->create();
         }
     }
 }

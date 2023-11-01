@@ -14,8 +14,6 @@ class PresentationSeeder extends Seeder
     {
         foreach (range(1, 17) as $val) {
             Presentation::create([
-                'title_ru' => 'Презентация '.$val,
-                'title_en' => 'Presentation '.$val,
                 'text_ru' => 'Текст в презентации '.$val,
                 'text_en' => 'Text in presentation '.$val,
                 'fragment_id' => $val,
