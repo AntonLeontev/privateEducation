@@ -1,63 +1,17 @@
-<header class="header" x-data="header">
-    <div class="container container-header">
-        <nav @if (Route::is('home')) style="margin-left:3.9vw" @endif class="header__nav">
-            <ul class="header__list__nav">
-                @if (Route::has('home'))
-                    <li class="header__nav__list-item"><a href="{{ route('home') }}">{{ __('header.menu.home') }}</a>
-                    </li>
-                @endif
-                @if (Route::has('about'))
-                    <li class="header__nav__list-item"><a href="{{ route('about') }}">{{ __('header.menu.about') }}</a></li>
-                @endif
-                @if (Route::has('copyright'))
-                    <li class="header__nav__list-item"><a href="{{ route('copyright') }}">{{ __('header.menu.copyright') }}</a></li>
-                @endif
-                @if (Route::has('commercial'))
-                    <li class="header__nav__list-item"><a href="{{ route('commercial') }}">{{ __('header.menu.commercial') }}</a></li>
-                @endif
-                @if (Route::has('privacy'))
-                    <li class="header__nav__list-item"><a href="{{ route('privacy') }}">{{ __('header.menu.privacy') }}</a></li>
-                @endif
-                @if (Route::has('contacts'))
-                    <li class="header__nav__list-item"><a href="{{ route('contacts') }}">{{ __('header.menu.contacts') }}</a></li>
-                @endif
-            </ul>
-        </nav>
-		<div style="display: flex">
-			@auth
-				<a href="{{ route('my.media') }}" class="user_link">
-					<img src="{{ Vite::asset('resources/images/user.png') }}" alt="Иконка личного кабинета">
-					<div class="lk">
-						{{ auth()->user()->email }}
-					</div>
-				</a>
-			@else
-				<a href="{{ route('my.media') }}" class="user_link">
-					<img src="{{ Vite::asset('resources/images/user.png') }}" alt="Личного кабинета">
-					<div class="lk" style="white-space: nowrap">
-						{{ __('header.personal') }}
-					</div>
-				</a>
-			@endauth
-			<div class="burger menu" @click="menuModal=true">
-				<div class="menu-text">{{ __('header.menuBtn') }}</div>
-				<span></span>
-			</div>
-		</div>
-    </div>
-	@if (Route::is('my.*'))
-		@include('partials.app.personal-menu')
-	@endif
+@extends('layouts.app.app')
 
-	<div class="auth-modal--cover" x-show="authModal" x-cloak >
+@section('title', 'Личный кабинет')
+
+@section('content')
+	<div class="auth-modal--cover" x-show="modal">
 		<div 
-			class="auth-modal" 
-			@modal-auth.window="section = 'login'"
+			class="auth-modal auth-modal--continue js-restore-success-modal" 
 			x-data="authModal"
+			x-show="modal"
 		>
 			<div class="modal-header">
 				<span class="modal-header-text">Личный кабинет</span>
-				<button class="myBtn modal-close-btn" @click="authModal = false"></button>
+				<button class="myBtn modal-close-btn" @click="modal = false"></button>
 	
 			</div>
 			<div class="modal-body">
@@ -104,7 +58,7 @@
 						</div>
 						<input class="modal-input modal-input--password" type="password" name="password"
 							placeholder="* * * * * * * * * * * * * * * * * * * *">
-						<div class="login-error-message">
+						<div class="login-error-message" x-show='loginError' x-cloak>
 							Не удалось войти в аккаунт, введенные e-mail или пароль неверны
 						</div>
 						<button class="myBtn action-btn auth-modal__login-btn">ВХОД</button>
@@ -119,22 +73,23 @@
 						<input id="modal-email" class="modal-input" type="email" name="email"
 							placeholder="* * * * * * * * * * * * * * * * * * * *">
 			
-						<button class="myBtn action-btn auth-modal__reg-btn">ПРОДОЛЖИТЬ</button>
+						<button class="myBtn action-btn auth-modal__reg-btn" style="margin-top: 2.8vw;">ПРОДОЛЖИТЬ</button>
 					</form>
 				</div>
 				<div x-show="section === 'restore'" x-cloak>
 					<div class="modal-title modal-title--restore"> Восстановить пароль </div>
 					<form class="modal-auth-form modal-auth-form--restore" @submit.prevent="reset">
 						<div class="modal-email-label"> Адрес электронной почты: </div> <input class="modal-input modal-input--restore"
-							type="email" name="email" placeholder="* * * * * * * * * * * * * * * * * * * *"> <button
+							type="email" name="email" placeholder="* * * * * * * * * * * * * * * * * * * *"> 
+							<button
 							class="myBtn action-btn auth-modal__reg-btn auth-modal__restore-btn js-restore-button">ВОССТАНОВИТЬ</button>
 					</form>
 				</div>
 				<div class="continue" x-show="section === 'restore-next'">
-					<div class="continue-reg"> 
+					<div class="continue-reg" style="margin-top: 6vw;"> 
 						На вашу почту отправлен новый пароль для входа на сервис 
 					</div>
-					<button class="myBtn action-btn auth-modal__reg-btn" @click="section = 'login'">АВТОРИЗАЦИЯ</button>
+					<button class="myBtn action-btn auth-modal__reg-btn" style="display: block; margin: 0 auto;" @click="section = 'login'">АВТОРИЗАЦИЯ</button>
 				</div>
 				<div class="continue" x-show="section === 'register-next'">
 					<div class="continue-reg"> 
@@ -150,6 +105,7 @@
 			Alpine.data('authModal', () => ({
 				section: 'login',
 				loginError: false,
+				modal: true,
 
 				login() {
 					let data = new FormData(this.$event.target)
@@ -162,6 +118,7 @@
 				},
 				register() {
 					let data = new FormData(this.$event.target)
+					if (data.get('email') === '') return 
 					axios
 						.post(route('register'), data)
 						.then(response => this.section = 'register-next')
@@ -169,6 +126,7 @@
 				},
 				reset() {
 					let data = new FormData(this.$event.target)
+					if (data.get('email') === '') return 
 					axios
 						.post(route('password.reset'), data)
 						.then(response => this.section = 'restore-next')
@@ -178,21 +136,4 @@
 		})
 	</script>
 
-	@include('partials.app.menu')
-</header>
-
-<script>
-	document.addEventListener('alpine:init', () => {
-		Alpine.data('header', () => ({
-			authModal: false,
-			menuModal: false,
-
-			openAuthModal() {
-				this.authModal = true
-				this.$dispatch('modal-auth')
-			},
-		}))
-	})
-</script>
-
-
+@endsection
