@@ -89,24 +89,7 @@ class AdminController extends Controller
 
     public function files()
     {
-        $fragments = DB::table('subscriptions')
-            ->select([
-                'subscribable_id',
-                DB::raw('SUM(price) AS sum_price'),
-            ])
-            ->where('created_at', '>=', now()->startOfDay())
-            ->where('created_at', '<=', now()->endOfDay())
-            ->groupBy('subscribable_id')
-            ->orderByDesc('sum_price')
-            ->take(4)
-            ->get()
-            ->map(function ($el, int $key) {
-                return [
-                    'id' => $el->subscribable_id,
-                    'sum' => $el->sum_price / 100,
-                    'position' => $key + 1,
-                ];
-            });
+        $fragments = Fragment::with(['audio', 'video'])->get();
 
         return view('admin.files', compact('fragments'));
     }

@@ -12,9 +12,9 @@
 				<div class="flex items-center gap-5 border rounded-xl">
 					<div class="!bg-transparent join">
 						<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" aria-label="Русский" 
-						:checked="lang === 'ru'" @click="lang = 'ru'" />
+						:checked="lang === 'ru'" @click="lang = 'ru'; $dispatch('change-lang')" />
 						<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" aria-label="English"
-						:checked="lang === 'en'" @click="lang = 'en'" />
+						:checked="lang === 'en'" @click="lang = 'en'; $dispatch('change-lang')" />
 					</div>
 				</div>
 				<div class="ml-auto burger">
@@ -34,11 +34,76 @@
                     <div class="col-span-5 player">
                         <div class="h-full">
                             <div class="flex justify-between player__title align-center">
-                                <div class="flex items-center gap-x-2 bg-[rgba(146,140,141,0.7)] pr-2">
+                                <div class="flex items-center gap-x-2 bg-[rgba(146,140,141,0.7)] pr-2 w-full">
                                     <img class="h-[45px]" :src="image" alt="">
-                                    <span class="text-[150%]" x-text="title">
-                                        Title
-                                    </span>
+                                    <div class="flex w-full flex-col justify-center h-[calc(1.3vw*1.15*2+0.96vw)] text-[1.2vw] leading-none pl-1 overflow-hidden">
+										<div x-text="title">Видео</div>
+										<div x-text="lang === 'ru' ? 'Фрагмент №' + selectedFragment?.id : 'Fragment №' + selectedFragment?.id">Фрагмент №1</div>
+										<div 
+											class="relative w-full" 
+											x-data="runningLine" 
+											x-ref="lineWrap"
+											@click-fragment.window="reset"
+											@change-lang.window="reset"
+										>
+											<div class="relative right-0 transition ease-linear whitespace-nowrap w-max" x-text="lang === 'ru' ? selectedFragment?.title_ru : selectedFragment?.title_en" x-ref="line"></div>
+										</div>
+										<script>
+											document.addEventListener('alpine:init', () => {
+												Alpine.data('runningLine', () => ({
+													shift: null,
+													timerId: null,
+
+													init() {
+														this.$nextTick(() => {
+															this.shift = this.$refs.lineWrap.offsetWidth - this.$refs.line.offsetWidth
+															this.timerId = setTimeout(() => this.moveLeft(), 500)
+														})
+													},
+													reset() {
+														clearTimeout(this.timerId);
+
+														this.$refs.line.classList.remove('transition')
+														this.$refs.line.classList.remove('ease-linear')
+														this.$refs.line.style.transitionDuration = '0s'
+														this.$refs.line.style.transform = `translateX(0px)`
+														
+														
+														this.$nextTick(() => {
+															this.$refs.line.classList.add('transition')
+															this.$refs.line.classList.add('ease-linear')
+															this.shift = this.$refs.lineWrap.offsetWidth - this.$refs.line.offsetWidth
+															this.moveLeft()
+														})
+														
+													},
+													moveLeft() {
+														this.timerId = setTimeout(() => {
+															if (this.shift >= 0) return
+
+															this.$refs.line.style.transitionDuration = Math.abs(this.shift) * 10 + 'ms'
+															this.$refs.line.style.transform = `translateX(${this.shift}px)`
+
+															this.$refs.line.ontransitionend = () => {
+																this.moveRight()
+															}
+														}, 500)
+													},
+													moveRight() {
+														this.timerId = setTimeout(() => {
+															if (this.shift >= 0) return
+
+															this.$refs.line.style.transform = `translateX(1px)`
+
+															this.$refs.line.ontransitionend = () => {
+																this.moveLeft()
+															}
+														}, 500)
+													},
+												}))
+											})
+										</script>
+									</div>
                                 </div>
                             </div>
 
@@ -56,13 +121,13 @@
                     </div>
                     <div class="grid grid-cols-6 col-span-6 justify-items-center">
                         @foreach (range(1, 6) as $number)
-                            <x-admin.fragment :$number />
+                            <x-admin.fragment-files :$number />
                         @endforeach
                     </div>
                 </div>
                 <div class="grid grid-cols-11 grid-rows-1 justify-items-center">
                     @foreach (range(7, 17) as $number)
-                        <x-admin.fragment :$number isPurple />
+                        <x-admin.fragment-files :$number isPurple />
                     @endforeach
                 </div>
             </div>
@@ -70,12 +135,14 @@
             <script>
                 document.addEventListener('alpine:init', () => {
                     Alpine.data('fragments', () => ({
-                        stats: 'files', // ['files']
+						fragments: @json($fragments),
                         page: 'audio', // ['sum', 'audio', 'video', 'pres']
-                        fragment: '1', // ['all', 'fragment id']
-                        title: 'Аудио файлы фрагмента №1',
-						popularFragments: false,
+                        selectedFragment: null,
+                        title: 'Загрузка аудио файлов',
 
+						init() {
+							this.selectedFragment = this.fragments[0]
+						},
                         image() {
                             if (this.page === 'presentation') {
                                 return "{{ Vite::asset('resources/images/icon4.png') }}";
@@ -93,19 +160,19 @@
                         fragmentClick() {
 							if (this.$event.detail.icon === 'sum') return;
 							
-                            this.fragment = this.$event.detail.fragment ?? this.fragment;
                             this.page = this.$event.detail.icon ?? this.page;
-                            this.title = this.makeTitle() + ` фрагмента №${this.fragment}`;
+                            this.title = this.makeTitle();
 
                         },
 						makeTitle() {
-							if (this.stats === 'files') {
-								if (this.page === 'sum') return this.title
-								if (this.page === 'audio') return 'Аудио файлы'
-								if (this.page === 'video') return 'Видео файлы'
-								if (this.page === 'presentation') return 'Файлы презентаций'
+							if (this.lang === 'ru') {
+								if (this.page === 'audio') return 'Загрузка аудио файлов'
+								if (this.page === 'video') return 'Загрузка видео файлов'
+								if (this.page === 'presentation') return 'Загрузка файлов презентаций'
 							} else {
-								return '';
+								if (this.page === 'audio') return 'Upload audio files'
+								if (this.page === 'video') return 'Upload video files'
+								if (this.page === 'presentation') return 'Upload presentation files'
 							}
 						},
 					}))

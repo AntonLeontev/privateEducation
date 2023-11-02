@@ -55,7 +55,7 @@ class FragmentSeeder extends Seeder
                 'title_en' => 'In the post-Soviet space, society is mentally mutated, i.e. the process of evolution of consciousness and self-consciousness is at an animal level.',
             ],
             [
-                'title_ru' => 'И что произошло в 1917 году?  А то, что главный большевик и коммунист Ленин, после насильственного большевистко-комкннистического переворота в России экспортировал коммунизм в Ригу.',
+                'title_ru' => 'И что произошло в 1917 году?  А то, что главный большевик и коммунист Ленин, после насильственного большевистко-комуннистического переворота в России экспортировал коммунизм в Ригу.',
                 'title_en' => '',
             ],
             [
