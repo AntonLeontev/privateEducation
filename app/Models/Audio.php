@@ -20,6 +20,7 @@ class Audio extends Model
     ];
 
     protected $with = [
+        'media',
     ];
 
     protected $casts = [
@@ -36,11 +37,6 @@ class Audio extends Model
     public function fragment(): BelongsTo
     {
         return $this->belongsTo(Fragment::class);
-    }
-
-    public function currency(): BelongsTo
-    {
-        return $this->belongsTo(Currency::class);
     }
 
     public function subscriptions(): MorphMany

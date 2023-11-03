@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Casts\MediableCast;
+use App\Support\Enums\MediaDevice;
 use App\Support\Enums\MediaLang;
 use App\Support\Enums\MediaSound;
-use App\Support\Enums\MediaType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -15,17 +16,19 @@ class Media extends Model
 
     protected $fillable = [
         'path',
-        'type',
         'sound',
+        'device',
         'lang',
+        'playtime',
         'mediable_id',
         'mediable_type',
     ];
 
     protected $casts = [
-        'type' => MediaType::class,
         'sound' => MediaSound::class,
+        'device' => MediaDevice::class,
         'lang' => MediaLang::class,
+        'mediable_type' => MediableCast::class,
     ];
 
     public function mediable(): MorphTo

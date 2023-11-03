@@ -31,7 +31,6 @@ class DbRefresh extends Command
 
         Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
         Artisan::call('db:seed', ['--class' => 'UserSeeder']);
-        Artisan::call('db:seed', ['--class' => 'CurrencySeeder']);
 
         Artisan::call('db:seed', ['--class' => 'FragmentSeeder']);
         Artisan::call('db:seed', ['--class' => 'AudioSeeder']);
@@ -43,8 +42,6 @@ class DbRefresh extends Command
         Artisan::call('db:seed', ['--class' => 'PresentationViewSeeder']);
 
         UserFactory::new()->count(3)->create();
-
-        Artisan::call('db:seed', ['--class' => 'SeoSeeder']);
 
         $this->info('ok');
     }

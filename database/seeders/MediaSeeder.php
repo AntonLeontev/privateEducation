@@ -18,53 +18,29 @@ class MediaSeeder extends Seeder
         foreach (range(1, 17) as $val) {
             Media::create([
                 'path' => str()->random(8).'.mov',
-                'type' => 'video',
-                'sound' => 'mono',
-                'lang' => 'ru',
-                'mediable_id' => $val,
-                'mediable_type' => Presentation::class,
-            ]);
-            Media::create([
-                'path' => str()->random(8).'.mov',
-                'type' => 'video',
-                'sound' => 'stereo',
+                'device' => fake()->randomElement(['mobile', 'tablet', 'notebook']),
+                'sound' => fake()->randomElement(['mono', 'stereo']),
                 'lang' => 'ru',
                 'mediable_id' => $val,
                 'mediable_type' => Presentation::class,
             ]);
 
             Media::create([
-                'path' => str()->random(8).'.mp3',
-                'type' => 'audio',
-                'sound' => 'mono',
+                'path' => str()->random(8).'.mov',
+                'device' => fake()->randomElement(['mobile', 'tablet', 'notebook']),
+                'sound' => fake()->randomElement(['mono', 'stereo']),
                 'lang' => 'ru',
                 'mediable_id' => $val,
-                'mediable_type' => Audio::class,
-            ]);
-            Media::create([
-                'path' => str()->random(8).'.mp3',
-                'type' => 'audio',
-                'sound' => 'stereo',
-                'lang' => 'ru',
-                'mediable_id' => $val,
-                'mediable_type' => Audio::class,
+                'mediable_type' => Video::class,
             ]);
 
             Media::create([
                 'path' => str()->random(8).'.mov',
-                'type' => 'video',
-                'sound' => 'mono',
+                'device' => fake()->randomElement(['mobile', 'tablet', 'notebook']),
+                'sound' => fake()->randomElement(['mono', 'stereo']),
                 'lang' => 'ru',
                 'mediable_id' => $val,
-                'mediable_type' => Video::class,
-            ]);
-            Media::create([
-                'path' => str()->random(8).'.mov',
-                'type' => 'video',
-                'sound' => 'stereo',
-                'lang' => 'ru',
-                'mediable_id' => $val,
-                'mediable_type' => Video::class,
+                'mediable_type' => Audio::class,
             ]);
         }
     }

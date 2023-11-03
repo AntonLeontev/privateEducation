@@ -107,15 +107,7 @@
                                 </div>
                             </div>
 
-							<div x-show="page === 'video'">
-								@include('admin.media-video')
-							</div>
-							<div x-show="page === 'audio'">
-								@include('admin.media-audio')
-							</div>
-							<div x-show="page === 'presentation'">
-								@include('admin.media-video')
-							</div>
+							@include('admin.media-video')
 
                         </div>
                     </div>
@@ -136,9 +128,11 @@
                 document.addEventListener('alpine:init', () => {
                     Alpine.data('fragments', () => ({
 						fragments: @json($fragments),
-                        page: 'audio', // ['sum', 'audio', 'video', 'pres']
+                        page: 'audio', // ['audio', 'video', 'pres']
                         selectedFragment: null,
                         title: 'Загрузка аудио файлов',
+						progressbar: false,
+						progress: 0,
 
 						init() {
 							this.selectedFragment = this.fragments[0]
@@ -162,7 +156,6 @@
 							
                             this.page = this.$event.detail.icon ?? this.page;
                             this.title = this.makeTitle();
-
                         },
 						makeTitle() {
 							if (this.lang === 'ru') {

@@ -19,6 +19,10 @@ class Presentation extends Model
         'fragment_id',
     ];
 
+    protected $with = [
+        'media',
+    ];
+
     public function media(): MorphMany
     {
         return $this->morphMany(Media::class, 'mediable');

@@ -89,7 +89,7 @@ class AdminController extends Controller
 
     public function files()
     {
-        $fragments = Fragment::with(['audio', 'video'])->get();
+        $fragments = Fragment::with(['audio', 'video', 'presentation'])->get();
 
         return view('admin.files', compact('fragments'));
     }

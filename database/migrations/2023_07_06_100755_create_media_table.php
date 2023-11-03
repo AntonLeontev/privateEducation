@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('media', function (Blueprint $table) {
             $table->id();
             $table->string('path');
-            $table->string('type');
             $table->string('sound');
             $table->string('lang');
+            $table->string('device');
+            $table->string('playtime')->nullable();
             $table->unsignedBigInteger('mediable_id');
             $table->string('mediable_type');
             $table->timestamps();

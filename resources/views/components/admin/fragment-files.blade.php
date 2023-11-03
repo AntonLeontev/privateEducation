@@ -66,10 +66,8 @@
 			number: {{ $number }},
 			
 			activate(icon) {
-				if (icon === 'sum') {
-					return
-				}
-				
+				if (icon === 'sum') return
+
 				let fragment = this.fragments.find(el => el.id === this.number)
 
 				this.selectedFragment = fragment
