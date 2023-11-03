@@ -7,6 +7,7 @@ use App\Http\Controllers\FragmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\PresentationViewController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SubscriptionController;
@@ -101,6 +102,9 @@ Route::prefix('admin')
 
                 Route::post('fragments/{id}/video/price', [VideoController::class, 'price'])->name('video.update.price');
                 Route::post('fragments/{id}/video/update', [VideoController::class, 'update'])->name('video.update');
+
+                Route::post('presentations/{presentation}/update', [PresentationController::class, 'update'])
+                    ->name('presentations.update');
 
                 Route::post('media/create', [MediaController::class, 'store'])->name('media.store');
             });

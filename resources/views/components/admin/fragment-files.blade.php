@@ -20,7 +20,7 @@
     <ul class="relative">
         <li class="">
 			<button type="button" data-type="total"
-				@click="activate('sum')"
+				@click="activate('text')"
 			>
 				<img src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
 			</button>
@@ -66,11 +66,14 @@
 			number: {{ $number }},
 			
 			activate(icon) {
-				if (icon === 'sum') return
-
 				let fragment = this.fragments.find(el => el.id === this.number)
-
 				this.selectedFragment = fragment
+
+				if (icon === 'text') {
+					this.modalText = true;
+					return
+				}
+				
 				this.page = icon
 				this.$dispatch('click-fragment')
 			},

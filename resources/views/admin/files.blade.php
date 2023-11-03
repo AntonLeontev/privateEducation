@@ -122,6 +122,32 @@
                         <x-admin.fragment-files :$number isPurple />
                     @endforeach
                 </div>
+
+				<div class="fixed top-0 bottom-0 left-0 right-0" x-show="modalText"></div>
+				<div 
+					class="auth-modal modal-content modal-content_audio" 
+					x-show="modalText"
+					@keydown.esc.window="modalText = false"
+					x-cloak
+				>
+					<div class="modal-content__header">
+						<span class="modal-header-text" x-text="`Текст презентации фрагмента №${selectedFragment?.id}`"></span>
+						<button class="myBtn modal-content__close-btn" @click="modalText = false"></button>
+					</div>
+					<div class="justify-center modal-content__body">
+						<div class="w-full h-full pb-5">
+							<form class="flex flex-col h-full active:outline-none gap-y-2" @submit.prevent="updatePresentationText">
+								<textarea 
+									class="h-full p-1 text-black resize-none rounded-xl" 
+									:name="lang === 'ru' ? 'text_ru' : 'text_en'" 
+									:value="lang === 'ru' ? selectedFragment.presentation.text_ru : selectedFragment.presentation.text_en"
+								></textarea>
+								<button class="myBtn action-btn auth-modal__login-btn">СОХРАНИТЬ</button>
+							</form>
+						</div>
+					</div>
+				</div>
+
             </div>
 
             <script>
@@ -133,6 +159,7 @@
                         title: 'Загрузка аудио файлов',
 						progressbar: false,
 						progress: 0,
+						modalText: true,
 
 						init() {
 							this.selectedFragment = this.fragments[0]
@@ -144,7 +171,7 @@
                             if (this.page === 'audio') {
                                 return "{{ Vite::asset('resources/images/icon2.png') }}";
                             }
-                            if (this.page === 'sum') {
+                            if (this.page === 'text') {
                                 return "{{ Vite::asset('resources/images/icon1.png') }}";
                             }
                             if (this.page === 'video') {
@@ -152,9 +179,8 @@
                             }
                         },
                         fragmentClick() {
-							if (this.$event.detail.icon === 'sum') return;
+							if (this.$event.detail === 'text') return;
 							
-                            this.page = this.$event.detail.icon ?? this.page;
                             this.title = this.makeTitle();
                         },
 						makeTitle() {
@@ -168,6 +194,21 @@
 								if (this.page === 'presentation') return 'Upload presentation files'
 							}
 						},
+						updatePresentationText() {
+							axios
+								.postForm(
+									route('admin.presentations.update', this.selectedFragment.id),
+									this.$event.target
+								)
+								.then(response => {
+									this.selectedFragment.presentation = response.data
+								})
+								.catch(error => alert('Ошибка сохранения'))
+								.finally(() => {
+									this.modalText = false
+								})
+								
+						},
 					}))
                 })
             </script>
@@ -178,7 +219,6 @@
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('container', () => ({
-                modal: false,
 				lang: 'ru',
             }))
         })

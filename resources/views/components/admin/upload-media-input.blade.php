@@ -82,6 +82,8 @@
 				return media != null
 			},
 			findMedia() {
+				if (this.page === 'text') return
+				
 				return this.selectedFragment[this.page].media.find(el => {
 					if (el.lang !== this.lang) return false
 					if (el.sound !== this.sound) return false
