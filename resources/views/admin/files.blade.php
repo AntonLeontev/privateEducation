@@ -125,7 +125,7 @@
 
 				<div class="fixed top-0 bottom-0 left-0 right-0" x-show="modalText"></div>
 				<div 
-					class="auth-modal modal-content modal-content_audio" 
+					class="z-50 auth-modal modal-content modal-content_audio" 
 					x-show="modalText"
 					@keydown.esc.window="modalText = false"
 					x-cloak
@@ -159,7 +159,7 @@
                         title: 'Загрузка аудио файлов',
 						progressbar: false,
 						progress: 0,
-						modalText: true,
+						modalText: false,
 
 						init() {
 							this.selectedFragment = this.fragments[0]
