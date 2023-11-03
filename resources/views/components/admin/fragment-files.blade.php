@@ -22,7 +22,7 @@
 			<button type="button" data-type="total"
 				@click="activate('text')"
 			>
-				<img src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
+				<img src="{{ Vite::asset('resources/images/icon7.png') }}" alt="">
 			</button>
         </li>
         <li>
