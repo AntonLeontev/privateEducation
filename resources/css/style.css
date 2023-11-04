@@ -297,7 +297,20 @@ ol li {
   margin-bottom: 2.2vw;
 }
 
+.content-block:hover .ps__thumb-y {
+	opacity: 1 !important;
+}
+
+.ps__rail-y {
+	position: absolute;
+	right: 0;
+}
+
 .ps__thumb-y {
+	position: absolute;
+	right: 0;
+	border-radius: 6px;
+	opacity: 0;
   width: 1.3vw;
   background-color: rgba(255, 255, 255, 0.3) !important;
 }

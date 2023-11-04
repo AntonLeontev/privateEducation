@@ -20,6 +20,7 @@ class Media extends Model
         'device',
         'lang',
         'playtime',
+        'format',
         'mediable_id',
         'mediable_type',
     ];

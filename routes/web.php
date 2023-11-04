@@ -40,6 +40,14 @@ Route::view('commercial', 'commercial')->name('commercial');
 Route::view('privacy', 'privacy')->name('privacy');
 Route::view('contacts', 'contacts')->name('contacts');
 
+Route::get('media/{type}/{fragmentId}/{lang}/{sound}/{device}', [MediaController::class, 'show'])
+    ->whereIn('type', ['audio', 'presentation', 'video'])
+    ->whereIn('fragmentId', range(1, 17))
+    ->whereIn('lang', ['en', 'ru'])
+    ->whereIn('sound', ['mono', 'stereo'])
+    ->whereIn('device', ['mobile', 'tablet', 'notebook'])
+    ->name('media.show');
+
 Route::get('/verify-email/{user:email}', [UserController::class, 'verifyEmail'])->name('verify-email');
 Route::post('/password-reset', PasswordResetController::class)->name('password.reset');
 

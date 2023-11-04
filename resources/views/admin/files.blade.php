@@ -128,7 +128,7 @@
 					class="z-50 auth-modal modal-content modal-content_audio" 
 					x-show="modalText"
 					@keydown.esc.window="modalText = false"
-					x-cloak
+					style="display: none"
 				>
 					<div class="modal-content__header">
 						<span class="modal-header-text" x-text="`Текст презентации фрагмента №${selectedFragment?.id}`"></span>

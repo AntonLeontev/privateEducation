@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('lang');
             $table->string('device');
             $table->string('playtime')->nullable();
+            $table->string('format')->nullable();
             $table->unsignedBigInteger('mediable_id');
             $table->string('mediable_type');
             $table->timestamps();

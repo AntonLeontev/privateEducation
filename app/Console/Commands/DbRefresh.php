@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Database\Factories\UserFactory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 
 class DbRefresh extends Command
 {
@@ -36,12 +37,14 @@ class DbRefresh extends Command
         Artisan::call('db:seed', ['--class' => 'AudioSeeder']);
         Artisan::call('db:seed', ['--class' => 'VideoSeeder']);
         Artisan::call('db:seed', ['--class' => 'PresentationSeeder']);
-        Artisan::call('db:seed', ['--class' => 'MediaSeeder']);
+        // Artisan::call('db:seed', ['--class' => 'MediaSeeder']);
         Artisan::call('db:seed', ['--class' => 'SubscriptionSeeder']);
         Artisan::call('db:seed', ['--class' => 'ViewsSeeder']);
         Artisan::call('db:seed', ['--class' => 'PresentationViewSeeder']);
 
         UserFactory::new()->count(3)->create();
+
+        Storage::disk('local')->deleteDirectory('media');
 
         $this->info('ok');
     }

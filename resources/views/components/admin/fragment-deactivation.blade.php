@@ -7,7 +7,7 @@
 	class="item" 
 	x-data="fragment{{ $number }}" 
 	:class="{
-		'is-active': plaingFragment?.id == number
+		'is-active': playingFragment?.id == number
 	}"
 >
     <div class="item__title @if ($isPurple) item__title--purple @endif">
@@ -21,7 +21,7 @@
         <li class="py-2">
 			<button type="button" data-type="total"
 				:class="{
-					'is-active': page === `deactivation` && plaingFragment?.id == number,
+					'is-active': page === `deactivation` && playingFragment?.id == number,
 				}"
 				@click="activate('deactivation')"
 			>
@@ -44,7 +44,7 @@
         <li>
             <button type="button" data-type="music"
 				:class="{
-					'is-active': page === `audio` && plaingFragment?.id == number,
+					'is-active': page === `audio` && playingFragment?.id == number,
 				}"
 				@click="activate('audio')"
 			>
@@ -54,7 +54,7 @@
         <li>
             <button type="button" data-type="video"
 				:class="{
-					'is-active': page === `video` && plaingFragment?.id == number,
+					'is-active': page === `video` && playingFragment?.id == number,
 				}"
 				@click="activate('video')"
 			>
@@ -64,7 +64,7 @@
         <li>
             <button type="button" data-type="presentation"
 				:class="{
-					'is-active': page === `presentation` && plaingFragment?.id == number,
+					'is-active': page === `presentation` && playingFragment?.id == number,
 				}"
 				@click="activate('presentation')"
 			>

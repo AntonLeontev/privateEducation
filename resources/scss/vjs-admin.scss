@@ -1,0 +1,77 @@
+$bottom-pannel-height: 2.8em;
+
+.vjs-admin {
+	video {
+		object-fit: cover;
+	}
+
+	&.vjs-fullscreen video {
+		object-fit: contain;
+	}
+
+	.vjs-big-play-button {
+		display: none;
+	}
+	
+	.vjs-poster img {
+		object-fit: cover;
+	}
+
+	.vjs-control-bar {
+		flex-wrap: wrap;
+		align-items: end;
+		height: 3.5em;
+		overflow: hidden;
+
+		.vjs-play-control {
+			margin-left: 2em;
+			height: $bottom-pannel-height;
+		}
+
+		.vjs-volume-panel {
+			height: $bottom-pannel-height;
+		}
+
+		.vjs-time-control {
+			display: block;
+			height: $bottom-pannel-height;
+		}
+	
+		.vjs-remaining-time {
+			display: none;
+		}
+	
+		.vjs-current-time {
+			padding-right: 0;
+		}
+	
+		.vjs-duration {
+			padding-left: 0;
+		}
+
+		.vjs-progress-control {
+			position: absolute;
+			width: 100%;
+			height: auto;
+			padding-top: 2px;
+			top: 0;
+			left:0;
+
+			&:hover {
+				font-size: 1em;
+			}
+
+			.vjs-progress-holder {
+				margin: 0;
+			}
+		}
+
+		.vjs-fullscreen-control {
+			height: $bottom-pannel-height;
+			margin-left: auto;
+			margin-right: 2em;
+		}
+	}
+
+} 
+

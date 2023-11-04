@@ -13,6 +13,9 @@ import Alpine from "alpinejs";
 window.Alpine = Alpine;
 Alpine.start();
 
+import videojs from "video.js";
+window.videojs = videojs;
+
 window.formatDate = function (date) {
     return new Date(date).toLocaleDateString("ru-RU");
 };
