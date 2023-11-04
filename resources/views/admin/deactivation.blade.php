@@ -178,7 +178,7 @@
 			</div>
 
 			<div 
-				class="auth-modal modal-content modal-content_audio" 
+				class="z-50 auth-modal modal-content modal-content_audio" 
 				style="display: none"
 				x-show="modal && page === 'deactivation'"
 				x-cloak
@@ -198,7 +198,7 @@
 			</div>
 
 			<div 
-				class="modal-content modal-content_presentation" 
+				class="z-50 modal-content modal-content_presentation" 
 				style="display: none"
 				x-show="modal && page === 'presentation'"
 				x-cloak
@@ -235,7 +235,7 @@
 			</div>
 
 			<div 
-				class="modal-content modal-content_presentation" 
+				class="z-50 modal-content modal-content_presentation" 
 				style="display: none"
 				x-show="modalPresentationText"
 			>
@@ -254,7 +254,7 @@
 			</div>
 
 			<div 
-				class="modal-content modal-content_audio" 
+				class="z-50 modal-content modal-content_audio" 
 				style="display: none"
 				x-show="modal && page === 'audio'"
 				x-cloak
@@ -290,7 +290,7 @@
 			</div>
 
 			<div 
-				class="modal-content modal-content_video" 
+				class="z-50 modal-content modal-content_video" 
 				style="display: none"
 				x-show="modal && page === 'video'"
 			>
