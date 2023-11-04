@@ -113,7 +113,7 @@
                         </div>
 
 						<div class="w-full h-full player__content">
-                            <div class="player__frame" x-data="player" @play-media.window="play">
+                            <div class="!overflow-hidden player__frame" x-data="player" @play-media.window="play">
 								<video 
 									id="player" 
 									class="vjs-admin video-js vjs-fill vjs-duration" 
@@ -348,7 +348,6 @@
 
 			init() {
 				this.playingFragment = this.fragments[0]
-				// this.selectedFragment = this.fragments[0]
 
 				this.$nextTick(() => {
 					let scroll = new PerfectScrollbar(".presentation-text", {

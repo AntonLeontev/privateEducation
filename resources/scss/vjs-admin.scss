@@ -21,7 +21,6 @@ $bottom-pannel-height: 2.8em;
 		flex-wrap: wrap;
 		align-items: end;
 		height: 3.5em;
-		overflow: hidden;
 
 		.vjs-play-control {
 			margin-left: 2em;
@@ -44,6 +43,11 @@ $bottom-pannel-height: 2.8em;
 		.vjs-current-time {
 			padding-right: 0;
 		}
+
+		.vjs-time-divider {
+			padding: 0;
+			text-align: center;
+		}
 	
 		.vjs-duration {
 			padding-left: 0;
@@ -53,7 +57,6 @@ $bottom-pannel-height: 2.8em;
 			position: absolute;
 			width: 100%;
 			height: auto;
-			padding-top: 2px;
 			top: 0;
 			left:0;
 

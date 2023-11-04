@@ -11,6 +11,8 @@ export default defineConfig({
                 "resources/scss/app.scss",
                 "resources/js/app.js",
                 "resources/js/metrics.js",
+                "node_modules/video.js/dist/video-js.min.css",
+                "resources/scss/vjs-admin.scss",
             ],
             refresh: true,
         }),
