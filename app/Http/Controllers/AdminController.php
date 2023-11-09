@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\Fragment;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -34,9 +33,9 @@ class AdminController extends Controller
         return view('admin.fragments', compact('fragments'));
     }
 
-    public function users(Request $request)
+    public function users()
     {
-        if (! $request->ajax()) {
+        if (! request()->ajax()) {
             $total = User::count();
             $buyers = User::whereHas('subscriptions')->count();
             $active = User::whereHas('activeSubscriptions')->count();
@@ -50,41 +49,14 @@ class AdminController extends Controller
             ->withCount(['activeSubscriptions', 'subscriptions'])
             ->withSum('activeSubscriptions', 'price')
             ->withSum('subscriptions', 'price')
-            ->when($request->filled('email'), function ($query) {
-                $query->where('email', 'LIKE', '%'.request('email').'%');
-            })
-            ->when($request->filled('media') || $request->filled('fragment'), function ($query) {
-                $subscriptions = DB::table('subscriptions')
-                    ->select('user_id', 'subscribable_type', 'subscribable_id')
-                    ->when(request()->filled('media'), function ($query) {
-                        $media = 'App\\Models\\App\\Models\\'.ucfirst(request('media'));
-
-                        $query->where('subscribable_type', $media);
-                    })
-                    ->when(request()->filled('fragment'), function ($query) {
-                        $query->where('subscribable_id', request('fragment'));
-                    })
-                    ->whereColumn('subscriptions.user_id', 'users.id');
-
-                $query->whereExists($subscriptions);
-            })
-            ->when($request->users_category === 'active', function ($query) {
-                $query->whereHas('activeSubscriptions')
-                    ->orderByDesc('last_subscription_time');
-            })
-            ->when($request->users_category === 'customers', function ($query) {
-                $query->whereHas('subscriptions')
-                    ->orderByDesc('last_subscription_time');
-            })
-            ->when($request->users_category === 'all', function ($query) {
-                $query->orderByDesc('id');
-            })
+            ->search()
+            ->fragmentOrMediaFilter()
+            ->categoryFilter()
             ->cursorPaginate();
 
         $users = UserResource::collection($users);
 
         return $users;
-
     }
 
     public function files()

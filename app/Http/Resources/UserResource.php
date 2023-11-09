@@ -31,14 +31,14 @@ class UserResource extends JsonResource
     {
         $fragments = collect();
 
-        foreach ($this->lastSubscriptions as $sub) {
-            $key = $sub->subscribable_id.'.'.$sub->subscribable_type;
+        foreach ($this->lastSubscriptions as $subscription) {
+            $key = $subscription->subscribable_id.'.'.$subscription->subscribable_type;
 
-            if (request()->filled('media') && request('media') !== $sub->subscribable_type->value()) {
+            if (request()->filled('media') && request('media') !== $subscription->subscribable_type->value()) {
                 continue;
             }
 
-            if (request()->filled('fragment') && request('fragment') != $sub->subscribable_id) {
+            if (request()->filled('fragment') && request('fragment') != $subscription->subscribable_id) {
                 continue;
             }
 
@@ -47,31 +47,31 @@ class UserResource extends JsonResource
             }
 
             $fragments->put($key, [
-                'created_at' => $sub->created_at->translatedFormat('d F Y'),
-                'ends_at' => $sub->ends_at->translatedFormat('d F Y'),
-                'left' => $sub->ends_at->diffForHumans(null, 1),
-                'ago' => $sub->ends_at->diffForHumans(),
+                'created_at' => $subscription->created_at->translatedFormat('d F Y'),
+                'ends_at' => $subscription->ends_at->translatedFormat('d F Y'),
+                'left' => $subscription->ends_at->diffForHumans(null, 1),
+                'ago' => $subscription->ends_at->diffForHumans(),
                 'price' => $this->lastSubscriptions
-                    ->where('subscribable_id', $sub->subscribable_id)
-                    ->where('subscribable_type', $sub->subscribable_type)
+                    ->where('subscribable_id', $subscription->subscribable_id)
+                    ->where('subscribable_type', $subscription->subscribable_type)
                     ->first()
                     ->price,
                 'views' => $this->views
-                    ->where('viewable_id', $sub->subscribable_id)
-                    ->where('viewable_type', $sub->subscribable_type)
+                    ->where('viewable_id', $subscription->subscribable_id)
+                    ->where('viewable_type', $subscription->subscribable_type)
                     ->count(),
-                'is_active' => $sub->ends_at > now(),
+                'is_active' => $subscription->ends_at > now(),
             ]);
 
-            if (! $fragments->has($sub->subscribable_id.'.presentation')) {
-                $fragments->put($sub->subscribable_id.'.id', $sub->subscribable_id);
-                $fragments->put($sub->subscribable_id.'.presentation', [
+            if (! $fragments->has($subscription->subscribable_id.'.presentation')) {
+                $fragments->put($subscription->subscribable_id.'.id', $subscription->subscribable_id);
+                $fragments->put($subscription->subscribable_id.'.presentation', [
                     'views' => $this->presentationViews
-                        ->where('presentation_id', $sub->subscribable_id)
+                        ->where('presentation_id', $subscription->subscribable_id)
                         ->where('is_reading', false)
                         ->count(),
                     'readings' => $this->presentationViews
-                        ->where('presentation_id', $sub->subscribable_id)
+                        ->where('presentation_id', $subscription->subscribable_id)
                         ->where('is_reading', true)
                         ->count(),
                 ]);

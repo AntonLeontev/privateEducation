@@ -39,8 +39,7 @@
 						type="text" 
 						placeholder="email" 
 						class="w-full max-w-[250px] input input-bordered input-primary text-black rounded-xl"
-						x-ref="email"
-						x-model="filter.email"
+						x-model="filter.search"
 						@input.debounce.400ms="update"
 					/>
 					<select class="w-full max-w-[200px] select select-primary bg-primary rounded-xl">
@@ -111,7 +110,7 @@
 				showFilter: false,
 				users: [],
 				filter: {
-					email: null,
+					search: null,
 					media: null,
 					fragment: null,
 				},
@@ -138,7 +137,7 @@
 							params: {
 								cursor: this.cursor,
 								users_category: this.usersCategory,
-								email: this.filter.email,
+								search: this.filter.search,
 								media: this.filter.media,
 								fragment: this.filter.fragment,
 							}
