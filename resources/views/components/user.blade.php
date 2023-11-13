@@ -32,29 +32,41 @@
 		:class="show && '!opacity-100'"
 		@click="show = !show"
 	>
-		<div class="w-[5%] text-center" title="Порядковый номер" x-text="user.id"></div>
-		<div class="w-[18%] grow-0 shrink-0 overflow-hidden truncate" :title="user.email" x-text="user.email"></div>
-		<div class="w-[10%] text-center" title="Страна">Россия</div>
-		<div class="w-[10%] text-center" title="Город">Москва</div>
+		<div class="w-[5%] text-center text-secondary" title="Порядковый номер" x-text="user.id"></div>
+		<div class="w-[18%] grow-0 shrink-0 overflow-hidden truncate text-secondary" :title="user.email" x-text="user.email"></div>
+		<div class="w-[10%] text-center text-secondary" title="Страна">Россия</div>
+		<div class="w-[10%] text-center text-secondary" title="Город">Москва</div>
 		<div class="flex justify-start gap-3 w-[25%]">
-			<label class="px-1 text-center transition swap swap-rotate rounded-xl hover:bg-primary">
+			<label class="px-1 text-center transition text-secondary swap swap-rotate rounded-xl hover:bg-primary">
 				<input type="checkbox" x-model="userStat" />
 				
 				<div class="swap-on">За все время:</div>
 				<div class="swap-off">Активные:</div>
 			</label>
-			<div class="text-center min-w-[30px]" title="Количество дейcтвующих сейчас подписок" x-text="user.active_subscriptions_count" x-show="!userStat"></div>
-			<div class="text-center min-w-[50px]" title="Сумма покупок дейcтвующих сейчас подписок" x-text="user.active_subscriptions_sum_price + ' €'" x-show="!userStat"></div>
-			<div class="text-center min-w-[30px]" title="Всего куплено подписок за все время" x-text="user.subscriptions_count" x-show="userStat">
+			<div class="flex w-[150px] overflow-hidden bg-[#28568c] text-primary rounded-xl" x-show="!userStat">
+				<div class="w-[44%] pl-5" title="Количество дейcтвующих сейчас подписок" x-text="user.active_subscriptions_count"></div>
+				<div 
+					class="w-[56%] pr-5 text-right text-[#28568c] bg-white" 
+					title="Сумма покупок дейcтвующих сейчас подписок" 
+					style="clip-path: polygon(12% 0, 100% 0, 100% 100%, 0% 100%);"
+					x-text="user.active_subscriptions_sum_price + ' €'" 
+				></div>
 			</div>
-			<div class="text-center min-w-[50px]" title="Сумма покупок за все время" x-text="user.subscriptions_sum_price + ' €'" x-show="userStat">
+			<div class="flex w-[150px] overflow-hidden bg-[#28568c] text-primary rounded-xl" x-show="userStat">
+				<div class="w-[44%] pl-5" title="Количество дейcтвующих сейчас подписок" x-text="user.subscriptions_count"></div>
+				<div 
+					class="w-[56%] pr-5 text-right text-[#28568c] bg-white" 
+					title="Сумма покупок дейcтвующих сейчас подписок" 
+					style="clip-path: polygon(12% 0, 100% 0, 100% 100%, 0% 100%);"
+					x-text="user.subscriptions_sum_price + ' €'" 
+				></div>
 			</div>
 		</div>
-		<div class="w-[15%] text-center" title="Дата последней покупки" x-show="!userStat" x-text="user.last_subscription_time"></div>
-		<div class="w-[15%] text-center" title="Дата первой покупки" x-show="userStat" x-text="user.first_subscription_created_at"></div>
-		<div class="w-[15%] text-center" title="Дата регистрации" x-text="user.created_at"></div>
+		<div class="w-[15%] text-center text-secondary" title="Дата последней покупки" x-show="!userStat" x-text="user.last_subscription_time"></div>
+		<div class="w-[15%] text-center text-secondary" title="Дата первой покупки" x-show="userStat" x-text="user.first_subscription_created_at"></div>
+		<div class="w-[15%] text-center text-secondary" title="Дата регистрации" x-text="user.created_at"></div>
 		<div class="w-[5%] text-center cursor-pointer flex justify-center">
-			<svg class="w-6 h-6 transition duration-500" :class="show && 'rotate-180'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+			<svg class="w-6 h-6 transition duration-500 text-secondary" :class="show && 'rotate-180'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
 			</svg>
 		</div>
@@ -67,17 +79,17 @@
 	
 						<template x-if="fragment.audio?.is_active || fragment.video?.is_active">
 							<div class="flex justify-start py-1 transition gap-x-1 hover:bg-slate-100/10">
-								<div class="flex items-center min-w-[150px] pl-2" x-text="'Фрагмент №' + fragment.id"></div>
+								<div class="flex items-center min-w-[150px] pl-2 text-secondary" x-text="'Фрагмент №' + fragment.id"></div>
 								<div class="flex items-center gap-3 min-w-[180px]">
 									<img class="w-[45px] h-[35px]" src="{{ Vite::asset('resources/images/icon4.png') }}" alt="Презентация">
-									<div class="flex items-center gap-1 min-w-[50px]" :title="'Количество просмотров видео презентации фрагмента №' + fragment.id">
+									<div class="flex items-center gap-1 min-w-[50px] text-[#f3fa5e]" :title="'Количество просмотров видео презентации фрагмента №' + fragment.id">
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 											<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
 											<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 										</svg>
 										<span x-text="fragment.presentation.views"></span>
 									</div>
-									<div class="flex items-center gap-1" :title="'Количество прочтений текста презентации фрагмента  №' + fragment.id">
+									<div class="flex items-center gap-1 text-[#1caab7]" :title="'Количество прочтений текста презентации фрагмента  №' + fragment.id">
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 											<path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
 										</svg>
@@ -88,7 +100,7 @@
 									<template x-if="fragment?.audio?.is_active">
 										<div class="grid items-center grid-flow-col gap-1 auto-cols-max">
 											<img class="w-[35px] h-[35px]" src="{{ Vite::asset('resources/images/icon2.png') }}" alt="Аудио">
-											<div class="flex items-center gap-1 min-w-[70px]" :title="'Количество прослушиваний аудио фрагмента  №' + fragment.id">
+											<div class="flex items-center gap-1 min-w-[70px] text-white" :title="'Количество прослушиваний аудио фрагмента  №' + fragment.id">
 												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-volume-up-fill" viewBox="0 0 16 16">
 													<path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
 													<path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
@@ -96,7 +108,7 @@
 												</svg>
 												<span x-text="fragment.audio?.views"></span>
 											</div>
-											<div class="flex items-center gap-1 min-w-[80px]" :title="'Стоимость подписки аудио фрагмента №' + fragment.id">
+											<div class="flex items-center gap-1 min-w-[80px] text-secondary" :title="'Стоимость подписки аудио фрагмента №' + fragment.id">
 												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 													<path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 100 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 												</svg>
@@ -110,7 +122,7 @@
 													<path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
 													<circle cx="11" cy="8" r="4" fill="#E9742B"/>
 												</svg>
-												<span x-text="'осталось: ' + fragment.audio?.left"></span>
+												<span class="text-secondary" x-text="'осталось: ' + fragment.audio?.left"></span>
 											</div>
 										</div>
 									</template>
@@ -119,14 +131,14 @@
 									<template x-if="fragment?.video?.is_active">
 										<div class="flex items-center gap-1">
 											<img class="w-[35px] h-[35px]" src="{{ Vite::asset('resources/images/icon3.png') }}" alt="Видео">
-											<div class="flex items-center gap-1 min-w-[70px]" :title="'Количество просмотров видео фрагмента  №' + fragment.id">
+											<div class="flex items-center gap-1 min-w-[70px] text-[#f3fa5e]" :title="'Количество просмотров видео фрагмента  №' + fragment.id">
 												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 													<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
 													<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 												</svg>
 												<span x-text="fragment.video?.views"></span>
 											</div>
-											<div class="flex items-center gap-1 min-w-[80px]" :title="'Стоимость подписки видео фрагмента №' + fragment.id">
+											<div class="flex items-center gap-1 min-w-[80px] text-secondary" :title="'Стоимость подписки видео фрагмента №' + fragment.id">
 												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 													<path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 100 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 												</svg>
@@ -140,7 +152,7 @@
 													<path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
 													<circle cx="11" cy="8" r="4" fill="#E9742B"/>
 												</svg>
-												<span x-text="'осталось: ' + fragment.video?.left"></span>
+												<span class="text-secondary" x-text="'осталось: ' + fragment.video?.left"></span>
 											</div>
 										</div>
 									</template>

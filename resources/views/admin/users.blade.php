@@ -13,11 +13,11 @@
 			</span>
 			<div class="flex items-center gap-5 border rounded-xl">
 				<div class="!bg-transparent join">
-					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" aria-label="С активной подпиской: {{ $active }}" 
+					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-secondary hover:!text-secondary" type="radio" aria-label="С активной подпиской: {{ $active }}" 
 					:checked="usersCategory === 'active'" @click="usersCategory = 'active'" />
-					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" aria-label="Всего покупателей: {{ $buyers }}"
+					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-secondary hover:!text-secondary" type="radio" aria-label="Всего покупателей: {{ $buyers }}"
 					:checked="usersCategory === 'customers'" @click="usersCategory = 'customers'" />
-					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-black hover:!text-black" type="radio" aria-label="Всего зарегистрировано: {{ $total }}"
+					<input class="bg-transparent !px-2 border-none join-item btn text-white checked:!bg-white checked:!text-secondary hover:!text-secondary" type="radio" aria-label="Всего зарегистрировано: {{ $total }}"
 					:checked="usersCategory === 'all'" @click="usersCategory = 'all'" />
 				</div>
 			</div>
@@ -90,8 +90,6 @@
 			<button class="" x-show="paginatorMeta?.prev_cursor" @click="prevPage">
 				{!! __('pagination.previous') !!}
 			</button>
-
-			{{-- <div x-text="page"></div> --}}
 
 			<button class="" x-show="paginatorMeta?.next_cursor" @click="nextPage">
 				{!! __('pagination.next') !!}
