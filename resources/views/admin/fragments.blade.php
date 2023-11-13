@@ -30,7 +30,7 @@
                         <div class="flex justify-between player__title align-center">
 							<div class="flex items-center gap-x-2 bg-[rgba(146,140,141,0.7)] pr-2">
 								<img class="h-[45px]" :src="image" alt="">
-								<span class="text-[150%]" x-text="title">
+								<span class="text-[150%] font-bold" x-text="title">
 									Презентация. Фрагмент №1
 								</span>
 							</div>

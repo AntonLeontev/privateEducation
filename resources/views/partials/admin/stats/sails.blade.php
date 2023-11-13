@@ -2,7 +2,7 @@
 
     <form class="flex justify-between" x-ref="form">
         <select 
-			class="bg-transparent border cursor-pointer rounded-none px-1 py-2 text-[16px] focus:outline-none" 
+			class="bg-transparent border cursor-pointer rounded-none px-1 py-2 text-[16px] font-bold focus:outline-none" 
 			name="period"
 			x-model="period"
 			@change="changePeriod" 
@@ -50,22 +50,22 @@
                 <div class="flex items-center justify-around w-full">
                     <div class="relative">
                         {{-- <div class="mb-1 text-center">Сумма продаж</div> --}}
-                        <div class="bg-secondary flex items-center justify-center p-6 text-[4vw] min-w-[150px]">
+                        <div class="bg-gradient-to-r from-[#4f60ca] to-transparent font-bold flex items-center justify-center p-6 text-[4vw] min-w-[150px]">
 							<span x-text="ru + en"></span>
 							<span x-show="stats === 'sails'">&nbsp;€</span>
                         </div>
                         <div class="absolute -right-[15px] top-0 bottom-0 w-[10px]">
-                            <div class="bg-[#aa0000] transition-all duration-500"
+                            <div class="transition-all duration-500 bg-primary"
                                 :style="'height: ' + getPercent(ru) + '%;'"></div>
-                            <div class="bg-[#0000aa] transition-all duration-500"
+                            <div class="transition-all duration-500 bg-white"
                                 :style="'height: ' + getPercent(en) + '%;'"></div>
 
-                            <div class="absolute left-[15px] top-0 flex w-max items-center gap-x-1">
-                                <span>RU:</span>
+                            <div class="absolute left-[15px] top-0 font-[600] flex w-max items-center gap-x-1">
+                                <span class="">RU:</span>
                                 <span class="text-[20px]" x-text="ru"></span>
 								<span x-show="stats === 'sails'">&nbsp;€</span>
                             </div>
-                            <div class="absolute bottom-0 left-[15px] flex w-max items-center gap-x-1">
+                            <div class="absolute bottom-0 font-[600] left-[15px] flex w-max items-center gap-x-1">
                                 <span>US:</span>
                                 <span class="text-[20px]" x-text="en"></span>
 								<span x-show="stats === 'sails'">&nbsp;€</span>

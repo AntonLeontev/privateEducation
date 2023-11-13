@@ -107,11 +107,11 @@
 						valueYField: "sum",
 						valueXField: "date",
 						minDistance: 15,
-						fill: am5.color(0x000000),
-						stroke: am5.color(0x000000),
+						fill: am5.color(0x4e60ca),
+						stroke: am5.color(0x4e60ca),
 						tooltip: am5.Tooltip.new(root, {
 							pointerOrientation: "horizontal",
-							html: `<div class="font-sans">{valueY}<span x-show="stats === 'metrics-sails'"> €</span></div>`,
+							html: `<div class="font-sans text-black">{valueY}<span x-show="stats === 'metrics-sails'"> €</span></div>`,
 						})
 					}));
 	
@@ -121,7 +121,7 @@
 					});
 	
 					total.strokes.template.setAll({
-						strokeWidth: 2
+						strokeWidth: 3
 					});
 	
 	
@@ -136,10 +136,10 @@
 	
 					total.bullets.push(function() {
 						let circle = am5.Circle.new(root, {
-							radius: 4,
+							radius: 6,
 							fill: root.interfaceColors.get("background"),
 							stroke: total.get("fill"),
-							strokeWidth: 2
+							strokeWidth: 3
 						})
 	
 						return am5.Bullet.new(root, {
@@ -159,11 +159,11 @@
 						valueYField: "ru",
 						valueXField: "date",
 						minDistance: 15,
-						fill: am5.color(0xff0000),
-						stroke: am5.color(0xff0000),
+						fill: am5.color(0xe88c52),
+						stroke: am5.color(0xe88c52),
 						tooltip: am5.Tooltip.new(root, {
 							pointerOrientation: "horizontal",
-							html: `<div class="font-sans">{valueY}<span x-show="stats === 'metrics-sails'"> €</span></div>`,
+							html: `<div class="font-sans text-black">{valueY}<span x-show="stats === 'metrics-sails'"> €</span></div>`,
 						}),
 						visible: false,
 					}));
@@ -174,7 +174,7 @@
 					});
 	
 					ruSeries.strokes.template.setAll({
-						strokeWidth: 2,
+						strokeWidth: 3,
 					});
 	
 	
@@ -189,10 +189,10 @@
 	
 					ruSeries.bullets.push(function() {
 						let circle = am5.Circle.new(root, {
-							radius: 4,
+							radius: 6,
 							fill: root.interfaceColors.get("background"),
 							stroke: ruSeries.get("fill"),
-							strokeWidth: 2
+							strokeWidth: 3
 						})
 	
 						return am5.Bullet.new(root, {
@@ -211,13 +211,18 @@
 						valueYField: "en",
 						valueXField: "date",
 						minDistance: 15,
-						fill: am5.color(0x0000ff),
-						stroke: am5.color(0x0000ff),
+						fill: am5.color(0xffffff),
+						stroke: am5.color(0xffffff),
 						tooltip: am5.Tooltip.new(root, {
 							pointerOrientation: "horizontal",
-							html: `<div class="font-sans">{valueY}<span x-show="stats === 'metrics-sails'"> €</span></div>`,
+							html: `<div class="font-sans text-black">{valueY}<span x-show="stats === 'metrics-sails'"> €</span></div>`,
 						}),
 					}));
+
+					enSeries.get("tooltip").get("background").setAll({
+						stroke: am5.color(0xe88c52),
+						strokeOpacity: 1
+					});
 	
 					enSeries.fills.template.setAll({
 						fillOpacity: 0.2,
@@ -225,7 +230,7 @@
 					});
 	
 					enSeries.strokes.template.setAll({
-						strokeWidth: 2
+						strokeWidth: 3
 					});
 	
 	
@@ -240,10 +245,10 @@
 	
 					enSeries.bullets.push(function() {
 						let circle = am5.Circle.new(root, {
-							radius: 4,
-							fill: root.interfaceColors.get("background"),
+							radius: 6,
+							fill: am5.color(0xe88c52),
 							stroke: enSeries.get("fill"),
-							strokeWidth: 2
+							strokeWidth: 3
 						})
 	
 						return am5.Bullet.new(root, {
