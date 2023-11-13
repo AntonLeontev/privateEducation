@@ -113,7 +113,7 @@
                         </div>
 
 						<div class="w-full h-full player__content">
-                            <div class="!overflow-hidden player__frame" x-data="player" @play-media.window="play">
+                            <div class="relative z-50 !rounded-none player__frame !overflow-hidden" x-data="player" @play-media.window="play">
 								<video 
 									id="player" 
 									class="vjs-admin video-js vjs-fill vjs-duration" 
@@ -237,14 +237,20 @@
 			<div 
 				class="z-50 modal-content modal-content_presentation" 
 				style="display: none"
+				:class="wide && '!top-0 !bottom-0 !left-0 !right-0 !w-auto !h-auto'"
 				x-show="modalPresentationText"
+				x-data="{wide: false}"
 			>
 				<div class="modal-content__header">
 					<span class="modal-header-text" x-text="`Текст презентации фрагмента ${selectedFragment?.id}`"></span>
 					<button class="myBtn modal-content__close-btn" @click="modalPresentationText = false"></button>
 				</div>
-				<div class="!px-10 modal-content__body  !pb-2">
-					<div class="relative overflow-hidden presentation-text pr-[1.4vw]">
+				<div class="!px-10 modal-content__body !pb-2 !pr-2">
+					<button class="absolute right-[2.5vw] w-[28px] z-50" @click="wide = !wide">
+						<img src="{{ Vite::asset('resources/images/text-expand-out.png') }}" x-show="!wide">
+						<img src="{{ Vite::asset('resources/images/text-expand-in.png') }}" x-show="wide">
+					</button>
+					<div class="relative overflow-hidden presentation-text pr-[4.4vw]">
 						<div class="mb-4 modal-content__title">
 							<span class="px-4" x-text="lang === 'ru' ? selectedFragment?.title_ru : selectedFragment?.title_en"></span>
 						</div>
@@ -414,10 +420,4 @@
 @endsection
 
 @section('body-scripts')
-	<script>
-		if (document.querySelector(".presentation-text")) {
-			
-
-		}
-	</script>
 @endsection

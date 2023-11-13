@@ -9,7 +9,9 @@ $bottom-pannel-height: 3em;
 		object-fit: contain;
 	}
 
-	.vjs-big-play-button {
+	.vjs-big-play-button, 
+	.vjs-picture-in-picture-control
+	{
 		display: none;
 	}
 	
@@ -22,8 +24,12 @@ $bottom-pannel-height: 3em;
 		align-items: end;
 		height: 3.5em;
 
+		.vjs-button > .vjs-icon-placeholder::before {
+			font-size: 2em;
+			line-height: 1.5;
+		}
+
 		.vjs-play-control {
-			margin-left: 2em;
 			height: $bottom-pannel-height;
 		}
 
@@ -39,7 +45,11 @@ $bottom-pannel-height: 3em;
 		.vjs-remaining-time {
 			display: none;
 		}
-	
+
+		.vjs-current-time-display {
+			font-size: 1.3em;
+		}
+		
 		.vjs-current-time {
 			padding-right: 0;
 		}
@@ -47,10 +57,18 @@ $bottom-pannel-height: 3em;
 		.vjs-time-divider {
 			padding: 0;
 			text-align: center;
+
+			span {
+				font-size: 1.3em;
+			}
 		}
 	
 		.vjs-duration {
 			padding-left: 0;
+
+			.vjs-duration-display {
+				font-size: 1.3em;
+			}
 		}
 
 		.vjs-progress-control {
@@ -72,7 +90,6 @@ $bottom-pannel-height: 3em;
 		.vjs-fullscreen-control {
 			height: $bottom-pannel-height;
 			margin-left: auto;
-			margin-right: 2em;
 		}
 	}
 

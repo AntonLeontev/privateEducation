@@ -1,12 +1,11 @@
 .modal-content {
 	position: absolute;
-	right: 0;
 	top: 8.7vh;
 	left: 29.3vw;
 	display: flex;
 	flex-direction: column;
-	height: 75vh;
-	width: auto;
+	height: 38vw;
+	width: 56vw;
 	font-family: 'Arimo';
 	color: black;
 	border-radius: 15px;
@@ -52,7 +51,6 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		// justify-content: center;
 		align-items: center;
 		height: calc(100% - 2.8104vw);
 		padding: 0.8vw 13% 0;
