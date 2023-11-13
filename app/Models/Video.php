@@ -17,8 +17,6 @@ class Video extends Model
         'title_ru',
         'title_en',
         'price',
-        'price_rub',
-        'price_usd',
         'fragment_id',
     ];
 
@@ -28,8 +26,6 @@ class Video extends Model
 
     protected $casts = [
         'price' => PriceCast::class,
-        'price_rub' => PriceCast::class,
-        'price_usd' => PriceCast::class,
     ];
 
     public function media(): MorphMany

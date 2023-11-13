@@ -14,6 +14,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ViewController;
+use App\Services\CurrencyRatesService\CurrencyRatesService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,8 +29,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 if (app()->isLocal()) {
-    Route::get('/test', function () {
-        return route('verify-email', ['123', bcrypt('654')]);
+    Route::get('/test', function (CurrencyRatesService $service) {
+        dd($service->getEurToUsd());
     });
 }
 
@@ -105,11 +106,9 @@ Route::prefix('admin')
 
                 Route::post('fragments/{fragment}/update', [FragmentController::class, 'update'])->name('fragments.update');
 
-                Route::post('fragments/{id}/audio/price', [AudioController::class, 'price'])->name('audio.update.price');
                 Route::post('audio/{audio}/update', [AudioController::class, 'update'])->name('audio.update');
 
-                Route::post('fragments/{id}/video/price', [VideoController::class, 'price'])->name('video.update.price');
-                Route::post('fragments/{id}/video/update', [VideoController::class, 'update'])->name('video.update');
+                Route::post('videos/{video}/update', [VideoController::class, 'update'])->name('video.update');
 
                 Route::post('presentations/{presentation}/update', [PresentationController::class, 'update'])
                     ->name('presentations.update');

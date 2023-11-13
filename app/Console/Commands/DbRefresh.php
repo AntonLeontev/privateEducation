@@ -46,6 +46,8 @@ class DbRefresh extends Command
 
         Storage::disk('local')->deleteDirectory('media');
 
+        Artisan::call('app:rates');
+
         $this->info('ok');
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Fragment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('audio', function (Blueprint $table) {
+        Schema::create('currency_rates', function (Blueprint $table) {
             $table->id();
-
-            $table->unsignedInteger('price');
-
-            $table->foreignIdFor(Fragment::class)
-                ->constrained()
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
+            $table->string('name');
+            $table->decimal('rate', 12, 4, true);
+            $table->date('date')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('audio');
+        Schema::dropIfExists('currency_rates');
     }
 };

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\CurrencyRate;
 use App\Models\Fragment;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -69,10 +70,11 @@ class AdminController extends Controller
     public function prices()
     {
         $fragments = Fragment::with(['audio', 'video'])->get();
-        //TODO currency rates
-        $rates = ['usd' => 1.12, 'rub' => 107.3];
 
-        return view('admin.prices', compact('fragments', 'rates'));
+        $rub = CurrencyRate::where('name', 'EUR/RUB')->first();
+        $usd = CurrencyRate::where('name', 'EUR/USD')->first();
+
+        return view('admin.prices', compact('fragments', 'usd', 'rub'));
     }
 
     public function deactivation()

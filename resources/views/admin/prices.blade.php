@@ -10,11 +10,11 @@
 			</span>
 			<div class="flex gap-8">
 				<div>Курс валюты:</div>
-				<div class="flex gap-1">
-					EUR 1 = USD {{ $rates['usd'] }}
+				<div class="flex gap-1" title="Данные за {{ $usd->date->format('d.m.Y') }}. Обновлено {{ $usd->updated_at->diffForHumans() }}">
+					EUR 1 = USD {{ $usd->rate }}
 				</div>
-				<div class="flex gap-1">
-					EUR 1 = RUB {{ $rates['rub'] }}
+				<div class="flex gap-1" title="Данные за {{ $rub->date->format('d.m.Y') }}. Обновлено {{ $rub->updated_at->diffForHumans() }}">
+					EUR 1 = RUB {{ $rub->rate }}
 				</div>
 			</div>
 			<div class="ml-auto burger">
@@ -42,7 +42,7 @@
 								let data = new FormData(this.$event.target.closest('form')); 
 								
 								axios
-									.post(route('admin.audio.update.price', id), data)
+									.post(route('admin.audio.update', id), data)
 									.then(response => {
 										this.savedShow = true;
 										setTimeout(() => this.savedShow = false, 600)
@@ -57,16 +57,16 @@
 									name="price" x-model="euro" 
 									@input.debounce.750ms="saveAudio(fragment.id)"
 								>
-								<input type="hidden" name="usd" :value="roundNumber(euro * rates.usd)">
-								<input type="hidden" name="rub" :value="roundNumber(euro * rates.rub)">
+								<input type="hidden" name="usd" :value="roundNumber(euro * usd.rate)">
+								<input type="hidden" name="rub" :value="roundNumber(euro * rub.rate)">
 							</form>
 							<div class="w-[32px] h-[32px]">
 								<div class="p-1 transition bg-green-500 rounded-full" x-show="savedShow" x-transition.opacity.duration.600ms>
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
 								</div>
 							</div>
-							<span class="w-32" x-text="'$ ' + format(euro * rates.usd)"></span>
-							<span class="w-32" x-text="'₽ ' + format(euro * rates.rub)"></span>
+							<span class="w-32" x-text="'$ ' + format(euro * usd.rate)"></span>
+							<span class="w-32" x-text="'₽ ' + format(euro * rub.rate)"></span>
 						</div>
 
 						<div class="flex items-center gap-2 min-w-[450px]" x-data="{
@@ -81,7 +81,7 @@
 								let data = new FormData(this.$event.target.closest('form')); 
 								
 								axios
-									.post(route('admin.video.update.price', id), data)
+									.post(route('admin.video.update', id), data)
 									.then(response => {
 										this.savedShow = true;
 										setTimeout(() => this.savedShow = false, 600)
@@ -97,16 +97,16 @@
 									x-model="euro" 
 									@input.debounce.750ms="saveVideo(fragment.id)"
 								>
-								<input type="hidden" name="usd" :value="roundNumber(euro * rates.usd)">
-								<input type="hidden" name="rub" :value="roundNumber(euro * rates.rub)">
+								<input type="hidden" name="usd" :value="roundNumber(euro * usd.rate)">
+								<input type="hidden" name="rub" :value="roundNumber(euro * rub.rate)">
 							</form>
 							<div class="w-[32px] h-[32px]">
 								<div class="p-1 transition bg-green-500 rounded-full" x-show="savedShow" x-transition.opacity.duration.600ms>
 									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
 								</div>
 							</div>
-							<span class="w-32" x-text="'$ ' + format(euro * rates.usd)"></span>
-							<span class="w-32" x-text="'₽ ' + format(euro * rates.rub)"></span>
+							<span class="w-32" x-text="'$ ' + format(euro * usd.rate)"></span>
+							<span class="w-32" x-text="'₽ ' + format(euro * rub.rate)"></span>
 						</div>
 
 					</div>
@@ -119,7 +119,8 @@
 		document.addEventListener('alpine:init', () => {
 			Alpine.data('prices', () => ({
 				fragments: @json($fragments),
-				rates: @json($rates),
+				usd: @json($usd),
+				rub: @json($rub),
 
 				format(number) {
 					return number.toLocaleString(

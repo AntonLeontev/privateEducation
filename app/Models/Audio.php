@@ -15,8 +15,6 @@ class Audio extends Model
     protected $fillable = [
         'id',
         'price',
-        'price_rub',
-        'price_usd',
     ];
 
     protected $with = [
@@ -25,8 +23,6 @@ class Audio extends Model
 
     protected $casts = [
         'price' => PriceCast::class,
-        'price_rub' => PriceCast::class,
-        'price_usd' => PriceCast::class,
     ];
 
     public function media(): MorphMany

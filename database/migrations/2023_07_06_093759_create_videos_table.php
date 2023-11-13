@@ -15,8 +15,6 @@ return new class extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('price');
-            $table->unsignedInteger('price_rub');
-            $table->unsignedInteger('price_usd');
 
             $table->foreignIdFor(Fragment::class)
                 ->constrained()

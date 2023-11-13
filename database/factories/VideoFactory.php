@@ -16,12 +16,8 @@ class VideoFactory extends Factory
      */
     public function definition(): array
     {
-        $price = fake()->numberBetween(5, 15);
-
         return [
-            'price' => $price,
-            'price_rub' => $price * 100,
-            'price_usd' => $price * 1.06,
+            'price' => fake()->numberBetween(5, 15),
             'fragment_id' => fake()->numberBetween(1, 17),
         ];
     }
