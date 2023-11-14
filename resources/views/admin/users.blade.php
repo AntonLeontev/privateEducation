@@ -23,10 +23,7 @@
 			</div>
 			<button class="px-3 py-2 ml-10 transition border rounded-xl hover:bg-primary hover:border-primary" @click="showFilter = !showFilter">Фильтр</button>
 			<span class="ml-3 loading loading-dots loading-sm" x-show="loadingFilter" x-cloak></span>
-			<div class="ml-auto burger">
-				<div class="">Меню</div>
-				<span></span>
-			</div>
+			<x-admin.menu-button />
 		</div>
 	</header>
 

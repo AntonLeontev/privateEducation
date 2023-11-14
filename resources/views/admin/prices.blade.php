@@ -17,10 +17,7 @@
 					<span class="text-secondary">EUR 1 = </span>RUB {{ $rub->rate }}
 				</div>
 			</div>
-			<div class="ml-auto burger">
-				<div class="">Меню</div>
-				<span></span>
-			</div>
+			<x-admin.menu-button />
 		</div>
 	</header>
 

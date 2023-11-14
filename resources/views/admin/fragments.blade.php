@@ -9,10 +9,7 @@
 			
 			<x-admin.menu />
 
-			<div class="burger">
-				<div class="">Меню</div>
-				<span></span>
-			</div>
+			<x-admin.menu-button />
 		</div>
 	</header>
 

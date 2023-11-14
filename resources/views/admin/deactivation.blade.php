@@ -23,10 +23,7 @@
 					:checked="lang === 'en'" @click="lang = 'en'; $dispatch('change-lang')" />
 				</div>
 			</div>
-			<div class="ml-auto burger">
-				<div class="">Меню</div>
-				<span></span>
-			</div>
+			<x-admin.menu-button />
 		</div>
 	</header>
 
