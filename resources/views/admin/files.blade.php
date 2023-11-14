@@ -154,7 +154,7 @@
                 document.addEventListener('alpine:init', () => {
                     Alpine.data('fragments', () => ({
 						fragments: @json($fragments),
-                        page: 'audio', // ['audio', 'video', 'pres']
+                        page: 'audio', // ['audio', 'video', 'presentation']
                         selectedFragment: null,
                         title: 'Загрузка аудио файлов',
 						progressbar: false,
