@@ -110,7 +110,12 @@
                         </div>
 
 						<div class="w-full h-full player__content">
-                            <div class="relative z-50 !rounded-none player__frame !overflow-hidden" x-data="player" @play-media.window="play">
+                            <div 
+								class="relative z-50 !rounded-none player__frame !overflow-hidden" 
+								x-data="player" 
+								@play-media.window="play"
+								@play-text.window="pause"
+							>
 								<video 
 									id="player" 
 									class="vjs-admin video-js vjs-fill vjs-duration" 
@@ -151,6 +156,9 @@
 												src: `/media/${this.playingMedia}/${this.playingFragment.id}/${this.lang}/${this.sound}/${this.device}` 
 											})
 											this.player.play()
+										},
+										pause() {
+											this.player.pause()
 										},
 									}))
 								})
@@ -213,7 +221,7 @@
 							<x-radio-group.item name="presentation-sound" value="text" text="В виде текста" italic="" />
 						</x-radio-group>
 					</div>
-					<div class="modal__duration" x-text="'Продолжительность записи в минутах: ' + selectedFragment?.presentation.media[0]?.playtime ?? '00:00'"></div>
+					<div class="modal__duration" x-text="'Продолжительность записи в минутах: ' + (selectedFragment?.presentation.media[0]?.playtime ?? '00:00')"></div>
 
 					<div class="modal__delimiter modal__delimiter_presentation"></div>
 
@@ -240,7 +248,7 @@
 			>
 				<div class="modal-content__header">
 					<span class="modal-header-text" x-text="`Текст презентации фрагмента ${selectedFragment?.id}`"></span>
-					<button class="myBtn modal-content__close-btn" @click="modalPresentationText = false"></button>
+					<button class="myBtn modal-content__close-btn" @click="modalPresentationText = false; wide = false"></button>
 				</div>
 				<div class="!px-10 modal-content__body !pb-2 !pr-2">
 					<button class="absolute right-[2.5vw] w-[28px] z-50" @click="wide = !wide">
@@ -274,7 +282,7 @@
 							<x-radio-group.item name="audio-sound" value="stereo" text="В стерео" italic="(живой голос)" />
 						</x-radio-group>
 					</div>
-					<div class="modal__duration" x-text="'Продолжительность записи в минутах: ' + selectedFragment?.audio.media[0]?.playtime ?? '00:00'"></div>
+					<div class="modal__duration" x-text="'Продолжительность записи в минутах: ' + (selectedFragment?.audio.media[0]?.playtime ?? '00:00')"></div>
 
 					<div class="modal__delimiter modal__delimiter_audio"></div>
 
@@ -309,7 +317,7 @@
 							<x-radio-group.item name="video-sound" value="stereo" text="В стерео" italic="(живой голос)" />
 						</x-radio-group>
 					</div>
-					<div class="modal__duration" x-text="'Продолжительность записи в минутах: ' + selectedFragment?.video.media[0]?.playtime ?? '00:00'"></div>
+					<div class="modal__duration" x-text="'Продолжительность записи в минутах: ' + (selectedFragment?.video.media[0]?.playtime ?? '00:00')"></div>
 
 					<div class="modal__delimiter modal__delimiter_video"></div>
 
@@ -382,6 +390,7 @@
 				if (data.get(`${this.page}-sound`) === 'text') {
 					this.modal = false
 					this.modalPresentationText = true
+					this.$dispatch('play-text')
 					return
 				}
 				
