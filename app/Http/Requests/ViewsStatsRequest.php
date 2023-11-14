@@ -13,8 +13,7 @@ class ViewsStatsRequest extends FormRequest
 
     public function authorize(): bool
     {
-        // TODO auth
-        return true;
+        return admin()->user()->isAdmin();
     }
 
     /**

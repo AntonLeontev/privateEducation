@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RedirectIfAdminAuthenticated
+class DetectAdminActivity
 {
     /**
      * Handle an incoming request.
@@ -20,12 +20,10 @@ class RedirectIfAdminAuthenticated
         }
 
         if (admin()->user()->isAdmin()) {
-            return to_route('admin.fragments');
+            return $next($request);
         }
 
-        if (admin()->user()->isSeo()) {
-            return to_route('admin.seo.index');
-        }
+        admin()->user()->update(['last_activity' => now()]);
 
         return $next($request);
     }

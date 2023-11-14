@@ -11,8 +11,7 @@ class FragmentUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        //TODO
-        return true;
+        return admin()->user()->isAdmin();
     }
 
     /**

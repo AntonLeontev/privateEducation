@@ -11,11 +11,11 @@ class GetMediaRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        //TODO users auth for media
-        if (Auth::guard('admin')->check()) {
+        if (admin()->user()->isAdmin()) {
             return true;
         }
 
+        //TODO users auth for media
         return false;
     }
 

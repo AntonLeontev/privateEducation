@@ -50,6 +50,13 @@ class AdminLoginController extends Controller
         Auth::guard('admin')->login($admin, true);
         $request->session()->regenerate();
         $admin->update(['two_factor_code_is_used' => true]);
+
+        $redirect = match (true) {
+            $admin->isAdmin() => route('admin.fragments'),
+            $admin->isSeo() => route('admin.seo.index'),
+        };
+
+        return response()->json(['redirect' => $redirect]);
     }
 
     public function logout()

@@ -16,7 +16,7 @@
 			</div>
 			<div class="modal-body" style="display: flex; justify-content:center; align-items:center; height: 100%">
 				<form class="modal-auth-form" x-show="section === 'login'" x-cloak @submit.prevent="login">
-					<div class="modal-email-label">
+					<div style="width: 100%" class="modal-email-label">
 						Логин администратора:
 					</div>
 					<input class="modal-input" type="text" name="email" placeholder="* * * * * * * * * * * * * * * * * * * *">
@@ -74,7 +74,7 @@
 					axios
 						.post(route('admin.two-factor.check'), data)
 						.then(response => {
-							location.href = route('admin.fragments');
+							location.href = response.data.redirect;
 						})
 						.catch(error => {
 							this.$refs.codeError.innerText = error.response.data.message

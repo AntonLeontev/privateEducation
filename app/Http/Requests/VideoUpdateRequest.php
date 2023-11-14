@@ -11,8 +11,7 @@ class VideoUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        //TODO admin auth
-        return true;
+        return admin()->user()->isAdmin();
     }
 
     /**

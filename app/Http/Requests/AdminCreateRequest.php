@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Support\Enums\AdminRole;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AudioUpdateRequest extends FormRequest
+class AdminCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +23,18 @@ class AudioUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'price' => ['sometimes', 'numeric', 'min:0', 'max:42949671'],
+            'email' => ['required', 'unique:admins,email', 'string', 'max:50'],
+            'password' => ['required', 'confirmed', 'min:8', 'max:50'],
+            'role' => ['required', 'string', 'in:'.implode(',', AdminRole::values())],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'email' => 'Логин',
+            'password' => 'Пароль',
+            'role' => 'Роль',
         ];
     }
 }

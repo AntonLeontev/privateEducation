@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class MediaStoreRequest extends FormRequest
 {
@@ -12,7 +11,7 @@ class MediaStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::guard('admin')->check();
+        return admin()->user()->isAdmin();
     }
 
     /**

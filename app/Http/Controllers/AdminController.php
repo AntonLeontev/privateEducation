@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminCreateRequest;
+use App\Http\Requests\AdminDeleteRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Admin;
 use App\Models\CurrencyRate;
 use App\Models\Fragment;
 use App\Models\User;
@@ -82,5 +85,26 @@ class AdminController extends Controller
         $fragments = Fragment::with(['audio', 'video', 'presentation'])->get();
 
         return view('admin.deactivation', compact('fragments'));
+    }
+
+    public function admins()
+    {
+        $admins = Admin::where('email', '!=', admin()->user()->email)->get();
+
+        return view('admin.admins', compact('admins'));
+    }
+
+    public function adminStore(AdminCreateRequest $request)
+    {
+        return Admin::create([
+            'email' => $request->validated('email'),
+            'password' => bcrypt($request->validated('password')),
+            'role' => $request->validated('role'),
+        ]);
+    }
+
+    public function adminDestroy(Admin $admin, AdminDeleteRequest $request)
+    {
+        $admin->delete();
     }
 }

@@ -4,9 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class RedirectIfAdminAuthenticated
+class OnlyAdmin
 {
     /**
      * Handle an incoming request.
@@ -15,17 +16,7 @@ class RedirectIfAdminAuthenticated
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! admin()->check()) {
-            return $next($request);
-        }
-
-        if (admin()->user()->isAdmin()) {
-            return to_route('admin.fragments');
-        }
-
-        if (admin()->user()->isSeo()) {
-            return to_route('admin.seo.index');
-        }
+        abort_if(! admin()->user()->isAdmin(), HttpResponse::HTTP_UNAUTHORIZED);
 
         return $next($request);
     }

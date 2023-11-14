@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Support\Enums\AdminRole;
 use Illuminate\Database\Seeder;
 
 class AdminSeeder extends Seeder
@@ -16,6 +17,7 @@ class AdminSeeder extends Seeder
             'name' => 'superuser',
             'email' => 'admin',
             'password' => bcrypt('12345678'),
+            'role' => AdminRole::admin,
         ]);
     }
 }
