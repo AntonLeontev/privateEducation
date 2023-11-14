@@ -13,10 +13,10 @@ class CurrencyRatesService
 
         $obj = $this->toObject($response->body());
 
-        $date = Carbon::parse($obj->Cube->Cube[0]->{'@attributes'}->time);
+        $date = Carbon::parse($obj->Cube->Cube->{'@attributes'}->time);
         $rate = 0;
 
-        foreach ($obj->Cube->Cube[0]->Cube as $value) {
+        foreach ($obj->Cube->Cube->Cube as $value) {
             if ($value->{'@attributes'}->currency === 'USD') {
                 $rate = (float) $value->{'@attributes'}->rate;
             }

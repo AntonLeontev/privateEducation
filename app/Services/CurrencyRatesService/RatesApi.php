@@ -12,7 +12,8 @@ class RatesApi
     public static function getECB()
     {
         return Http::retry(5, 3000)
-            ->get('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml');
+            // ->get('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml');
+            ->get('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml');
     }
 
     /**
