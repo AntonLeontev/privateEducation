@@ -125,6 +125,8 @@
 					class="z-50 auth-modal modal-content modal-content_audio" 
 					x-show="modalText"
 					@keydown.esc.window="modalText = false"
+					x-data="redactor"
+					@redactor.window="open"
 					style="display: none"
 				>
 					<div class="modal-content__header">
@@ -137,13 +139,71 @@
 								<textarea 
 									class="h-full p-1 text-black resize-none rounded-xl" 
 									:name="lang === 'ru' ? 'text_ru' : 'text_en'" 
-									:value="lang === 'ru' ? selectedFragment.presentation.text_ru : selectedFragment.presentation.text_en"
+									:value="text"
 								></textarea>
 								<button class="myBtn action-btn auth-modal__login-btn">СОХРАНИТЬ</button>
 							</form>
 						</div>
 					</div>
 				</div>
+
+				<script>
+					document.addEventListener('alpine:init', () => {
+						Alpine.data('redactor', () => ({
+							text: null,
+
+							open() {
+								this.text = this.lang === 'ru' 
+									? this.clean(this.selectedFragment.presentation.text_ru) 
+									: this.clean(this.selectedFragment.presentation.text_en)
+
+								this.modalText = true
+							},
+							clean(text) {
+								let arr = text.split(/<p>|<\/p><p>|<\/p>/)
+								
+								if (arr.length === 0) {
+									return text
+								}
+
+								arr.splice(arr.length - 1, 1)
+								arr.splice(0, 1)
+
+								return arr.join('\n')
+							},
+							addParagraphs(text) {
+								if (text.trim() === '') {
+									return text
+								}
+
+								return text.split('\n')
+									.map(line => `<p>${line}</p>`)
+									.join('')
+							},
+							updatePresentationText() {
+								let data = new FormData(this.$event.target)
+
+								let text = this.addParagraphs(data.get(`text_${this.lang}`))
+
+								data.set(`text_${this.lang}`, text)
+
+								axios
+									.post(
+										route('admin.presentations.update', this.selectedFragment.id),
+										data
+									)
+									.then(response => {
+										this.selectedFragment.presentation = response.data
+									})
+									.catch(error => alert('Ошибка сохранения'))
+									.finally(() => {
+										this.modalText = false
+									})
+									
+							},
+						}))
+					})
+				</script>
 
             </div>
 
@@ -190,21 +250,6 @@
 								if (this.page === 'video') return 'Upload video files'
 								if (this.page === 'presentation') return 'Upload presentation files'
 							}
-						},
-						updatePresentationText() {
-							axios
-								.postForm(
-									route('admin.presentations.update', this.selectedFragment.id),
-									this.$event.target
-								)
-								.then(response => {
-									this.selectedFragment.presentation = response.data
-								})
-								.catch(error => alert('Ошибка сохранения'))
-								.finally(() => {
-									this.modalText = false
-								})
-								
 						},
 					}))
                 })

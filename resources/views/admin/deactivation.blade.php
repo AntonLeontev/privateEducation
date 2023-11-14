@@ -259,7 +259,14 @@
 						<div class="mb-4 modal-content__title">
 							<span class="px-4" x-text="lang === 'ru' ? selectedFragment?.title_ru : selectedFragment?.title_en"></span>
 						</div>
-						<div class="whitespace-pre-line text-[20px]" x-text="lang === 'ru' ? selectedFragment?.presentation.text_ru : selectedFragment?.presentation.text_en"></div>
+						<style>
+							.presentation-text p {
+								min-height: 1rem;
+								text-indent: 25px;
+								text-align: justify;
+							}
+						</style>
+						<div class="whitespace-pre-line text-[20px] presentation-text" x-html="lang === 'ru' ? selectedFragment?.presentation.text_ru : selectedFragment?.presentation.text_en"></div>
 					</div>
 				</div>
 			</div>

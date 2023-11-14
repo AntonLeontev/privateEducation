@@ -71,7 +71,7 @@
 				this.$dispatch('click-fragment')
 
 				if (icon === 'text') {
-					this.modalText = true;
+					this.$dispatch('redactor')
 					return
 				}
 				
