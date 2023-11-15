@@ -12,6 +12,6 @@ class PresentationViewSeeder extends Seeder
      */
     public function run(): void
     {
-        PresentationViewFactory::new()->count(300)->create();
+        PresentationViewFactory::new()->count(590)->create();
     }
 }

@@ -23,6 +23,7 @@ class PresentationViewFactory extends Factory
             'presentation_id' => Presentation::inRandomOrder()->first()->id,
             'lang' => $this->faker->randomElement(['en', 'ru']),
             'is_reading' => $this->faker->boolean(25),
+            'is_passive' => $this->faker->boolean(75),
             'created_at' => $this->faker->dateTimeBetween('-6 months'),
         ];
     }

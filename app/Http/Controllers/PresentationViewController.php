@@ -16,6 +16,12 @@ class PresentationViewController extends Controller
             ->where('created_at', '>=', $start->startOfDay())
             ->where('created_at', '<=', $end->endOfDay())
             ->where('lang', 'en')
+            ->when($request->get('content') === 'sum', function (Builder $query) {
+                return $query->where('is_passive', false);
+            })
+            ->when($request->get('content') === 'passive', function (Builder $query) {
+                return $query->where('is_passive', true);
+            })
             ->when($request->get('content') === 'audio', function (Builder $query) {
                 return $query->where('is_reading', true);
             })
@@ -31,6 +37,12 @@ class PresentationViewController extends Controller
             ->where('created_at', '>=', $start->startOfDay())
             ->where('created_at', '<=', $end->endOfDay())
             ->where('lang', 'ru')
+            ->when($request->get('content') === 'sum', function (Builder $query) {
+                return $query->where('is_passive', false);
+            })
+            ->when($request->get('content') === 'passive', function (Builder $query) {
+                return $query->where('is_passive', true);
+            })
             ->when($request->get('content') === 'audio', function (Builder $query) {
                 return $query->where('is_reading', true);
             })
@@ -56,6 +68,12 @@ class PresentationViewController extends Controller
             ])
             ->where('created_at', '>=', $start->startOfDay())
             ->where('created_at', '<=', $end->endOfDay())
+            ->when($request->get('content') === 'sum', function (Builder $query) {
+                return $query->where('is_passive', false);
+            })
+            ->when($request->get('content') === 'passive', function (Builder $query) {
+                return $query->where('is_passive', true);
+            })
             ->when($request->get('content') === 'audio', function (Builder $query) {
                 return $query->where('is_reading', true);
             })
@@ -87,6 +105,12 @@ class PresentationViewController extends Controller
             $sum = DB::table('presentation_views')
                 ->where('created_at', '>=', $date->startOfDay())
                 ->where('created_at', '<=', now()->subDays($day)->endOfDay())
+                ->when($request->get('content') === 'sum', function (Builder $query) {
+                    return $query->where('is_passive', false);
+                })
+                ->when($request->get('content') === 'passive', function (Builder $query) {
+                    return $query->where('is_passive', true);
+                })
                 ->when($request->get('content') === 'audio', function (Builder $query) {
                     return $query->where('is_reading', true);
                 })
@@ -102,6 +126,12 @@ class PresentationViewController extends Controller
                 ->where('created_at', '>=', $date->startOfDay())
                 ->where('created_at', '<=', now()->subDays($day)->endOfDay())
                 ->where('lang', 'ru')
+                ->when($request->get('content') === 'sum', function (Builder $query) {
+                    return $query->where('is_passive', false);
+                })
+                ->when($request->get('content') === 'passive', function (Builder $query) {
+                    return $query->where('is_passive', true);
+                })
                 ->when($request->get('content') === 'audio', function (Builder $query) {
                     return $query->where('is_reading', true);
                 })
@@ -117,6 +147,12 @@ class PresentationViewController extends Controller
                 ->where('created_at', '>=', $date->startOfDay())
                 ->where('created_at', '<=', now()->subDays($day)->endOfDay())
                 ->where('lang', 'en')
+                ->when($request->get('content') === 'sum', function (Builder $query) {
+                    return $query->where('is_passive', false);
+                })
+                ->when($request->get('content') === 'passive', function (Builder $query) {
+                    return $query->where('is_passive', true);
+                })
                 ->when($request->get('content') === 'audio', function (Builder $query) {
                     return $query->where('is_reading', true);
                 })

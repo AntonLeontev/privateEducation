@@ -140,5 +140,21 @@
 			</x-admin.menu.submenu>
 		</x-admin.menu.item>
 
+		<x-admin.menu.item title="Пассивные просмотры">
+			<x-admin.menu.subitem stats="pres" page="passive" title="Пассивные просмотры презентаций">
+				<img width="25px" src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
+				<div class="">
+					Пассивные просмотры презентаций
+				</div>
+			</x-admin.menu.subitem>
+
+			<x-admin.menu.subitem stats="metrics-pres" page="passive" title="График пассивных просмотров">
+				<img width="25px" src="{{ Vite::asset('resources/images/icon5.png') }}" alt="">
+				<div>
+					График пассивных просмотров
+				</div>
+			</x-admin.menu.subitem>
+		</x-admin.menu.item>
+
     </ul>
 </nav>

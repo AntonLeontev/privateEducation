@@ -118,7 +118,10 @@
 								this.stats = 'pres';
 							}
 							
-							this.page = 'sum';
+							if (this.page != 'passive') {
+								this.page = 'sum';
+							}
+							
 							this.fragment = fragment;
 						} else {
 							if (this.stats === 'metrics-pres') {
