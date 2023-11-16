@@ -71,6 +71,16 @@
 			</li>
 		@endif
 
+		@if (Route::has('admin.payments.page'))
+			<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.payments.page')) !bg-[#50657c] @endif">
+				<a class="right-menu__link" href="{{ route('admin.payments.page') }}">
+					<span class="right-menu-link__wrapper">
+						<span class="right-menu-link__text @if (Route::is('admin.payments.page')) !text-primary @endif">Транзакции</span>
+					</span>
+				</a>
+			</li>
+		@endif
+
 		@if (Route::has('admin.admins'))
 			<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.admins')) !bg-[#50657c] @endif">
 				<a class="right-menu__link" href="{{ route('admin.admins') }}">

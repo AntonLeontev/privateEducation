@@ -86,6 +86,11 @@ class User extends Authenticatable
         return $this->hasMany(ActionLog::class);
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     public function newEloquentBuilder($query)
     {
         return new UserQueryBuilder($query);

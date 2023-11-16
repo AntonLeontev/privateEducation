@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Support\Traits\WorksWithPeriods;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ActionsIndexRequest extends FormRequest
+class PaymentsIndexRequest extends FormRequest
 {
     use WorksWithPeriods;
 

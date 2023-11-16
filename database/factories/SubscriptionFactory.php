@@ -26,8 +26,10 @@ class SubscriptionFactory extends Factory
 
         $location = $this->faker->randomElement($countries[$locale]);
 
+        $userIds = User::all('id')->pluck('id');
+
         return [
-            'user_id' => User::inRandomOrder()->first()->id,
+            'user_id' => $this->faker->randomElement($userIds),
             'subscribable_id' => $this->faker->randomElement(range(1, 17)),
             'subscribable_type' => $this->faker->randomElement(['video', 'audio']),
             'lang' => $locale,

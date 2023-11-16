@@ -8,6 +8,7 @@ use App\Http\Controllers\FragmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\PresentationViewController;
 use App\Http\Controllers\RegisterUserController;
@@ -124,6 +125,9 @@ Route::prefix('admin')
 
                         Route::get('actions', [ActionLogController::class, 'page'])->name('actions.page');
                         Route::get('actions/index', [ActionLogController::class, 'index'])->name('actions.index');
+
+                        Route::get('payments', [PaymentController::class, 'page'])->name('payments.page');
+                        Route::get('payments/index', [PaymentController::class, 'index'])->name('payments.index');
                     });
 
                 Route::middleware(['admin.detect'])
