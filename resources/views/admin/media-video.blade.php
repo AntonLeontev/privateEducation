@@ -26,7 +26,7 @@
     </div>
 
     <div class="pt-2">
-        <div class="mb-1 text-lg font-bold" :class="page == 'video' ? 'text-[#fe7db0]' : 'text-secondary'">Моно звук</div>
+        <div class="mb-1 text-lg font-bold" :class="page == 'video' ? 'text-[#ffbcd7]' : 'text-secondary'">Моно звук</div>
 
         <div class="flex justify-around gap-x-10">
             <div class="">
