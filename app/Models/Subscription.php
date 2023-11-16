@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Casts\PriceCast;
 use App\Casts\SubscribableTypeCast;
 use App\Events\SubscriptionCreated;
+use App\Events\SubscriptionCreating;
 use App\Support\Enums\MediaLang;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +38,7 @@ class Subscription extends Model
     protected $with = [];
 
     protected $dispatchesEvents = [
+        'creating' => SubscriptionCreating::class,
         'created' => SubscriptionCreated::class,
     ];
 
@@ -48,12 +50,5 @@ class Subscription extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    protected static function booted(): void
-    {
-        static::creating(function (Subscription $sub) {
-            $sub->ends_at = $sub->created_at->addDays(30);
-        });
     }
 }
