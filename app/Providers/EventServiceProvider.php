@@ -8,6 +8,7 @@ use App\Events\TwoFactorRequested;
 use App\Events\UserRegistered;
 use App\Events\ViewCreated;
 use App\Listeners\LogPresentationView;
+use App\Listeners\LogSubscription;
 use App\Listeners\LogView;
 use App\Listeners\SendAuthorizationCode;
 use App\Listeners\SendRegisterEmail;
@@ -28,6 +29,7 @@ class EventServiceProvider extends ServiceProvider
 
         SubscriptionCreated::class => [
             SyncCreatingDateInUsersTable::class,
+            LogSubscription::class,
         ],
 
         TwoFactorRequested::class => [

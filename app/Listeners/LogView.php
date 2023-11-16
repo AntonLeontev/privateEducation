@@ -10,7 +10,7 @@ class LogView implements ShouldQueue
 {
     public function handle(ViewCreated $event): void
     {
-        $action = $event->view->viewable_type === 'App\\Models\\Audio'
+        $action = $event->view->viewable_type === 'App\Models\Audio'
             ? 'Прослушивание аудио фрагмента №'.$event->view->viewable_id
             : 'Просмотр видео фрагмента №'.$event->view->viewable_id;
 
