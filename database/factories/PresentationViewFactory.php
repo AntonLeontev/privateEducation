@@ -18,8 +18,10 @@ class PresentationViewFactory extends Factory
      */
     public function definition(): array
     {
+        $userIds = User::all('id')->pluck('id');
+
         return [
-            'user_id' => User::inRandomOrder()->first()->id,
+            'user_id' => $this->faker->randomElement($userIds),
             'presentation_id' => Presentation::inRandomOrder()->first()->id,
             'lang' => $this->faker->randomElement(['en', 'ru']),
             'is_reading' => $this->faker->boolean(25),

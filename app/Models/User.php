@@ -81,6 +81,11 @@ class User extends Authenticatable
         return $this->hasMany(PresentationView::class);
     }
 
+    public function actionLogs(): HasMany
+    {
+        return $this->hasMany(ActionLog::class);
+    }
+
     public function newEloquentBuilder($query)
     {
         return new UserQueryBuilder($query);

@@ -23,9 +23,10 @@ class ViewFactory extends Factory
             Video::class,
             Audio::class,
         ]);
+        $userIds = User::all('id')->pluck('id');
 
         return [
-            'user_id' => User::inRandomOrder()->first(['id'])->id,
+            'user_id' => $this->faker->randomElement($userIds),
             'viewable_id' => $this->faker->numberBetween(1, 17),
             'viewable_type' => $model,
             'lang' => $this->faker->randomElement(['ru', 'en']),

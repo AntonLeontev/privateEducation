@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\PresentationViewCreated;
 use App\Support\Enums\MediaLang;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +22,10 @@ class PresentationView extends Model
     protected $casts = [
         'lang' => MediaLang::class,
         'is_reading' => 'boolean',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => PresentationViewCreated::class,
     ];
 
     public function user(): BelongsTo

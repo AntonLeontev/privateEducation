@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\ViewCreated;
 use App\Support\Enums\MediaLang;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,10 @@ class View extends Model
 
     protected $casts = [
         'lang' => MediaLang::class,
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => ViewCreated::class,
     ];
 
     public function viewable(): MorphTo

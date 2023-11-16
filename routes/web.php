@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActionLogController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AudioController;
@@ -120,6 +121,9 @@ Route::prefix('admin')
                             ->name('presentations.update');
 
                         Route::post('media/create', [MediaController::class, 'store'])->name('media.store');
+
+                        Route::get('actions', [ActionLogController::class, 'page'])->name('actions.page');
+                        Route::get('actions/index', [ActionLogController::class, 'index'])->name('actions.index');
                     });
 
                 Route::middleware(['admin.detect'])

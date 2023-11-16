@@ -61,6 +61,16 @@
 			</li>
 		@endif
 
+		@if (Route::has('admin.actions.page'))
+			<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.actions.page')) !bg-[#50657c] @endif">
+				<a class="right-menu__link" href="{{ route('admin.actions.page') }}">
+					<span class="right-menu-link__wrapper">
+						<span class="right-menu-link__text @if (Route::is('admin.actions.page')) !text-primary @endif">Журнал действий</span>
+					</span>
+				</a>
+			</li>
+		@endif
+
 		@if (Route::has('admin.admins'))
 			<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.admins')) !bg-[#50657c] @endif">
 				<a class="right-menu__link" href="{{ route('admin.admins') }}">

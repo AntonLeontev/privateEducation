@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\PresentationViewCreated;
 use App\Events\SubscriptionCreated;
 use App\Events\TwoFactorRequested;
 use App\Events\UserRegistered;
+use App\Events\ViewCreated;
+use App\Listeners\LogPresentationView;
+use App\Listeners\LogView;
 use App\Listeners\SendAuthorizationCode;
 use App\Listeners\SendRegisterEmail;
 use App\Listeners\SyncCreatingDateInUsersTable;
@@ -28,6 +32,14 @@ class EventServiceProvider extends ServiceProvider
 
         TwoFactorRequested::class => [
             SendAuthorizationCode::class,
+        ],
+
+        PresentationViewCreated::class => [
+            LogPresentationView::class,
+        ],
+
+        ViewCreated::class => [
+            LogView::class,
         ],
     ];
 
