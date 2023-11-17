@@ -36,11 +36,11 @@
 		<div class="w-[18%] grow-0 shrink-0 overflow-hidden truncate text-secondary" :title="user.email" x-text="user.email"></div>
 		<div class="w-[10%] text-center text-secondary" title="Страна">Россия</div>
 		<div class="w-[10%] text-center text-secondary" title="Город">Москва</div>
-		<div class="flex justify-start gap-3 w-[25%]">
+		<div class="flex justify-center gap-3 w-[30%]">
 			<label class="px-1 text-center transition text-secondary swap swap-rotate rounded-xl hover:bg-primary">
 				<input type="checkbox" x-model="userStat" />
 				
-				<div class="swap-on">За все время:</div>
+				<div class="truncate swap-on">За все время:</div>
 				<div class="swap-off">Активные:</div>
 			</label>
 			<div class="flex w-[150px] overflow-hidden bg-[#28568c] text-primary rounded-xl" x-show="!userStat">
@@ -62,9 +62,9 @@
 				></div>
 			</div>
 		</div>
-		<div class="w-[15%] text-center text-secondary" title="Дата последней покупки" x-show="!userStat" x-text="user.last_subscription_time"></div>
-		<div class="w-[15%] text-center text-secondary" title="Дата первой покупки" x-show="userStat" x-text="user.first_subscription_created_at"></div>
-		<div class="w-[15%] text-center text-secondary" title="Дата регистрации" x-text="user.created_at"></div>
+		<div class="w-[10%] text-center text-secondary" title="Дата последней покупки" x-show="!userStat" x-text="user.last_subscription_time"></div>
+		<div class="w-[10%] text-center text-secondary" title="Дата первой покупки" x-show="userStat" x-text="user.first_subscription_created_at"></div>
+		<div class="w-[10%] text-center text-secondary" title="Дата регистрации" x-text="user.created_at"></div>
 		<div class="w-[5%] text-center cursor-pointer flex justify-center">
 			<svg class="w-6 h-6 transition duration-500 text-secondary" :class="show && 'rotate-180'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />

@@ -75,6 +75,7 @@
 							</div>
 						</div>
 					</template>
+					<div class="h-[200px] flex justify-center items-center text-white" x-show="actions.length == 0">Активности за выбранный период не было</div>
 				</div>
 			</div>
 			<nav role="navigation" aria-label="Pagination Navigation" class="flex justify-start pt-3 pb-4 gap-x-5" x-show="paginatorMeta?.next_cursor || paginatorMeta?.prev_cursor" x-cloak>
