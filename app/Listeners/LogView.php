@@ -4,19 +4,25 @@ namespace App\Listeners;
 
 use App\Events\ViewCreated;
 use App\Models\ActionLog;
+use App\Support\Enums\ActionLogType;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class LogView implements ShouldQueue
 {
     public function handle(ViewCreated $event): void
     {
-        $action = $event->view->viewable_type === 'App\Models\Audio'
-            ? 'Прослушивание аудио фрагмента №'.$event->view->viewable_id
-            : 'Просмотр видео фрагмента №'.$event->view->viewable_id;
+        if ($event->view->viewable_type === 'App\Models\Audio') {
+            $action = 'Прослушивание аудио фрагмента №'.$event->view->viewable_id;
+            $type = ActionLogType::listen;
+        } else {
+            $action = 'Просмотр видео фрагмента №'.$event->view->viewable_id;
+            $type = ActionLogType::viewVideo;
+        }
 
         ActionLog::create([
             'user_id' => $event->view->user_id,
             'action' => $action,
+            'type' => $type,
             'created_at' => $event->view->created_at,
         ]);
     }

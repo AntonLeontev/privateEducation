@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\PresentationViewCreated;
 use App\Models\ActionLog;
+use App\Support\Enums\ActionLogType;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class LogPresentationView implements ShouldQueue
@@ -23,10 +24,13 @@ class LogPresentationView implements ShouldQueue
     {
         if ($event->presentationView->is_reading) {
             $action = 'Чтение презентации фрагмента №';
+            $type = ActionLogType::reading;
+        } elseif ($event->presentationView->is_passive) {
+            $action = 'Пассивный просмотр видео презентации фрагмента №';
+            $type = ActionLogType::passiveView;
         } else {
-            $action = $event->presentationView->is_passive
-                ? 'Пассивный просмотр видео презентации фрагмента №'
-                : 'Просмотр видео презентации фрагмента №';
+            $action = 'Просмотр видео презентации фрагмента №';
+            $type = ActionLogType::viewPresentation;
         }
 
         $action .= $event->presentationView->presentation_id;
@@ -34,6 +38,7 @@ class LogPresentationView implements ShouldQueue
         ActionLog::create([
             'user_id' => $event->presentationView->user_id,
             'action' => $action,
+            'type' => $type,
             'created_at' => $event->presentationView->created_at,
         ]);
     }

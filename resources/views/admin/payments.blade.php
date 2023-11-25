@@ -70,8 +70,8 @@
 						>
 							<div class="flex w-full">
 								<div class="w-[25%] overflow-hidden truncate text-secondary" x-text="payment.user.email"></div>
-								<div class="w-[35%] text-secondary" x-text="payment.external_id"></div>
-								<div class="w-[10%] text-secondary" x-text="payment.status"></div>
+								<div class="w-[35%]" :class="colorClass(payment)" x-text="payment.external_id"></div>
+								<div class="w-[10%]" :class="colorClass(payment)" x-text="payment.status"></div>
 								<div class="w-[10%] text-secondary" x-text="payment.amount + payment.currency"></div>
 								<div class="w-[15%] text-secondary" x-text="payment.created_at"></div>
 							</div>
@@ -145,6 +145,14 @@
 				nextPage() {
 					this.loadingPagination = true
 					this.page = this.page + 1
+				},
+				colorClass(payment) {
+					return {
+						'text-[#1caab7]': payment.status === 'Создана',
+						'text-[#f8fe58]': payment.status === 'Успешно',
+						'text-[#c33e5e]': payment.status === 'Не успешно',
+						'text-[#fefefe]': payment.status === 'Отменено',
+					}
 				},
 			}))
 		})

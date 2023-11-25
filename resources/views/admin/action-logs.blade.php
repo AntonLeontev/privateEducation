@@ -50,7 +50,6 @@
 						>
 					</label>
 				</form>
-				{{-- <button class="px-3 py-2 ml-10 transition border rounded-xl hover:bg-primary hover:border-primary" @click="showFilter = !showFilter">Фильтр</button> --}}
 				<x-admin.menu-button />
 			</div>
 		</header>
@@ -70,7 +69,7 @@
 						>
 							<div class="flex w-full">
 								<div class="w-[25%] overflow-hidden truncate text-secondary" x-text="action.user.email"></div>
-								<div class="w-[50%] text-secondary" x-text="action.action"></div>
+								<div class="w-[50%]" :class="actionStyleClass(action)" x-text="action.action"></div>
 								<div class="w-[25%] text-secondary" x-text="action.created_at"></div>
 							</div>
 						</div>
@@ -143,6 +142,15 @@
 				nextPage() {
 					this.loadingPagination = true
 					this.page = this.page + 1
+				},
+				actionStyleClass(action) {
+					return {
+						'text-[#28568c]': action.type === 'subscription',
+						'text-[#f8fe58]': action.type === 'view video' || action.type === 'view presentation',
+						'text-[#ffcab2]': action.type === 'passive view',
+						'text-[#fefefe]': action.type === 'listen',
+						'text-[#1caab7]': action.type === 'reading',
+					}
 				},
 			}))
 		})

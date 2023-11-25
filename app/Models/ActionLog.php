@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Enums\ActionLogType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +17,12 @@ class ActionLog extends Model
     protected $fillable = [
         'user_id',
         'action',
+        'type',
         'created_at',
+    ];
+
+    protected $casts = [
+        'type' => ActionLogType::class,
     ];
 
     public function user(): BelongsTo
