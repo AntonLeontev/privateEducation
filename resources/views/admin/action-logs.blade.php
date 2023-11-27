@@ -146,10 +146,10 @@
 				actionStyleClass(action) {
 					return {
 						'text-[#28568c]': action.type === 'subscription',
-						'text-[#f8fe58]': action.type === 'view video' || action.type === 'view presentation',
+						'text-[#ffd92a]': action.type === 'view video' || action.type === 'view presentation',
 						'text-[#ffcab2]': action.type === 'passive view',
 						'text-[#fefefe]': action.type === 'listen',
-						'text-[#1caab7]': action.type === 'reading',
+						'text-[rgb(61,223,238)]': action.type === 'reading',
 					}
 				},
 			}))

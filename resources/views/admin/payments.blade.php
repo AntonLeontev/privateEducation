@@ -148,7 +148,7 @@
 				},
 				colorClass(payment) {
 					return {
-						'text-[#1caab7]': payment.status === 'Создана',
+						'text-[#28568c]': payment.status === 'Создана',
 						'text-[#f8fe58]': payment.status === 'Успешно',
 						'text-[#c33e5e]': payment.status === 'Не успешно',
 						'text-[#fefefe]': payment.status === 'Отменено',
