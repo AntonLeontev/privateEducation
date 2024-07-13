@@ -68,5 +68,11 @@ class Kernel extends HttpKernel
         'admin.guest' => \App\Http\Middleware\RedirectIfAdminAuthenticated::class,
         'admin.detect' => \App\Http\Middleware\DetectAdminActivity::class,
         'only_admin' => \App\Http\Middleware\OnlyAdmin::class,
+
+        'localize' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
+        'localizationRedirect' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
+        'localeSessionRedirect' => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
+        'localeCookieRedirect' => \Mcamara\LaravelLocalization\Middleware\LocaleCookieRedirect::class,
+        'localeViewPath' => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
     ];
 }

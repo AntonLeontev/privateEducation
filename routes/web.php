@@ -19,6 +19,7 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ViewController;
 use App\Services\CurrencyRatesService\CurrencyRatesService;
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,12 +37,31 @@ if (app()->isLocal()) {
     });
 }
 
-Route::get('/', HomeController::class)->name('home');
-Route::view('about', 'about')->name('about');
-Route::view('copyright', 'copyright')->name('copyright');
-Route::view('commercial', 'commercial')->name('commercial');
-Route::view('privacy', 'privacy')->name('privacy');
-Route::view('contacts', 'contacts')->name('contacts');
+Route::prefix(LaravelLocalization::setLocale())
+    ->middleware(['localeSessionRedirect', 'localizationRedirect'])
+    ->group(static function () {
+        Route::get('/', HomeController::class)->name('home');
+        Route::view('about', 'about')->name('about');
+        Route::view('copyright', 'copyright')->name('copyright');
+        Route::view('commercial', 'commercial')->name('commercial');
+        Route::view('privacy', 'privacy')->name('privacy');
+        Route::view('contacts', 'contacts')->name('contacts');
+
+        Route::get('/verify-email/{user:email}', [UserController::class, 'verifyEmail'])->name('verify-email');
+        Route::post('/password-reset', PasswordResetController::class)->name('password.reset');
+
+        Route::middleware('guest')
+            ->post('register', [RegisterUserController::class, 'store'])
+            ->name('register');
+
+        Route::prefix('my')
+            ->middleware('auth')
+            ->group(function () {
+                Route::view('account', 'my.account')->name('my.account');
+                Route::view('media', 'my.media')->name('my.media');
+                Route::view('password', 'my.password')->name('my.password');
+            });
+    });
 
 Route::get('media/{type}/{fragmentId}/{lang}/{sound}/{device}', [MediaController::class, 'show'])
     ->whereIn('type', ['audio', 'presentation', 'video'])
@@ -50,21 +70,6 @@ Route::get('media/{type}/{fragmentId}/{lang}/{sound}/{device}', [MediaController
     ->whereIn('sound', ['mono', 'stereo'])
     ->whereIn('device', ['mobile', 'tablet', 'notebook'])
     ->name('media.show');
-
-Route::get('/verify-email/{user:email}', [UserController::class, 'verifyEmail'])->name('verify-email');
-Route::post('/password-reset', PasswordResetController::class)->name('password.reset');
-
-Route::middleware('guest')
-    ->post('register', [RegisterUserController::class, 'store'])
-    ->name('register');
-
-Route::prefix('my')
-    ->middleware('auth')
-    ->group(function () {
-        Route::view('account', 'my.account')->name('my.account');
-        Route::view('media', 'my.media')->name('my.media');
-        Route::view('password', 'my.password')->name('my.password');
-    });
 
 Route::prefix('admin')
     ->as('admin.')

@@ -15,6 +15,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/telescope": "^4.16",
         "laravel/tinker": "^2.8",
+        "mcamara/laravel-localization": "^2.0",
         "owen-oj/laravel-getid3": "^2.2",
         "tightenco/ziggy": "^1.6"
     },
