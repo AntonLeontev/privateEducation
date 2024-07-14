@@ -53,7 +53,7 @@
                 <span>Презентация: <span class="frag">Фрагмент</span> <span class="number">№</span>1.</span>
                 <span>Заглавие</span>
             </div>
-			<div class="video-js"></div>
+			<div class="video-js" style="background-color: transparent"></div>
             {{-- <video  class="video-js"
                     controls
                     data-setup="{}"  poster="/img/player.png">
@@ -207,6 +207,93 @@
             <div class="drawer__element">
             </div>
         </div>
+
+		<style>
+			.video {
+				position: absolute;
+				top: 187px;
+				width: 522px;
+				aspect-ratio: 16/9;
+				z-index: 999;
+			}
+			.video.video_expanded {
+				top: 110px;
+				left: 381px;
+				right: 302px;
+				bottom: 270px;
+				width: auto;
+			}
+			.video .video-js {
+				width: 100%;
+				height: 100%;
+				/* max-height: 294px; */
+			}
+			.video .resize-buttons {
+				position: absolute;
+				right: 13px;
+				top: 15px;
+				height: 47px;
+  				width: 47px;
+				opacity: 0.74;
+			}
+			
+			@media screen and (max-width: 680px) and (orientation: portrait) {
+				.video {
+					top: calc(3vw + 3.8vw + 2vw + 4.5vw + 1.2vw + 4.55vw);
+					width: 100%;
+				}
+
+				.video .video-js {
+					max-height: unset;
+				}
+
+				.video .resize-buttons {
+					display: none;
+				}
+			}
+
+			@media screen and (max-width: 1024px) and (orientation: landscape) {
+				.video {
+					top: calc(0.7vw + 4px + 4.173vw + 0.79vw + 0.42vw + 4vw + 0.54vw);
+					width: 48.3962vw;
+				}
+
+				.video .resize-buttons {
+					display: none;
+				}
+			}
+			@media screen and (max-width: 1024px) and (orientation: landscape) and (max-width: 800px) and (min-width: 701px) {
+				.video {
+					/* top: calc(0.7vw + 4px + 4.173vw + 0.79vw + 0.42vw + 4vw + 0.54vw); */
+					width: calc(100vw - 3.661vw - 3.031vw - 4.055vw - 37.98vw);
+				}
+			}
+			@media screen and (max-width: 1024px) and (orientation: landscape) and (max-width: 700px) {
+				.video {
+					width: 59.0293vw;
+				}
+			}
+			
+		</style>
+		<div class="video" :class="isExpanded && 'video_expanded'" x-data="{
+			isExpanded: false,
+		}">
+			<video  class="video-js"
+                    controls
+                    data-setup="{}"  poster="/img/player.png">
+                Your browser does not support the video tag.
+            </video>
+			<div class="resize-buttons" @click="isExpanded = !isExpanded">
+				<button x-show="!isExpanded">
+					<img class="" src="/img/resize.png" alt="resize">
+				</button>
+				<button x-show="isExpanded" x-cloak>
+					<img class="" src="/img/expand-in.png" alt="expand in">
+				</button>
+			</div>
+		</div>
+
+
         <div id="dialog1" >
             <div class="dialog__top">
                 <h4>Полное содержание. Фрагмент №8</h4>
