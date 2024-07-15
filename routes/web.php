@@ -50,6 +50,8 @@ Route::prefix(LaravelLocalization::setLocale())
         Route::get('/verify-email/{user:email}', [UserController::class, 'verifyEmail'])->name('verify-email');
         Route::post('/password-reset', PasswordResetController::class)->name('password.reset');
 
+        Route::view('/login', 'auth.login')->name('login');
+
         Route::middleware('guest')
             ->post('register', [RegisterUserController::class, 'store'])
             ->name('register');
