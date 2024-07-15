@@ -39,4 +39,9 @@ class UserController extends Controller
 
         return to_route('my.media');
     }
+
+    public function personal()
+    {
+        return view('personal');
+    }
 }

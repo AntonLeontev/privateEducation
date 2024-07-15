@@ -36,19 +36,19 @@
                     });
                 }),
                     (function (e) {})(),
-                    y.addEventListener("click", function () {
+                    y?.addEventListener("click", function () {
                         (r.style.display = "flex"), (s.style.display = "none");
                     }),
-                    v.addEventListener("click", function () {
+                    v?.addEventListener("click", function () {
                         (r.style.display = "none"), (t.style.display = "flex");
                     }),
-                    i.addEventListener("click", function () {
+                    i?.addEventListener("click", function () {
                         (o.style.display = "none"),
                             (r.style.display = "flex"),
                             (p.style.display = "none"),
                             n.reset();
                     }),
-                    l.addEventListener("click", function () {
+                    l?.addEventListener("click", function () {
                         (r.style.display = "none"), (s.style.display = "flex");
                     }),
                     document.querySelectorAll("input").forEach((e) => {
@@ -202,7 +202,7 @@
                         });
                     }),
                     i
-                        .querySelector(".dialog__close")
+                        ?.querySelector(".dialog__close")
                         .addEventListener("click", () => {
                             i.style.visibility = "hidden";
                         });

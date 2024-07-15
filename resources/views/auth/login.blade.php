@@ -1,6 +1,6 @@
 @extends('layouts.app.app')
 
-@section('title', 'Личный кабинет')
+@section('title', 'Вход')
 
 @section('css')
     <link rel="stylesheet" href="/css/account.css" />

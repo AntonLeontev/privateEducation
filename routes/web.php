@@ -56,13 +56,9 @@ Route::prefix(LaravelLocalization::setLocale())
             ->post('register', [RegisterUserController::class, 'store'])
             ->name('register');
 
-        Route::prefix('my')
-            ->middleware('auth')
-            ->group(function () {
-                Route::view('account', 'my.account')->name('my.account');
-                Route::view('media', 'my.media')->name('my.media');
-                Route::view('password', 'my.password')->name('my.password');
-            });
+        Route::middleware(['auth'])
+            ->get('account', [UserController::class, 'personal'])
+            ->name('personal');
     });
 
 Route::get('media/{type}/{fragmentId}/{lang}/{sound}/{device}', [MediaController::class, 'show'])
