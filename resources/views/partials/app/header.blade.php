@@ -8,10 +8,17 @@
             <li><a href="{{ route('privacy') }}">{{ __('header.menu.privacy') }}</a></li>
             <li><a href="{{ route('contacts') }}">{{ __('header.menu.contacts') }}</a></li>
             <li>
-                <button class="lk">
-                    <img src="/img/user.png" alt="user">
-                    <span>{{ __('header.personal') }}</span>
-                </button>
+				@auth
+					<a href="{{ route('personal') }}" class="lk">
+						<img src="/img/user.png" alt="user">
+						<span>{{ auth()->user()->email }}</span>
+					</a>
+				@else
+					<a href="{{ route('login') }}" class="lk">
+						<img src="/img/user.png" alt="user">
+						<span>{{ __('header.personal') }}</span>
+					</a>
+				@endauth
             </li>
             <li>
                 <button class="menu">

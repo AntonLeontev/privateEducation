@@ -17,9 +17,9 @@
                 <div id="dialog1" class="" style="visibility: visible">
                     <div class="dialog__top">
                         <h4>Личный кабинет</h4>
-                        <button class="dialog__close">
+                        <a class="dialog__close" href="{{ route('home') }}">
 
-                        </button>
+                        </a>
                     </div>
                     <div class="dialog__center">
                         <!-- для авторизации -->
