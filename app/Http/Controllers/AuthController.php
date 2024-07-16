@@ -6,6 +6,7 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class AuthController extends Controller
 {
@@ -53,8 +54,12 @@ class AuthController extends Controller
 
     public function destroy()
     {
-        auth()->logout();
+        Auth::logout();
 
-        return to_route('home');
+        request()->session()->invalidate();
+
+        request()->session()->regenerateToken();
+
+        return redirect(LaravelLocalization::localizeUrl('/'));
     }
 }
