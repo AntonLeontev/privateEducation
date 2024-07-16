@@ -18,26 +18,26 @@
                     <div class="account-content">
                         <div class="account-content__top">
                             <h1 class="account-content__title title">
-                                <span class="account-content__title-text">Личная&nbsp;страница</span>
+                                <span class="account-content__title-text">{{ __('personal.personal') }}</span>
                             </h1>
                             <div class="account-content__action-button-bar action-button-bar">
                                 <button id="account-purchases-btn"
                                     class="action-button-bar__action-button tabs__button _active" data-tab="tab_1">
-                                    Мои&nbsp;покупки
+                                    {{ __('personal.purchases') }}
                                 </button>
                                 <button id="account-settings-btn" class="action-button-bar__action-button tabs__button"
                                     data-tab="tab_2">
-                                    Настройки
+                                    {{ __('personal.settings') }}
                                 </button>
                                 <button id="account-password-btn" class="action-button-bar__action-button tabs__button"
                                     data-tab="tab_3">
-                                    Сменить&nbsp;пароль
+                                    {{ __('personal.password') }}
                                 </button>
                             </div>
 							<form action="{{ route('logout') }}" method="POST">
 								@csrf
 								<button id="account-exit-btn" class="account-content__exit-button">
-									Выход
+									{{ __('personal.exit') }}
 								</button>
 							</form>
                         </div>
@@ -53,11 +53,11 @@
                                         <div class="purchase-item__box">
                                             <img src="/img/audio.png" alt="shop" class="purchase-item__img">
                                             <span class="purchase-item__name">
-                                                Фрагмент &#8470;&nbsp;4
+                                                {{ __('personal.fragment') }} &#8470;&nbsp;4
                                             </span>
                                         </div>
                                         <button class="purchase-item__btn-action">
-                                            Воспроизвести
+                                            {{ __('personal.play') }}
                                         </button>
                                         <span class="purchase-item__date">
                                             15.03.2021
@@ -73,82 +73,82 @@
                             <div class="account-content__inner inner-settings inner">
                                 <div class="settings settings__wrapper">
                                     <h3 class="settings__title">
-                                        Редактирование аккаунта
+                                        {{ __('personal.edit') }}
                                     </h3>
                                     <form class="settings__form">
                                         <div class="settings__section">
                                             <h4 class="settings__subtitle">
-                                                Личные данные
+                                                {{ __('personal.data') }}
                                             </h4>
                                             <ul class="settings__data-list">
                                                 <li class="settings__item">
                                                     <span class="settings__label">
-                                                        E-mail
+                                                        {{ __('personal.email') }}
                                                     </span>
                                                     <input id="settings-email" type="email" class="settings__input"
-                                                        placeholder="ivanov@gmail.com" disabled>
+                                                        value="{{ auth()->user()->email }}" disabled>
                                                 </li>
                                                 <li class="settings__item">
                                                     <span class="settings__label">
-                                                        Контактный номер
+                                                        {{ __('personal.number') }}
                                                     </span>
                                                     <input id="settings-tel" type="email" class="settings__input"
-                                                        placeholder="+7 (900) 000 00 00">
+                                                        placeholder="{{ __('personal.phone_placeholder') }}">
                                                 </li>
                                                 <li class="settings__item">
                                                     <span class="settings__label">
-                                                        Имя
+                                                        {{ __('personal.name') }}
                                                     </span>
                                                     <input id="settings-name" type="email" class="settings__input"
-                                                        placeholder="Иван">
+                                                        placeholder="{{ __('personal.name_placeholder') }}">
                                                 </li>
                                                 <li class="settings__item">
                                                     <span class="settings__label">
-                                                        Фамилия
+                                                        {{ __('personal.surname') }}
                                                     </span>
                                                     <input id="settings-surname" type="email" class="settings__input"
-                                                        placeholder="Иванов">
+                                                        placeholder="{{ __('personal.surname_placeholder') }}">
                                                 </li>
                                             </ul>
                                         </div>
                                         <div class="settings__section">
                                             <h4 class="settings__subtitle settings__subtitle--address">
-                                                Адрес
+                                                {{ __('personal.address') }}
                                             </h4>
                                             <ul class="settings__adress-list">
                                                 <li class="settings__item">
                                                     <span class="settings__label">
-                                                        Страна
+                                                        {{ __('personal.country') }}
                                                     </span>
                                                     <input id="settings-country" type="email" class="settings__input"
-                                                        placeholder="Страна">
+                                                        placeholder="{{ __('personal.country') }}">
                                                 </li>
                                                 <li class="settings__item">
                                                     <span class="settings__label">
-                                                        Город
+                                                        {{ __('personal.city') }}
                                                     </span>
                                                     <input id="settings-city" type="email" class="settings__input"
-                                                        placeholder="Город">
+                                                        placeholder="{{ __('personal.city') }}">
                                                 </li>
                                                 <li class="settings__item">
                                                     <span class="settings__label">
-                                                        Улица
+                                                        {{ __('personal.street') }}
                                                     </span>
                                                     <input id="settings-street" type="email" class="settings__input"
-                                                        placeholder="Улица">
+                                                        placeholder="{{ __('personal.street') }}">
                                                 </li>
                                                 <li id="settings-housing" class="settings__item">
                                                     <ul class="housing__list">
                                                         <li class="settings__item">
                                                             <span class="settings__label">
-                                                                Дом
+                                                                {{ __('personal.house') }}
                                                             </span>
                                                             <input id="settings-building" type="email"
                                                                 class="settings__input" placeholder="10">
                                                         </li>
                                                         <li class="settings__item">
                                                             <span class="settings__label">
-                                                                Квартира
+                                                                {{ __('personal.apartment') }}
                                                             </span>
                                                             <input id="settings-apartment" type="email"
                                                                 class="settings__input" placeholder="100">
@@ -156,7 +156,7 @@
                                                         <!--id = 'settings-index-box' для стилизации в мобилке -->
                                                         <li id="settings-index-box" class="settings__item">
                                                             <span class="settings__label">
-                                                                Индекс
+                                                                {{ __('personal.zip') }}
                                                             </span>
                                                             <input id="settings-post-index" type="email"
                                                                 class="settings__input" placeholder="123456">
@@ -167,7 +167,7 @@
                                             </ul>
                                         </div>
                                         <button class="settings__submit-btn">
-                                            Сохранить&nbsp;изменения
+                                            {{ __('personal.save') }}
                                         </button>
                                     </form>
                                 </div>
@@ -179,12 +179,12 @@
                                 <div class="password-change password-change__wrapper">
                                     <form class="password-change__form">
                                         <input type="text" class="password-change__input"
-                                            placeholder="Текущий пароль">
-                                        <input type="text" class="password-change__input" placeholder="Новый пароль">
+                                            placeholder="{{ __('personal.current_password') }}">
+                                        <input type="text" class="password-change__input" placeholder="{{ __('personal.new_password') }}">
                                         <input type="text" class="password-change__input"
-                                            placeholder="Новый пароль (повторить)">
+                                            placeholder="{{ __('personal.repeat_password') }}">
                                         <button type="submit" class="password-change__submit-btn">
-                                            Сохранить&nbsp;пароль
+                                            {{ __('personal.save_password') }}
                                         </button>
                                     </form>
                                 </div>
