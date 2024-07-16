@@ -14,7 +14,5 @@ class PresentationViewCreated
     /**
      * Create a new event instance.
      */
-    public function __construct(public PresentationView $presentationView)
-    {
-    }
+    public function __construct(public PresentationView $presentationView) {}
 }

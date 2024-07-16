@@ -10,6 +10,5 @@ class CurrencyRateDTO
         readonly public Carbon $date,
         readonly public string $name,
         readonly public float $rate,
-    ) {
-    }
+    ) {}
 }

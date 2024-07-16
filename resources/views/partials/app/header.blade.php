@@ -14,7 +14,7 @@
 						<span>{{ auth()->user()->email }}</span>
 					</a>
 				@else
-					<a href="{{ route('login') }}" class="lk" style="max-width: 245px">
+					<a href="{{ route('personal') }}" class="lk" style="max-width: 245px">
 						<img src="/img/user.png" alt="user">
 						<span>{{ __('header.personal') }}</span>
 					</a>

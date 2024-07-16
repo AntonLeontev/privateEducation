@@ -14,7 +14,5 @@ class ViewCreated
     /**
      * Create a new event instance.
      */
-    public function __construct(public View $view)
-    {
-    }
+    public function __construct(public View $view) {}
 }

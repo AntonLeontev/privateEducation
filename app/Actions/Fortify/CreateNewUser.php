@@ -4,12 +4,12 @@ namespace App\Actions\Fortify;
 
 use App\Events\UserRegistered;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Laravel\Fortify\Contracts\CreatesNewUsers;
 
-class CreateNewUser implements CreatesNewUsers
+class CreateNewUser
 {
     use PasswordValidationRules;
 
@@ -32,12 +32,20 @@ class CreateNewUser implements CreatesNewUsers
 
         $password = str()->password(10);
 
-        $user = User::create([
-            'email' => $input['email'],
-            'password' => Hash::make($password),
-        ]);
+        try {
+            DB::beginTransaction();
+            $user = User::create([
+                'email' => $input['email'],
+                'password' => Hash::make($password),
+            ]);
 
-        event(new UserRegistered($user, $password));
+            event(new UserRegistered($user, $password));
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+
+        DB::commit();
 
         return $user;
     }

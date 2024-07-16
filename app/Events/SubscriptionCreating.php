@@ -14,7 +14,5 @@ class SubscriptionCreating
     /**
      * Create a new event instance.
      */
-    public function __construct(public Subscription $subscription)
-    {
-    }
+    public function __construct(public Subscription $subscription) {}
 }

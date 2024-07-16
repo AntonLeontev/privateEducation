@@ -4,6 +4,7 @@ use App\Http\Controllers\ActionLogController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AudioController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FragmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
@@ -11,7 +12,6 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\PresentationViewController;
-use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
@@ -33,8 +33,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 */
 
 if (app()->isLocal()) {
-    Route::get('/test', function (CurrencyRatesService $service) {
-    });
+    Route::get('/test', function (CurrencyRatesService $service) {});
 }
 
 Route::prefix(LaravelLocalization::setLocale())
@@ -47,14 +46,14 @@ Route::prefix(LaravelLocalization::setLocale())
         Route::view('privacy', 'privacy')->name('privacy');
         Route::view('contacts', 'contacts')->name('contacts');
 
-        Route::get('/verify-email/{user:email}', [UserController::class, 'verifyEmail'])->name('verify-email');
-        Route::post('/password-reset', PasswordResetController::class)->name('password.reset');
-
-        Route::view('/login', 'auth.login')->name('login');
-
-        Route::middleware('guest')
-            ->post('register', [RegisterUserController::class, 'store'])
-            ->name('register');
+        Route::middleware(['guest'])->group(function () {
+            Route::get('/login', [AuthController::class, 'create'])->name('login');
+            Route::post('/login', [AuthController::class, 'login'])->name('auth');
+            Route::get('/verify-email/{user:email}', [AuthController::class, 'verifyEmail'])->name('verify-email');
+            Route::post('register', [AuthController::class, 'store'])->name('register');
+            Route::post('/password-reset', PasswordResetController::class)->name('password.reset');
+            Route::post('logout', [AuthController::class, 'destroy'])->name('logout');
+        });
 
         Route::middleware(['auth'])
             ->get('account', [UserController::class, 'personal'])

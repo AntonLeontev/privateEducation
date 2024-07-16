@@ -14,7 +14,9 @@
 
                 @include('partials.app.sidebar')
 
-                <div id="dialog1" class="" style="visibility: visible">
+                <div id="dialog1" class="" style="visibility: visible" x-data="{
+					window: 'login',
+				}">
                     <div class="dialog__top">
                         <h4>{{ __('login.title') }}</h4>
                         <a class="dialog__close" href="{{ route('home') }}">
@@ -23,7 +25,18 @@
                     </div>
                     <div class="dialog__center">
                         <!-- для авторизации -->
-                        <div id="account-autorization" class="dialog__autorization autorization">
+                        <div id="account-autorization" class="dialog__autorization autorization" x-show="window === 'login'" x-data="{
+							login(event) {
+								this.$refs.err.style.display = 'none'
+								axios
+									.post(route('auth'), new FormData(event.target))
+									.then(res => location.replace(route('personal')))
+									.catch(err => {
+										console.log(err)
+										this.$refs.err.style.display = 'block'
+									})
+							},
+						}">
                             <h3 class="autorization__title">
                                 {{ __('login.auth') }}
                             </h3>
@@ -33,29 +46,29 @@
                                     <img src="/img/user.png" alt="user" class="autorization__img" />
                                     <span class="autorization__btn-text">{!! __('login.user') !!}</span></button>
                                 <button id="autorization-mode-btn-registration"
-                                    class="autorization__btn autorization__btn--registration">
+                                    class="autorization__btn autorization__btn--registration" @click="window = 'register'">
                                     <img src="/img/user.png" alt="user"
                                         class="autorization__img autorization__img--grey" />
                                     <span class="autorization__btn-text">{{ __('login.register') }}</span></button>
                             </div>
-                            <form id="autorization-form" class="autorization__form">
+                            <form id="autorization-form" class="autorization__form" @submit.prevent="login">
                                 <span class="autorization__label">
                                     {{ __('login.email') }}:
                                 </span>
                                 <input id="autorization-email-input" type="email" class="autorization__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *">
+                                    placeholder="* * * * * * * * * * * * * * * * *" name="email">
                                 <div class="autorization__wrapper">
                                     <span class="autorization__label">
                                         {{ __('login.password') }}:
                                     </span>
-                                    <button type="button" id="autorization-password-recall-btn" class="autorization__link">
+                                    <button type="button" id="autorization-password-recall-btn" class="autorization__link" @click="window = 'forget'">
                                         {{ __('login.forget') }}
                                     </button>
 
                                 </div>
                                 <input id="autorization-password-input" type="password" class="autorization__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *">
-                                <span id="autorization-error-msg" class="autorization__error-msg">
+                                    placeholder="* * * * * * * * * * * * * * * * *" name="password">
+                                <span id="autorization-error-msg" class="autorization__error-msg" x-ref="err">
 									{{ __('login.error_message') }}
 								</span>
                                 <button type="submit" id="autorization-submit-btn" class="autorization__submit-btn">
@@ -64,13 +77,37 @@
                             </form>
                         </div>
                         <!-- для регистрации -->
-                        <div id="account-registration" class="dialog__registration registration">
+						<style>
+							.dialog__center .registration {
+								display: flex;
+								position: relative;
+							}
+							.dialog__center .registration .registration__error-msg {
+								position: absolute;
+								top: 485px;
+								font-weight: 600;
+								font-size: 33.5px;
+								color: #e9752c;
+							}
+						</style>
+                        <div id="account-registration" class="dialog__registration registration" x-show="window === 'register'" x-data="{
+							register() {
+								this.$refs.err.innerText = ''
+								axios
+									.post(route('register'), new FormData(this.$event.target))
+									.then(() => window = 'register-msg')
+									.catch(err => {
+										this.$refs.err.innerText = err.response.data.message
+										console.log(err)
+									})
+							},
+						}">
                             <h3 class="registration__title">
                                 {{ __('login.register') }}
                             </h3>
                             <div class="registration__button-box">
                                 <button id="registration-mode-btn-aurorization"
-                                    class="registration__btn registration__btn--autorization">
+                                    class="registration__btn registration__btn--autorization" @click="window = 'login'">
                                     <img src="/img/user.png" alt="user"
                                         class="registration__img registration__img--grey" />
                                     <span class="registration__btn-text">{{ __('login.auth') }}</span></button>
@@ -79,19 +116,27 @@
                                     <img src="/img/user.png" alt="user" class="registration__img" />
                                     <span class="registration__btn-text">{{ __('login.register') }}</span></button>
                             </div>
-                            <form id="registration-form" class="registration__form">
+                            <form id="registration-form" class="registration__form" @submit.prevent="register">
                                 <span class="registration__label">
                                     {{ __('login.email') }}:
                                 </span>
                                 <input id="registration-email-input" type="email" class="registration__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *">
+                                    placeholder="* * * * * * * * * * * * * * * * *" name="email">
                                 <button id="registration-submit-btn" class="registration__submit-btn">
                                     {{ __('login.register_btn') }}
                                 </button>
                             </form>
+							<span id="registration-error-msg" class="registration__error-msg" x-show="true" x-ref="err">
+								
+							</span>
                         </div>
                         <!-- напомнить пароль -->
-                        <div id="account-password-recall" class="dialog__password-recall password-reacll">
+						<style>
+							.dialog__center .password-reacll {
+								display: flex;
+							}
+						</style>
+                        <div id="account-password-recall" class="dialog__password-recall password-reacll" x-show="window === 'forget'">
                             <h3 class="password-reacll__title">
                                 {{ __('login.restore') }}
                             </h3>
@@ -109,7 +154,12 @@
 
                         </div>
                         <!--для продолжения регистрации пройдите в почту ... -->
-                        <div id="account-password-info-msg" class="dialog__password-info-msg password-info-msg">
+						<style>
+							.dialog__center .password-info-msg {
+								display: flex;
+							}
+						</style>
+                        <div id="account-password-info-msg" class="dialog__password-info-msg password-info-msg" style="display: flex" x-show="window === 'register-msg'">
                             <div class="password-info-msg__wrapper">
                                 <p class="password-info-msg__text">
                                     {{ __('login.register_message') }}
@@ -117,8 +167,13 @@
                             </div>
                         </div>
                         <!--на вашу почту отправлен пароль ... -->
+						<style>
+							.dialog__center .password-new-info-msg {
+								display: flex;
+							}
+						</style>
                         <div id="account-password-new-info-msg"
-                            class="dialog__password-new-info-msg password-new-info-msg">
+                            class="dialog__password-new-info-msg password-new-info-msg" style="display: flex" x-show="window === 'forget-msg'">
                             <div class="password-new-info-msg__wrapper">
                                 <p class="password-new-info-msg__text">
                                     {{ __('login.new_password_message') }}

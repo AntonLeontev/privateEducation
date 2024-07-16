@@ -17,9 +17,7 @@ class VerifyEmail extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public User $user, public string $password)
-    {
-    }
+    public function __construct(public User $user, public string $password) {}
 
     /**
      * Get the message envelope.

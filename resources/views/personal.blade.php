@@ -34,9 +34,12 @@
                                     Сменить&nbsp;пароль
                                 </button>
                             </div>
-                            <button id="account-exit-btn" class="account-content__exit-button">
-                                Выход
-                            </button>
+							<form action="{{ route('logout') }}" method="POST">
+								@csrf
+								<button id="account-exit-btn" class="account-content__exit-button">
+									Выход
+								</button>
+							</form>
                         </div>
 
                         <!-- по нажатии мои покупки -->

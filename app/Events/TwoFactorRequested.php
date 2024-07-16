@@ -14,7 +14,5 @@ class TwoFactorRequested
     /**
      * Create a new event instance.
      */
-    public function __construct(public Admin $admin)
-    {
-    }
+    public function __construct(public Admin $admin) {}
 }

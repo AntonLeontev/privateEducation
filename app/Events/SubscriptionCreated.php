@@ -11,7 +11,5 @@ class SubscriptionCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public Subscription $subscription)
-    {
-    }
+    public function __construct(public Subscription $subscription) {}
 }

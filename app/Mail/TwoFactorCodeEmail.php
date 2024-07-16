@@ -17,9 +17,7 @@ class TwoFactorCodeEmail extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public Admin $admin)
-    {
-    }
+    public function __construct(public Admin $admin) {}
 
     /**
      * Get the message envelope.

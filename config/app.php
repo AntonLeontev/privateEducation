@@ -1,6 +1,5 @@
 <?php
 
-use App\Providers\FortifyServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -170,7 +169,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
-        FortifyServiceProvider::class,
     ])->toArray(),
 
     /*

@@ -1,8 +1,7 @@
 (() => {
     var e = {
             297: () => {
-                const e = document.getElementById("account-password-info-msg"),
-                    t = document.getElementById("account-password-recall"),
+                const t = document.getElementById("account-password-recall"),
                     n = document.getElementById("password-reacll-form"),
                     o = document.getElementById(
                         "account-password-new-info-msg"
@@ -20,10 +19,7 @@
                     v = document.getElementById(
                         "autorization-password-recall-btn"
                     ),
-                    _ = document.getElementById("account-main-wrapper"),
-                    b = document.querySelector(".purchases__wrapper"),
-                    w = document.querySelectorAll(".tabs__button"),
-                    f = document.getElementById("dialog1");
+                    w = document.querySelectorAll(".tabs__button");
                 w.forEach((e) => {
                     e.addEventListener("click", () => {
                         const t = document.querySelector(".tabs__item._active"),
@@ -36,21 +32,21 @@
                     });
                 }),
                     (function (e) {})(),
-                    y?.addEventListener("click", function () {
-                        (r.style.display = "flex"), (s.style.display = "none");
-                    }),
-                    v?.addEventListener("click", function () {
-                        (r.style.display = "none"), (t.style.display = "flex");
-                    }),
-                    i?.addEventListener("click", function () {
-                        (o.style.display = "none"),
-                            (r.style.display = "flex"),
-                            (p.style.display = "none"),
-                            n.reset();
-                    }),
-                    l?.addEventListener("click", function () {
-                        (r.style.display = "none"), (s.style.display = "flex");
-                    }),
+                    // y?.addEventListener("click", function () {
+                    //     (r.style.display = "flex"), (s.style.display = "none");
+                    // }),
+                    // v?.addEventListener("click", function () {
+                    //     (r.style.display = "none"), (t.style.display = "flex");
+                    // }),
+                    // i?.addEventListener("click", function () {
+                    //     (o.style.display = "none"),
+                    //         (r.style.display = "flex"),
+                    //         (p.style.display = "none"),
+                    //         n.reset();
+                    // }),
+                    // l?.addEventListener("click", function () {
+                    //     (r.style.display = "none"), (s.style.display = "flex");
+                    // }),
                     document.querySelectorAll("input").forEach((e) => {
                         e.addEventListener("focus", function () {
                             window.matchMedia("(orientation: portrait)")
