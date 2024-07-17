@@ -182,7 +182,7 @@
 
                     @media screen and (max-width: 680px) and (orientation: portrait) {
                         .video {
-                            top: calc(3vw + 3.8vw + 2vw + 4.5vw + 1.2vw + 4.55vw);
+                            top: calc(3vw + 3.8vw + 2vw + 4.5vw + 1.2vw + 5.3vw);
                             width: 100%;
                         }
 
