@@ -161,6 +161,15 @@ return [
         'password' => 'Password',
         'new_password' => 'New password',
         'new_password_confirmation' => 'New password repeat',
+        'name' => 'Name',
+        'surname' => 'Surname',
+        'phone' => 'Contact number',
+        'country' => 'Country',
+        'city' => 'City',
+        'street' => 'Street',
+        'building' => 'House',
+        'apartment' => 'Apartment',
+        'zip' => 'ZIP Code',
     ],
 
 ];

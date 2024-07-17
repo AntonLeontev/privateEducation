@@ -33,6 +33,7 @@ class UpdatePasswordRequest extends FormRequest
         return [
             'password' => __('validation.attributes.password'),
             'new_password' => __('validation.attributes.new_password'),
+            'new_password_confirmation' => __('validation.attributes.new_password_confirmation'),
         ];
     }
 

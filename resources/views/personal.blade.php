@@ -69,9 +69,23 @@
                             </div>
                         </div>
                         <!-- по нажатии мои настройки -->
+						<style>
+							.error-message {
+								text-align: center;
+								font-weight: 600;
+								font-size: 33.5px;
+								color: #000;
+							}
+						</style>
                         <div id="tab_2" class="account-content__outer outer-settings outer tabs__item" x-data="{
-							save() {
+							error: '',
 
+							save(e) {
+								this.error = '';
+								
+								axios
+									.post(route('personal.update'), new FormData(e.target))
+									.catch(err => this.error = err.response.data.message)
 							},
 						}">
                             <div class="account-content__inner inner-settings inner">
@@ -97,21 +111,21 @@
                                                         {{ __('personal.number') }}
                                                     </span>
                                                     <input id="settings-tel" type="text" class="settings__input"
-                                                        placeholder="{{ __('personal.phone_placeholder') }}" name="phone">
+                                                        placeholder="{{ __('personal.phone_placeholder') }}" name="phone" value="{{ auth()->user()->phone }}">
                                                 </li>
                                                 <li class="settings__item">
                                                     <span class="settings__label">
                                                         {{ __('personal.name') }}
                                                     </span>
-                                                    <input id="settings-name" type="email" class="settings__input"
-                                                        placeholder="{{ __('personal.name_placeholder') }}">
+                                                    <input id="settings-name" type="text" class="settings__input"
+                                                        placeholder="{{ __('personal.name_placeholder') }}" name="name" value="{{ auth()->user()->name }}">
                                                 </li>
                                                 <li class="settings__item">
                                                     <span class="settings__label">
                                                         {{ __('personal.surname') }}
                                                     </span>
-                                                    <input id="settings-surname" type="email" class="settings__input"
-                                                        placeholder="{{ __('personal.surname_placeholder') }}">
+                                                    <input id="settings-surname" type="text" class="settings__input"
+                                                        placeholder="{{ __('personal.surname_placeholder') }}" name="surname" value="{{ auth()->user()->surname }}">
                                                 </li>
                                             </ul>
                                         </div>
@@ -124,22 +138,22 @@
                                                     <span class="settings__label">
                                                         {{ __('personal.country') }}
                                                     </span>
-                                                    <input id="settings-country" type="email" class="settings__input"
-                                                        placeholder="{{ __('personal.country') }}">
+                                                    <input id="settings-country" type="text" class="settings__input"
+                                                        placeholder="{{ __('personal.country') }}" name="country" value="{{ auth()->user()->country }}">
                                                 </li>
                                                 <li class="settings__item">
                                                     <span class="settings__label">
                                                         {{ __('personal.city') }}
                                                     </span>
-                                                    <input id="settings-city" type="email" class="settings__input"
-                                                        placeholder="{{ __('personal.city') }}">
+                                                    <input id="settings-city" type="text" class="settings__input"
+                                                        placeholder="{{ __('personal.city') }}" name="city" value="{{ auth()->user()->city }}">
                                                 </li>
                                                 <li class="settings__item">
                                                     <span class="settings__label">
                                                         {{ __('personal.street') }}
                                                     </span>
-                                                    <input id="settings-street" type="email" class="settings__input"
-                                                        placeholder="{{ __('personal.street') }}">
+                                                    <input id="settings-street" type="text" class="settings__input"
+                                                        placeholder="{{ __('personal.street') }}" name="street" value="{{ auth()->user()->street }}">
                                                 </li>
                                                 <li id="settings-housing" class="settings__item">
                                                     <ul class="housing__list">
@@ -147,29 +161,30 @@
                                                             <span class="settings__label">
                                                                 {{ __('personal.house') }}
                                                             </span>
-                                                            <input id="settings-building" type="email"
-                                                                class="settings__input" placeholder="10">
+                                                            <input id="settings-building" type="text"
+                                                                class="settings__input" placeholder="10" name="building" value="{{ auth()->user()->building }}">
                                                         </li>
                                                         <li class="settings__item">
                                                             <span class="settings__label">
                                                                 {{ __('personal.apartment') }}
                                                             </span>
-                                                            <input id="settings-apartment" type="email"
-                                                                class="settings__input" placeholder="100">
+                                                            <input id="settings-apartment" type="text"
+                                                                class="settings__input" placeholder="100" name="apartment" value="{{ auth()->user()->apartment }}">
                                                         </li>
                                                         <!--id = 'settings-index-box' для стилизации в мобилке -->
                                                         <li id="settings-index-box" class="settings__item">
                                                             <span class="settings__label">
                                                                 {{ __('personal.zip') }}
                                                             </span>
-                                                            <input id="settings-post-index" type="email"
-                                                                class="settings__input" placeholder="123456">
+                                                            <input id="settings-post-index" type="text"
+                                                                class="settings__input" placeholder="123456" name="zip" value="{{ auth()->user()->zip }}">
                                                         </li>
                                                     </ul>
 
                                                 </li>
                                             </ul>
                                         </div>
+										<div class="error-message" x-text="error"></div>
                                         <button class="settings__submit-btn">
                                             {{ __('personal.save') }}
                                         </button>
@@ -178,14 +193,6 @@
                             </div>
                         </div>
                         <!-- Если по нажатии сменить пароль -->
-						<style>
-							.error-message {
-								text-align: center;
-								font-weight: 600;
-								font-size: 33.5px;
-								color: #000;
-							}
-						</style>
                         <div id="tab_3" class="account-content__outer outer-password-change outer tabs__item" x-data="{
 							error: '',
 
