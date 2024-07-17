@@ -19,7 +19,7 @@
 				}">
                     <div class="dialog__top">
                         <h4>{{ __('login.title') }}</h4>
-                        <a class="dialog__close" href="{{ route('home') }}">
+                        <a class="dialog__close" href="{{ route('home') }}" style="margin-top: 0">
 
                         </a>
                     </div>
