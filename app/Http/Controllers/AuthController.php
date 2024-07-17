@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Mail\PasswordReset;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class AuthController extends Controller
@@ -61,5 +64,19 @@ class AuthController extends Controller
         request()->session()->regenerateToken();
 
         return redirect(LaravelLocalization::localizeUrl('/'));
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $user = User::where('email', $request->get('email'))->first();
+
+        if ($user) {
+            $password = str()->password(10);
+
+            $user->password = Hash::make($password);
+            $user->save();
+
+            Mail::to($user->email)->send(new PasswordReset($password, app()->getLocale()));
+        }
     }
 }

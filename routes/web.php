@@ -8,7 +8,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FragmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
-use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PresentationController;
 use App\Http\Controllers\PresentationViewController;
@@ -51,7 +50,7 @@ Route::prefix(LaravelLocalization::setLocale())
             Route::post('/login', [AuthController::class, 'login'])->name('auth');
             Route::get('/verify-email/{user:email}', [AuthController::class, 'verifyEmail'])->name('verify-email');
             Route::post('register', [AuthController::class, 'store'])->name('register');
-            Route::post('/password-reset', PasswordResetController::class)->name('password.reset');
+            Route::post('/password-reset', [AuthController::class, 'resetPassword'])->name('password.reset');
         });
         Route::post('logout', [AuthController::class, 'destroy'])->name('logout');
 

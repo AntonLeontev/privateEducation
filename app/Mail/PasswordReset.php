@@ -16,7 +16,7 @@ class PasswordReset extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $password) {}
+    public function __construct(public string $password, public $locale) {}
 
     /**
      * Get the message envelope.

@@ -17,7 +17,7 @@
                 <div id="dialog1" class="" style="visibility: visible" x-data="{
 					window: 'login',
 				}">
-                    <div class="dialog__top">
+                    <div class="dialog__top" style="align-items: center">
                         <h4>{{ __('login.title') }}</h4>
                         <a class="dialog__close" href="{{ route('home') }}" style="margin-top: 0">
 
@@ -91,7 +91,10 @@
 							}
 						</style>
                         <div id="account-registration" class="dialog__registration registration" x-show="window === 'register'" x-data="{
+							processing: false, 
+							
 							register() {
+								this.processing = true;
 								this.$refs.err.innerText = ''
 								axios
 									.post(route('register'), new FormData(this.$event.target))
@@ -100,6 +103,7 @@
 										this.$refs.err.innerText = err.response.data.message
 										console.log(err)
 									})
+									.finally(() => this.processing = false)
 							},
 						}">
                             <h3 class="registration__title">
@@ -122,7 +126,7 @@
                                 </span>
                                 <input id="registration-email-input" type="email" class="registration__input"
                                     placeholder="* * * * * * * * * * * * * * * * *" name="email">
-                                <button id="registration-submit-btn" class="registration__submit-btn">
+                                <button id="registration-submit-btn" class="registration__submit-btn" :disabled="processing">
                                     {{ __('login.register_btn') }}
                                 </button>
                             </form>
@@ -136,18 +140,29 @@
 								display: flex;
 							}
 						</style>
-                        <div id="account-password-recall" class="dialog__password-recall password-reacll" x-show="window === 'forget'">
+                        <div id="account-password-recall" class="dialog__password-recall password-reacll" x-show="window === 'forget'" x-data="{
+							processing: false,
+
+							submit(e) {
+								this.processing = true;
+
+								axios
+									.post(route('password.reset'), new FormData(e.target))
+									.then(resp => this.window = 'forget-msg')
+									.finally(() => this.processing = false)
+							}
+						}">
                             <h3 class="password-reacll__title">
                                 {{ __('login.restore') }}
                             </h3>
 
-                            <form id="password-reacll-form" class="password-reacll__form">
+                            <form id="password-reacll-form" class="password-reacll__form" @submit.prevent="submit">
                                 <span class="password-reacll__label">
                                     {{ __('login.email') }}:
                                 </span>
                                 <input id="password-reacall-input" type="email" class="password-reacll__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *">
-                                <button id="password-reacll-submit-btn" class="password-reacll__submit-btn">
+                                    placeholder="* * * * * * * * * * * * * * * * *" name="email">
+                                <button id="password-reacll-submit-btn" class="password-reacll__submit-btn" :disabled="processing">
                                     {{ __('login.restore_btn') }}
                                 </button>
                             </form>
