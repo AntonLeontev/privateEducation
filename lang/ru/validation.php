@@ -128,9 +128,16 @@ return [
     'uploaded' => 'Загрузка поля :attribute не удалась.',
     'url' => 'Значение поля :attribute имеет ошибочный формат URL.',
     'uuid' => 'Значение поля :attribute должно быть корректным UUID.',
+
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+    ],
+
+    'attributes' => [
+        'password' => 'Пароль',
+        'new_password' => 'Новый пароль',
+        'new_password_confirmation' => 'Новый пароль',
     ],
 ];

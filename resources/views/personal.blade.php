@@ -69,13 +69,17 @@
                             </div>
                         </div>
                         <!-- по нажатии мои настройки -->
-                        <div id="tab_2" class="account-content__outer outer-settings outer tabs__item">
+                        <div id="tab_2" class="account-content__outer outer-settings outer tabs__item" x-data="{
+							save() {
+
+							},
+						}">
                             <div class="account-content__inner inner-settings inner">
                                 <div class="settings settings__wrapper">
                                     <h3 class="settings__title">
                                         {{ __('personal.edit') }}
                                     </h3>
-                                    <form class="settings__form">
+                                    <form class="settings__form" @submit.prevent="save">
                                         <div class="settings__section">
                                             <h4 class="settings__subtitle">
                                                 {{ __('personal.data') }}
@@ -92,8 +96,8 @@
                                                     <span class="settings__label">
                                                         {{ __('personal.number') }}
                                                     </span>
-                                                    <input id="settings-tel" type="email" class="settings__input"
-                                                        placeholder="{{ __('personal.phone_placeholder') }}">
+                                                    <input id="settings-tel" type="text" class="settings__input"
+                                                        placeholder="{{ __('personal.phone_placeholder') }}" name="phone">
                                                 </li>
                                                 <li class="settings__item">
                                                     <span class="settings__label">
@@ -174,15 +178,38 @@
                             </div>
                         </div>
                         <!-- Если по нажатии сменить пароль -->
-                        <div id="tab_3" class="account-content__outer outer-password-change outer tabs__item">
+						<style>
+							.error-message {
+								text-align: center;
+								font-weight: 600;
+								font-size: 33.5px;
+								color: #000;
+							}
+						</style>
+                        <div id="tab_3" class="account-content__outer outer-password-change outer tabs__item" x-data="{
+							error: '',
+
+							save(e) {
+								this.error = '';
+								
+								axios
+									.post(route('account.password'), new FormData(e.target))
+									.then(e.target.reset())
+									.catch(err => {
+										this.error = err.response.data.message
+									})
+							},
+						}">
                             <div class="account-content__inner inner-password-change inner">
                                 <div class="password-change password-change__wrapper">
-                                    <form class="password-change__form">
-                                        <input type="text" class="password-change__input"
-                                            placeholder="{{ __('personal.current_password') }}">
-                                        <input type="text" class="password-change__input" placeholder="{{ __('personal.new_password') }}">
-                                        <input type="text" class="password-change__input"
-                                            placeholder="{{ __('personal.repeat_password') }}">
+                                    <form class="password-change__form" @submit.prevent="save">
+                                        <input type="password" class="password-change__input"
+                                            placeholder="{{ __('personal.current_password') }}" name="password">
+                                        <input type="password" class="password-change__input" placeholder="{{ __('personal.new_password') }}"
+											name="new_password">
+                                        <input type="password" class="password-change__input"
+                                            placeholder="{{ __('personal.repeat_password') }}" name="new_password_confirmation">
+										<div class="error-message" x-text="error"></div>
                                         <button type="submit" class="password-change__submit-btn">
                                             {{ __('personal.save_password') }}
                                         </button>

@@ -55,9 +55,14 @@ Route::prefix(LaravelLocalization::setLocale())
         });
         Route::post('logout', [AuthController::class, 'destroy'])->name('logout');
 
-        Route::middleware(['auth'])
-            ->get('account', [UserController::class, 'personal'])
-            ->name('personal');
+        Route::middleware(['auth'])->group(function () {
+            Route::get('account', [UserController::class, 'personal'])
+                ->name('personal');
+            Route::post('account', [UserController::class, 'update'])
+                ->name('personal.update');
+            Route::post('personal/password', [UserController::class, 'updatePassword'])
+                ->name('account.password');
+        });
     });
 
 Route::get('media/{type}/{fragmentId}/{lang}/{sound}/{device}', [MediaController::class, 'show'])

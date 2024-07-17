@@ -157,6 +157,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'password' => 'Password',
+        'new_password' => 'New password',
+        'new_password_confirmation' => 'New password repeat',
+    ],
 
 ];
