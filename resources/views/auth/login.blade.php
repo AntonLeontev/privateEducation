@@ -194,9 +194,9 @@
                                     {{ __('login.new_password_message') }}
                                 </p>
                             </div>
-                            <div id="password-new-info-msg-btn" class="password-new-info-msg__btn">
+                            <button id="password-new-info-msg-btn" class="password-new-info-msg__btn" @click="window = 'login'">
                                 {{ __('login.new_password_btn') }}
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>

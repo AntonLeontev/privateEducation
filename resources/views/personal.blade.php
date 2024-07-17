@@ -79,13 +79,16 @@
 						</style>
                         <div id="tab_2" class="account-content__outer outer-settings outer tabs__item" x-data="{
 							error: '',
+							processing: false,
 
 							save(e) {
 								this.error = '';
+								this.processing = true;
 								
 								axios
 									.post(route('personal.update'), new FormData(e.target))
 									.catch(err => this.error = err.response.data.message)
+									.finally(() => this.processing = false)
 							},
 						}">
                             <div class="account-content__inner inner-settings inner">
@@ -185,7 +188,7 @@
                                             </ul>
                                         </div>
 										<div class="error-message" x-text="error"></div>
-                                        <button class="settings__submit-btn">
+                                        <button class="settings__submit-btn" :disabled="processing">
                                             {{ __('personal.save') }}
                                         </button>
                                     </form>
@@ -195,9 +198,11 @@
                         <!-- Если по нажатии сменить пароль -->
                         <div id="tab_3" class="account-content__outer outer-password-change outer tabs__item" x-data="{
 							error: '',
+							processing: false,
 
 							save(e) {
 								this.error = '';
+								this.processing = true;
 								
 								axios
 									.post(route('account.password'), new FormData(e.target))
@@ -205,6 +210,7 @@
 									.catch(err => {
 										this.error = err.response.data.message
 									})
+									.finally(() => this.processing = false)
 							},
 						}">
                             <div class="account-content__inner inner-password-change inner">
@@ -217,7 +223,7 @@
                                         <input type="password" class="password-change__input"
                                             placeholder="{{ __('personal.repeat_password') }}" name="new_password_confirmation">
 										<div class="error-message" x-text="error"></div>
-                                        <button type="submit" class="password-change__submit-btn">
+                                        <button type="submit" class="password-change__submit-btn" :disabled="processing">
                                             {{ __('personal.save_password') }}
                                         </button>
                                     </form>
