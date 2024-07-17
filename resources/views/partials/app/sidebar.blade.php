@@ -1,4 +1,4 @@
-<div id="menu" class="drawer drawer__close">
+<div id="menu" class="drawer drawer__close" style="z-index: 1000">
     <div class="drawer__top">
         <button class="close">
             <img src="/img/close.png" alt="close" />

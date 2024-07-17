@@ -1,71 +1,140 @@
 @extends('layouts.app.app')
 
-@section('title')
+@section('title', 'Авторское право')
+
+@section('css')
+    <link rel="stylesheet" href="/css/impression.css" />
+@endsection
 
 @section('content')
-    <main class="main main--copyright">
-        <div class="container">
-            <div class="title-block title-block--copyright">Авторское право</div>
-            <div class="content-block-wrapper">
-                <div class="content-block content-block--no-scroll content-block--copyright">
-                    <div class="copyright-container">
-                        <h1>Интеллектуальная собственность</h1>
-                        <h2>Оператор веб-сайта и ответственный за&nbsp;продажи</h2>
-                        <h3>Общие сведения об организации</h3>
-                        <ol class="no-style copyright__text-list">
-                            <li class="copyright__list-item">
-                                <div class="copyright__list-item-title">1. Полное наименование организации:</div>
-                                <div class="copyright__list-item-text">Даугавпилское Региональное Христианско Демократическое
-                                    Правозащитное Движение, сокращённое наименование ДРХДП</div>
-                            </li>
-                            <li class="copyright__list-item">
-                                <div class="copyright__list-item-title">2. Организационно-правовой статус организации:</div>
-                                <div class="copyright__list-item-text">Латвийская общественная организация.</div>
-                                <div class="copyright__list-item-text">Reg.Nr 40008127911</div>
-                            </li>
-                            <li class="copyright__list-item">
-                                <div class="copyright__list-item-title">3. Дата и место регистрации организации:</div>
-                                <div class="copyright__list-item-text">21.05.2008, город Рига, Латвия</div>
-                            </li>
-                            <li class="copyright__list-item">
-                                <div class="copyright__list-item-title">4. Местонахождение организации (Страна, Регион,
-                                    Город, точный почтовый адрес и адрес фактического нахождения организации):</div>
-                                <div class="copyright__list-item-text">Улица Циетокшня 68-51, Даугавпилс, LV-5401, Латгалия,
-                                    Латвия.</div>
-                                <div class="copyright__list-item-text">Latvija, Daugavpils, Cietokšņa 68-51, LV-5401</div>
-                            </li>
-                            <li class="copyright__list-item">
-                                <div class="copyright__list-item-title">5. Фамилия, Имя, руководителя организации, номер
-                                    телефона, факса, адрес сайта организации, ее электронный адрес, контактное лицо:</div>
-                                <div class="copyright__list-item-text">Sevcovs Vladimirs, (+371)29892296, e-mail: <span
-                                        class="ref-underlined">volde&shy;mar606060@gmail.com</span></div>
-                                <div class="copyright__list-item-text"><span
-                                        class="ref-underlined">www.private-new-education.de</span></div>
-                                <div class="copyright__list-item-text">Aina Voitkevica, (+4915221942007)</div>
-                            </li>
-                        </ol>
-                        <p>Все права на информацию, графические изображения, тексты и иные содержащиеся на Сайте Материалы и
-                            объекты, принадлежат Исполнителю, а также иным третьим лицам в соответствии с условиями
-                            договоров, заключенных между Исполнителем и соответствующими третьими лицами.</p>
-                        <p>Никакие содержащиеся на Сайте Материалы или их часть не могут быть воспроизведены, использованы
-                            или переданы третьим лицам в целях извлечения прибыли без предварительного согласия Исполнителя
-                            в письменной форме.</p>
-                        <p>Заказчик может просматривать Материалы, содержащиеся на Сайте, для целей исключительно личного
-                            использования.</p>
-                        <p>Все товарные знаки, логотипы, фирменные наименования или обозначения (в том числе словесные,
-                            графические, объемные и другие обозначения или их комбинации), содержащиеся на Сайте, являются
-                            собственностью Исполнителя или принадлежат ему на праве пользования.</p>
-                        <p>Размещение Материалов на Сайте не может рассматриваться как разрешение или предоставление прав на
-                            их использование без предварительного письменного согласия Исполнителя или их правообладателей.
-                        </p>
-                        <p>Если содержимое Сайта нарушает правовые положения или сторонние права третьих лиц, Исполнитель
-                            требует извещать об этом без требований о возмещении. Исполнитель удалит соответствующие
-                            положения, если у Исполнителя есть на это право. Вмешательство адвоката не требуется. Если
-                            издержки возникнут из-за того, что Заказчик не обращался к Исполнителю заранее, Исполнитель
-                            имеет право полностью отклонить их и предъявить встречные требования.</p>
+    <main>
+        <div class="main">
+            <div class="container">
+                @include('partials.app.header')
+                <div class="main__center main__desk">
+                    <div class="impression-content">
+                        <h1 class="impression-content__title title">
+                            <span class="impression-content__title-text">Авторское право</span>
+                        </h1>
+                        <div class="impression-content__outer outer">
+                            <div class="impression-content__inner inner">
+                                <h2 class="inner__subtitle"> Интеллектуальная собственность</h2>
+                                <span class="inner__desclaimer">
+                                    Оператор веб-сайта и ответственный за продажи
+                                </span>
+                                <span class="inner__preamble"> Общие сведения об организации</span>
+
+                                <dl class="inner__descr-list descr-list">
+                                    <dt class="descr-list__theme">
+                                        1. Полное наименование организации:
+                                    </dt>
+                                    <dd class="descr-list__descrption">
+                                        Даугавпилское Региональное Христианско Демократическое Правозащитное Движение,
+                                        сокращённое наименование
+                                        ДРХДПД
+                                    </dd>
+
+                                    <dt class="descr-list__theme">
+                                        2. Организационно-правовой статус организации:
+                                    </dt>
+                                    <dd class="descr-list__descrption">
+                                        Латвийская общественная организация. <br />
+                                        Reg.Nr 40008127911
+                                    </dd>
+
+                                    <dt class="descr-list__theme">
+                                        3. Дата и место регистрации организации:
+                                    </dt>
+                                    <dd class="descr-list__descrption">
+                                        21.05.2008, город Рига, Латвия
+                                    </dd>
+
+                                    <dt class="descr-list__theme">
+                                        4. Местонахождение организации (Страна, Регион, Город, точный почтовый адрес и адрес
+                                        фактического
+                                        нахождения
+                                        организации):
+                                    </dt>
+                                    <dd class="descr-list__descrption">
+                                        Улица Циетокшня 68-51, Даугавпилс, LV-5401, Латгалия, Латвия. <br />
+                                        Latvija, Daugavpils, Cietokšņa 68-51, LV-5401
+                                    </dd>
+
+                                    <dt class="descr-list__theme">
+                                        5. Адрес сайта организации, ее электронный адрес, контакты:
+                                    </dt>
+                                    <dd class="descr-list__descrption">
+                                        <i><a
+                                                href="https://www.private-new-education.de">www.private-new-education.de</a></i><br />
+                                        e-mail:<i><a
+                                                href="mailto:voldemar606060@gmail.com">voldemar606060@gmail.com</a></i><br />
+                                        телефон:<a href="tel:+4915221942007">(+4915221942007)</a><br />
+                                    </dd>
+
+                                </dl>
+                                <div class="inner__text text">
+                                    <p class="text__pharagraph">
+                                        Все права на&nbsp;информацию, графические изображения, тексты и&nbsp;иные
+                                        содержащиеся на&nbsp;Сайте
+                                        Материалы
+                                        и&nbsp;объекты, принадлежат Исполнителю, а&nbsp;также иным третьим лицам
+                                        в&nbsp;соответствии
+                                        с&nbsp;условиями договоров,
+                                        заключенных между Исполнителем и&nbsp;соответствующими третьими лицами.
+                                    </p>
+                                    <p class="text__pharagraph">
+                                        Никакие содержащиеся на&nbsp;Сайте Материалы или их&nbsp;часть не&nbsp;могут быть
+                                        воспроизведены,
+                                        использованы или
+                                        переданы третьим лицам в&nbsp;целях извлечения прибыли без предварительного согласия
+                                        Исполнителя
+                                        в&nbsp;письменной
+                                        форме.
+                                    </p>
+                                    <p class="text__pharagraph">
+                                        Заказчик может просматривать Материалы, содержащиеся на&nbsp;Сайте, для целей
+                                        исключительно личного
+                                        использования.
+                                    </p>
+                                    <p class="text__pharagraph">
+                                        Все товарные знаки, логотипы, фирменные наименования или обозначения (в&nbsp;том
+                                        числе словесные,
+                                        графические, объемные
+                                        и&nbsp;другие обозначения или их&nbsp;комбинации), содержащиеся на&nbsp;Сайте,
+                                        являются собственностью
+                                        Исполнителя или
+                                        принадлежат ему на&nbsp;праве пользования.
+                                    </p>
+                                    <p class="text__pharagraph">
+                                        Размещение Материалов на&nbsp;Сайте не&nbsp;может рассматриваться как разрешение или
+                                        предоставление прав
+                                        на&nbsp;их&nbsp;использование без предварительного письменного согласия Исполнителя
+                                        или
+                                        их&nbsp;правообладателей.
+                                    </p>
+                                    <p class="text__pharagraph">
+                                        Если содержимое Сайта нарушает правовые положения или сторонние права третьих лиц,
+                                        Исполнитель требует
+                                        извещать
+                                        об&nbsp;этом без требований о&nbsp;возмещении. Исполнитель удалит соответствующие
+                                        положения, если
+                                        у&nbsp;Исполнителя
+                                        есть на&nbsp;это право. Вмешательство адвоката не&nbsp;требуется. Если издержки
+                                        возникнут из-за того,
+                                        что Заказчик
+                                        не&nbsp;обращался к&nbsp;Исполнителю заранее, Исполнитель имеет право полностью
+                                        отклонить
+                                        их&nbsp;и&nbsp;предъявить
+                                        встречные требования.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                @include('partials.app.sidebar')
             </div>
         </div>
     </main>
+    <script src="/js/app.bundle.js"></script>
 @endsection

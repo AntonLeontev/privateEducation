@@ -2,112 +2,123 @@
 
 @section('title')
 
+@section('css')
+    <link rel="stylesheet" href="/css/contacts.css" />
+@endsection
+
 @section('content')
-    <main class="main main--contacts">
-        <div class="container">
-            <div class="title-block title-block--contacts">Контакты</div>
-            <div class="content-block-wrapper">
-                <div class="content-block content-block--no-scroll content-block--contacts">
+    <main>
+        <div class="main">
+            <div class="container">
+                @include('partials.app.header')
+                <div class="main__center main__desk">
+                    <div class="contacts-content">
+                        <h1 class="contacts-content__title title">
+                            <span class="contacts-content__title-text"> Контакты </span>
+                        </h1>
+                        <div class="contacts-content__outer outer">
+                            <div class="contacts-content__inner inner">
+                                <div class="inner__wrapper wrapper">
+                                    <h2 class="inner__subtitle visually-hidden">
+                                        <!-- В макете нет. для читалок -->
+                                        Контактная информация
+                                    </h2>
+                                    <ul class="wrapper__connections connections">
+                                        <li class="connections__row">
+                                            <div class="connections__column connections__column--title">
+                                                Электронная почта
+                                            </div>
+                                            <div class="connections__column connections__column--data">
+                                                <i><a
+                                                        href="mailto:voldemar606060@gmail.com">voldemar606060@gmail.com</a></i>
+                                            </div>
+                                        </li>
 
-                    <div class="address-data-block">
-                        <div class="address-data-title">
-                            Электронная почта
-                        </div>
-                        <div class="address-data-text">
-                            <span class="ref-underlined">voldemar606060@gmail.com</span>
-                        </div>
-                        <div class="address-data-title">
-                            Телефон в Латвии
-                        </div>
-                        <div class="address-data-text">
-                            (+371)29892296
-                        </div>
+                                        <li class="connections__row">
+                                            <div class="connections__column connections__column--title">
+                                                Телефон в&nbsp;Латвии
+                                            </div>
+                                            <div class="connections__column connections__column--data">
+                                                <a href="tel:+37129892296">(+371)29892296</a>
+                                            </div>
+                                        </li>
 
-                        <div class="address-data-title">
-                            Телефон в Германии
-                        </div>
-                        <div class="address-data-text">
-                            (+49)15221942007
-                        </div>
+                                        <li class="connections__row">
+                                            <div class="connections__column connections__column--title">
+                                                Телефон в&nbsp;Германии
+                                            </div>
+                                            <div class="connections__column connections__column--data">
+                                                <a href="tel:+4915221942007">(+49)15221942007</a>
+                                            </div>
+                                        </li>
 
-                        <div class="address-data-title">
-                            Офис разработки
-                        </div>
-                        <div class="address-data-text">
-                            Grebensteiner str 2. Kassel . 34127. Germany
-                        </div>
-                    </div>
-
-                    <div class="bank-data-block">
-
-                        <h2>Банковские данные</h2>
-                        <p>
-                            Даугавпилское Региональное Христианско Демократическое Правозащитное
-                            Движение, сокращённое наименование – ДРХДПД
-                        </p>
-                        <div class="bank-req-wrapper">
-
-                            <div class="bank-data-title">
-                                Bank
+                                        <li class="connections__row">
+                                            <div class="connections__column connections__column--title">
+                                                Офис разработки
+                                            </div>
+                                            <div class="connections__column connections__column--data">
+                                                <address>Grebensteiner str 2. Kassel . 34127. Germany</address>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="wrapper__bank-data bank-data">
+                                        <h2 class="inner__subtitle">
+                                            Банковские данные
+                                        </h2>
+                                        <p class="inner__descr">
+                                            Даугавпилское Региональное Христианско Демократическое Правозащитное
+                                            Движение, сокращённое наименование&nbsp;&mdash; ДРХДПД
+                                        </p>
+                                        <ul class="bank-data__list">
+                                            <li class="bank-data__item">
+                                                <div class="bank-data__column bank-data__column--title">
+                                                    Bank
+                                                </div>
+                                                <div class="bank-data__column bank-data__column--title">
+                                                    Swedbank
+                                                </div>
+                                            </li>
+                                            <li class="bank-data__item">
+                                                <div class="bank-data__column bank-data__column--data">
+                                                    IBAN EUR
+                                                </div>
+                                                <div class="bank-data__column bank-data__column--data">
+                                                    LV57HABA0551055237872
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="bank-data__decor"></div>
+                                    </div>
+                                    <!-- JS для этой формы находится в html внизудокумента -->
+                                    <form id="feedback-form" class="wrapper__feedback-form feedback-form">
+                                        <h2 class="inner__subtitle feedback-form__subtitle">
+                                            Обратная связь
+                                        </h2>
+                                        <div class="feedback-form__inputs-wrapper">
+                                            <input id="feedback-form-input-name" type="text" placeholder="Ваше имя*"
+                                                minlength="3" maxlength="20" required class="feedback-form__input">
+                                            <input id="feedback-form-input-email" type="email" placeholder="Ваш e-mail*"
+                                                minlength="3" maxlength="50" required class="feedback-form__input">
+                                            <input id="feedback-form-input-tel" type="text" placeholder="Ваш телефон*"
+                                                minlength="3" maxlength="12" required class="feedback-form__input">
+                                            <input id="feedback-form-input-subject" type="text" placeholder="Тема"
+                                                maxlength="50" class="feedback-form__input">
+                                            <textarea id="feedback-form-input-message" name="feedback-form-input-message"
+                                                class="feedback-form__input feedback-form__input--textarea" placeholder="Сообщение" maxlength="5000"></textarea>
+                                        </div>
+                                        <button id="feedback-form-button-submit" type="submit"
+                                            class="feedback-form__button">
+                                            Отправить
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
-                            <div class="bank-data-text">
-                                AS&nbsp;Citadele banka
-                            </div>
-
-                            <div class="bank-data-title">
-                                BIC/Swift
-                            </div>
-                            <div class="bank-data-text">
-                                PARXLV22XXX
-                            </div>
-
-                            <div class="bank-data-title bank-data-title--slim">
-                                IBAN EUR
-                            </div>
-                            <div class="bank-data-text bank-data-text--slim">
-                                LV93PARX0006035975124
-                            </div>
-
                         </div>
-
-                    </div>
-
-                    <div class="divider-line"></div>
-
-                    <div class="feedback-form-block">
-                        <h2 class="feedback-header">Обратная связь</h2>
-                        <form action="" class="contacts__feedback-form">
-                            <div class="form-placeholder-wrapper">
-                                <input id="name" type="text" required
-                                    class="feedback-input feedback-input--with-star" placeholder="Ваше имя">
-                                <label for="name" class="star-input-label star-input-label--name">*</label>
-                            </div>
-
-                            <div class="form-placeholder-wrapper">
-                                <input id="email" type="text" required
-                                    class="feedback-input feedback-input--with-star" placeholder="Ваш e-mail">
-                                <label for="email" class="star-input-label star-input-label--email">*</label>
-                            </div>
-
-                            <div class="form-placeholder-wrapper">
-                                <input id="phone" type="text" required
-                                    class="feedback-input feedback-input--with-star" placeholder="Ваш телефон">
-                                <label for="phone" class="star-input-label star-input-label--phone">*</label>
-                            </div>
-
-                            <input type="text" class="feedback-input" placeholder="Тема">
-                            <textarea class="feedback-input feedback-input--message" placeholder="Сообщение"></textarea>
-                        </form>
-                    </div>
-
-
-                    <div class="btn-wrapper">
-                        <button class="action-btn back-to-purchase--contacts">
-                            Отправить
-                        </button>
                     </div>
                 </div>
+                @include('partials.app.sidebar')
             </div>
         </div>
     </main>
+    <script src="/js/app.bundle.js"></script>
 @endsection
