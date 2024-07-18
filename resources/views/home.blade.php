@@ -238,48 +238,48 @@
 
                 <div id="dialog1">
                     <div class="dialog__top">
-                        <h4>Полное содержание. Фрагмент №8</h4>
+                        <h4>{{ __('home.windows.audio.title') }}8</h4>
                         <button class="dialog__close">
 
                         </button>
                     </div>
                     <div class="dialog__center">
-                        <h5>Аудио формат для прослушивания<br />
-                            на сайте</h5>
+                        <h5>{{ __('home.windows.audio.1') }}<br />
+                            {{ __('home.windows.audio.2') }}</h5>
                         <form>
                             <div class="dialog__checkbox">
                                 <input id="vehicle1" type="radio" name="vehicle1" value="Bike">
-                                <label for="vehicle1">В моно <span>(обработанный объемный голос)</span></label><br>
+                                <label for="vehicle1">{{ __('home.windows.audio.mono1') }} <span>{{ __('home.windows.audio.mono2') }}</span></label><br>
                             </div>
                             <div class="dialog__checkbox">
                                 <input id="vehicle2" type="radio" name="vehicle1" value="Bikew">
-                                <label for="vehicle2">В стерео <span>(живой голос)</span></label><br>
+                                <label for="vehicle2">{{ __('home.windows.audio.stereo1') }} <span>{{ __('home.windows.audio.stereo2') }}</span></label><br>
                             </div>
                             <div class="sub">
-                                Продолжительность записи в минутах - 25:02
+                                {{ __('home.windows.audio.duration') }}25:02
                             </div>
                             <div class="sep">
 
                             </div>
-                            <h5>Устройство воспроизведения:</h5>
+                            <h5>{{ __('home.windows.audio.device') }}</h5>
                             <div class="dialog__checkbox">
                                 <input id="vehicle3" type="radio" name="vehicle2" value="Bike">
-                                <label for="vehicle3">Мобильная версия <span>(apple, android)</span></label><br>
+                                <label for="vehicle3">{{ __('home.windows.audio.mobile1') }} <span>{{ __('home.windows.audio.mobile2') }}</span></label><br>
                             </div>
                             <div class="dialog__checkbox">
                                 <input id="vehicle4" type="radio" name="vehicle2" value="Bike2">
-                                <label for="vehicle4">Планшет</label><br>
+                                <label for="vehicle4">{{ __('home.windows.audio.tablet') }}</label><br>
                             </div>
                             <div class="dialog__checkbox">
                                 <input id="vehicle5" type="radio" name="vehicle2" value="Bike3">
-                                <label for="vehicle5">Ноутбук</label><br>
+                                <label for="vehicle5">{{ __('home.windows.audio.notebook') }}</label><br>
                             </div>
-                            <img class="dialog__dostup" src="../img/dostup.png" alt="">
+                            <img class="dialog__dostup" src="/img/dostup.png" alt="">
 
-                            <h3>ДОСТУП АКТИВИРОВАН</h3>
+                            <h3>{{ __('home.windows.audio.access_granted') }}</h3>
                         </form>
                         <button>
-                            <img src="../img/play.png" alt="play">
+                            <img src="/img/play.png" alt="play">
                         </button>
                     </div>
                 </div>
