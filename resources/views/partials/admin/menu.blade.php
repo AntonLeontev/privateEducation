@@ -1,4 +1,28 @@
-<ul class="right-menu hidden h-[100vh] !bg-[#7e90a5] pt-1 z-50 overflow-y-auto">
+<ul class="right-menu h-[100vh] !bg-[#7e90a5] pt-1 z-50 overflow-y-auto" 
+:class="!active && 'hidden'"
+x-cloak
+@menu-toggle.window="open"
+@click.outside="close"
+x-data="{
+	active: false,
+	opened: false,
+
+	close() {
+		if (!this.opened) {
+			return;
+		}
+
+		this.active = false
+		this.opened = false
+	},
+	open() {
+		this.active = true
+
+		this.$nextTick(() => {
+			this.opened = true
+		})
+	},
+}">
 
 	@if (admin()->user()->isAdmin())
 		@if (Route::has('admin.fragments'))

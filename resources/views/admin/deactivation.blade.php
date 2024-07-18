@@ -428,8 +428,6 @@
 @section('modals')
     @include('partials.admin.menu')
 
-    <!--script1.js -  скрипт для открытия-закрытия серого меню справа-->
-    <script src="/js/script1.js"></script>
 @endsection
 
 @section('body-scripts')
