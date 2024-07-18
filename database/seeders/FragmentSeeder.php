@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use Database\Factories\FragmentFactory;
-use Illuminate\Database\Eloquent\Factories\Sequence;
+use App\Models\Fragment;
 use Illuminate\Database\Seeder;
 
 class FragmentSeeder extends Seeder
@@ -13,10 +12,9 @@ class FragmentSeeder extends Seeder
      */
     public function run(): void
     {
-        FragmentFactory::new()
-            ->count(17)
-            ->state(new Sequence(...$this->sequence()))
-            ->create();
+        foreach ($this->sequence() as $key => $value) {
+            Fragment::create($value);
+        }
     }
 
     private function sequence(): array
