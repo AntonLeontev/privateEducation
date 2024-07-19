@@ -9,7 +9,13 @@
 
 @section('content')
     <main>
-        <div class="main">
+		<script>
+			let fragments = @json($fragments);
+		</script>
+        <div class="main" id="fragments" x-data="{
+			fragments: fragments,
+			activeFragment: null,
+		}">
             <div class="container">
                 @include('partials.app.header')
 				
@@ -46,7 +52,7 @@
 						<img class="resize" src="/img/resize.png" alt="resize"> --}}
                         </div>
                         @foreach (range(1, 7) as $number)
-                            <div class="main__column column">
+                            <div class="main__column column" id="fragment{{ $number }}">
                                 <button class="column__top">
                                     <span><span class="frag">{{ __('home.fragment') }}</span><br /><span
                                             class="number"><span>№</span>{{ $number }}</span></span>
@@ -70,7 +76,7 @@
                     </div>
                     <div class="main__row">
                         @foreach (range(7, 17) as $number)
-                            <div class="main__column column">
+                            <div class="main__column column" id="fragment{{ $number }}">
                                 <button class="column__top">
                                     <span>
                                         <span class="frag">{{ __('home.fragment') }}</span>

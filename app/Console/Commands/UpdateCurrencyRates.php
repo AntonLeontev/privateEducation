@@ -33,6 +33,9 @@ class UpdateCurrencyRates extends Command
 
         $this->update($usd);
         $this->update($rub);
+
+        cache()->forget('rates');
+        rates();
     }
 
     private function update(CurrencyRateDTO $rate)

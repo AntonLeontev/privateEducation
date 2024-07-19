@@ -28,7 +28,7 @@
 					<div class="flex items-center justify-between px-2 py-3 transition gap-x-3 rounded-xl bg-white/20">
 						<div class="w-28" :class="fragment.id < 7 ? 'text-[#8f6143]' : 'text-secondary'" x-text="'Фрагмент ' + fragment.id"></div>
 						<div class="flex items-center gap-2 min-w-[450px]" x-data="{
-							euro: fragment.audio.price,
+							euro: fragment.audio.price.raw.amount,
 							savedShow: false,
 
 							saveAudio(id) {
@@ -71,7 +71,7 @@
 						</div>
 
 						<div class="flex items-center gap-2 min-w-[450px]" x-data="{
-							euro: fragment.video.price,
+							euro: fragment.video.price.raw.amount,
 							savedShow: false,
 
 							saveVideo(id) {

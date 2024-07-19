@@ -13,6 +13,7 @@
 				section: 'login', 
 				
 				login() {
+					this.$refs.loginError.style.display = 'none'
 					let data = new FormData(this.$event.target)
 
 					axios
@@ -24,6 +25,7 @@
 						})
 						.catch(error => {
 							this.$refs.loginError.innerText = 'Не удалось войти в аккаунт, введенные логин или пароль неверны'
+							this.$refs.loginError.style.display = 'block'
 						})
 				},
 				checkCode() {
@@ -76,7 +78,7 @@
                                 </div>
                                 <input id="autorization-password-input" type="password" class="autorization__input"
                                     placeholder="* * * * * * * * * * * * * * * * *" name="password">
-                                <span id="autorization-error-msg" class="autorization__error-msg" x-ref="err">
+                                <span id="autorization-error-msg" class="autorization__error-msg" x-ref="loginError">
 									{{ __('login.error_message') }}
 								</span>
                                 <button type="submit" id="autorization-submit-btn" class="autorization__submit-btn">

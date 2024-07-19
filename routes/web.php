@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Currency;
 use App\Http\Controllers\ActionLogController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminLoginController;
@@ -32,7 +33,9 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 */
 
 if (app()->isLocal()) {
-    Route::get('/test', function (CurrencyRatesService $service) {});
+    Route::get('/test', function (CurrencyRatesService $service) {
+        echo Currency::rub->getCode();
+    });
 }
 
 Route::prefix(LaravelLocalization::setLocale())
