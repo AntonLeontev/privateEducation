@@ -1,6 +1,6 @@
 @extends('layouts.app.app')
 
-@section('title', 'О компании')
+@section('title', __('about.h1'))
 
 @section('css')
     <link rel="stylesheet" href="/css/about.css" />
