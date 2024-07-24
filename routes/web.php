@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FragmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
@@ -66,6 +67,8 @@ Route::prefix(LaravelLocalization::setLocale())
                 ->name('account.password');
         });
     });
+
+Route::post('feedback', FeedbackController::class)->name('feedback');
 
 Route::get('media/{type}/{fragmentId}/{lang}/{sound}/{device}', [MediaController::class, 'show'])
     ->whereIn('type', ['audio', 'presentation', 'video'])
