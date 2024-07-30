@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'title' => 'Private new education',
     'fragment' => 'Fragment',
     'windows' => [
         'audio' => [

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'title' => 'Частное образование',
     'fragment' => 'Фрагмент',
     'windows' => [
         'audio' => [

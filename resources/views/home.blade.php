@@ -1,10 +1,16 @@
 @extends('layouts.app.app')
 
-@section('title', 'main')
+@section('title', __('home.title'))
 
 @section('css')
     <link rel="stylesheet" href="/css/main.css" />
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    {{-- <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" /> --}}
+	@vite(['node_modules/video.js/dist/video-js.min.css'])
+	<style>
+		.opacity-100 {
+			opacity: 1 !important;
+		}
+	</style>
 @endsection
 
 @section('content')
@@ -14,7 +20,32 @@
 		</script>
         <div class="main" id="fragments" x-data="{
 			fragments: fragments,
-			activeFragment: null,
+			modal: null,
+			selectedFragment: null,
+
+			activateFragment(id) {
+				this.selectedFragment = this.fragments
+					.find(el => el.id === id)
+			},
+			activateVideo(id) {
+				this.activateFragment(id)
+				this.modal = 'video'
+			},
+			activateAudio(id) {
+				this.activateFragment(id)
+				this.modal = 'audio'
+			},
+			activatePresentation(id) {
+				this.activateFragment(id)
+				this.modal = 'presentation'
+			},
+			activateBuySteps(id) {
+				this.activateFragment(id)
+				this.modal = 'buy'
+			},
+			buyClasses(id) {
+				return {'opacity-100': this.selectedFragment === id}
+			},
 		}">
             <div class="container">
                 @include('partials.app.header')
@@ -52,22 +83,30 @@
 						<img class="resize" src="/img/resize.png" alt="resize"> --}}
                         </div>
                         @foreach (range(1, 7) as $number)
-                            <div class="main__column column" id="fragment{{ $number }}">
-                                <button class="column__top">
+                            <div class="main__column column" id="fragment{{ $number }}" x-data="{id: {{ $number }}}">
+                                <div class="column__top"
+									:style="selectedFragment?.id === id && modal === 'buy' && {background: 'rgba(233, 117, 44, 1)'}"
+								>
                                     <span><span class="frag">{{ __('home.fragment') }}</span><br /><span
                                             class="number"><span>№</span>{{ $number }}</span></span>
-                                </button>
+                                </div>
                                 <div class="polygon">
-                                    <button class="column__shop">
+                                    <button class="column__shop" 
+										@click="activateBuySteps(id)" 
+										:class="{'opacity-100': selectedFragment?.id === id && modal === 'buy'}"
+									>
                                         <img src="/img/korzina.png" alt="shop">
                                     </button>
-                                    <button class="column__audio">
+                                    <button class="column__audio" 
+										@click="activateAudio(id)"
+										:class="{'opacity-100': selectedFragment?.id === id && modal === 'audio'}"
+									>
                                         <img src="/img/audio.png" alt="shop">
                                     </button>
-                                    <button class="column__video">
+                                    <button class="column__video" @click="activateVideo(id)">
                                         <img src="/img/video.png" alt="shop">
                                     </button>
-                                    <button class="column__search">
+                                    <button class="column__search" @click="activatePresentation(id)">
                                         <img src="/img/present.png" alt="shop">
                                     </button>
                                 </div>
@@ -76,8 +115,8 @@
                     </div>
                     <div class="main__row">
                         @foreach (range(7, 17) as $number)
-                            <div class="main__column column" id="fragment{{ $number }}">
-                                <button class="column__top">
+                            <div class="main__column column" id="fragment{{ $number }}" x-data="{id: {{ $number }}}">
+                                <div class="column__top">
                                     <span>
                                         <span class="frag">{{ __('home.fragment') }}</span>
                                         <br />
@@ -90,18 +129,18 @@
                                             @endif
                                         </span>
                                     </span>
-                                </button>
+                                </div>
                                 <div class="polygon">
-                                    <button class="column__shop">
+                                    <button class="column__shop" @click="activateBuySteps(id)">
                                         <img src="/img/korzina.png" alt="shop">
                                     </button>
-                                    <button class="column__audio">
+                                    <button class="column__audio" @click="activateAudio(id)">
                                         <img src="/img/audio.png" alt="shop">
                                     </button>
-                                    <button class="column__video">
+                                    <button class="column__video" @click="activateVideo(id)">
                                         <img src="/img/video.png" alt="shop">
                                     </button>
-                                    <button class="column__search">
+                                    <button class="column__search" @click="activatePresentation(id)">
                                         <img src="/img/present.png" alt="shop">
                                     </button>
                                 </div>
@@ -128,22 +167,22 @@
                     </div>
                     <div class="main__row">
                         @foreach (range(1, 17) as $number)
-                            <div class="main__column column">
+                            <div class="main__column column" id="fragment-mobile{{ $number }}" x-data="{id: {{ $number }}}">
                                 <button class="column__top">
                                     <span><span class="frag">{{ __('home.fragment') }}</span><br /><span
                                             class="number">№</span>{{ $number }}</span>
                                 </button>
                                 <div class="polygon">
-                                    <button class="column__shop">
+                                    <button class="column__shop" @click="activateBuySteps(id)">
                                         <img src="/img/korzina.png" alt="shop">
                                     </button>
-                                    <button class="column__audio">
+                                    <button class="column__audio" @click="activateAudio(id)">
                                         <img src="/img/audio.png" alt="shop">
                                     </button>
-                                    <button class="column__video">
+                                    <button class="column__video" @click="activateVideo(id)">
                                         <img src="/img/video.png" alt="shop">
                                     </button>
-                                    <button class="column__search">
+                                    <button class="column__search" @click="activatePresentation(id)">
                                         <img src="/img/present.png" alt="shop">
                                     </button>
                                 </div>
@@ -241,11 +280,15 @@
                     </div>
                 </div>
 
-
-                <div id="dialog1">
+				<style>
+					#dialog1 {
+						visibility: visible;
+					}
+				</style>
+                <div id="dialog1" x-show="modal === 'audio'" x-cloak>
                     <div class="dialog__top">
-                        <h4>{{ __('home.windows.audio.title') }}8</h4>
-                        <button class="dialog__close">
+                        <h4>{{ __('home.windows.audio.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <button class="dialog__close" @click="modal = null">
 
                         </button>
                     </div>
@@ -293,6 +336,6 @@
         </div>
     </main>
 
-    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-    <script src="/js/index.bundle.js"></script>
+    {{-- <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script> --}}
+	@vite(['resources/js/index.js'])
 @endsection
