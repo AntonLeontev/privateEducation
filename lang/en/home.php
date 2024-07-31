@@ -3,6 +3,9 @@
 return [
     'title' => 'Private new education',
     'fragment' => 'Fragment',
+    'audio' => 'Audio',
+    'video' => 'Video',
+    'presentation' => 'Presentation',
     'windows' => [
         'audio' => [
             'title' => 'Full content. Fragment №',
