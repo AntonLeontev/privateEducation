@@ -147,7 +147,7 @@
 						</video>
 						<img class="resize" src="/img/resize.png" alt="resize"> --}}
                         </div>
-                        @foreach (range(1, 7) as $number)
+                        @foreach (range(1, 6) as $number)
                             <div class="main__column column" id="fragment{{ $number }}" x-data="{id: {{ $number }}}">
                                 <div class="column__top"
 									:style="selectedFragment?.id === id && modal === 'buy' && {background: 'rgba(233, 117, 44, 1)'}"
