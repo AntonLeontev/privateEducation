@@ -11,7 +11,11 @@ class GetMediaRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        if (admin()->user()->isAdmin()) {
+        if ($this->route('type') === 'presentation') {
+            return true;
+        }
+
+        if (admin()->user()?->isAdmin()) {
             return true;
         }
 
