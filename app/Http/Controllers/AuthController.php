@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class AuthController extends Controller
@@ -49,10 +50,10 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
+            return;
         }
 
-        throw new \Exception('The provided credentials do not match our records.');
+        throw ValidationException::withMessages(['email' => 'Не удалось войти в аккаунт, введенные e-mail или пароль неверны']);
     }
 
     public function destroy()
