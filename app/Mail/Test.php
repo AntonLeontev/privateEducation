@@ -36,10 +36,10 @@ class Test extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.verify-buy',
+            // view: 'emails.verify-buy',
             // view: 'emails.verify-email-2',
             // view: 'emails.password-reset-2',
-            // view: 'emails.ticket',
+            view: 'emails.ticket',
         );
     }
 
