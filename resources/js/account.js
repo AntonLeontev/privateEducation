@@ -3,24 +3,25 @@
 const continueRegistrationWindow = document.getElementById('account-password-info-msg');
 
 const passwordRecallWindow = document.getElementById('account-password-recall');
-const passwordRecallForm = document.getElementById('password-reacll-form');
-const passwordRecallInput = document.getElementById('password-reacall-input')
+const passwordRecallForms = document.querySelectorAll('#password-reacll-form');
+//const loginButton = document.getElementById('login-btn')
 
 const newPasswordMsgWindow = document.getElementById('account-password-new-info-msg')
-const newPasswordMsgButton = document.getElementById('password-new-info-msg-btn')
+const newPasswordMsgButtons = document.querySelectorAll('#password-new-info-msg-btn')
 
 const registrationWindow = document.getElementById('account-registration')
-const registrationButton = document.getElementById('autorization-mode-btn-registration')
-const registrationForm = document.getElementById('registration-form')
+const registrationButtons = document.querySelectorAll('#autorization-mode-btn-registration')
+const registrationForms = document.querySelectorAll('#registration-form')
 const registrationEmailInput = document.getElementById('registration-email-input')
+const step = document.getElementById('login-step')
 
 const autorizationWindow = document.getElementById('account-autorization')
 const autorizationEmailInput = document.getElementById('autorization-email-input')
 const autorizationPasswordInput = document.getElementById('autorization-password-input')
-const autorizationErrorMsg = document.getElementById('autorization-error-msg')
-const autorizationButton = document.getElementById('registration-mode-btn-aurorization')
-const autorizationForm = document.getElementById('autorization-form')
-const autorizationPasswordRecallButton = document.getElementById('autorization-password-recall-btn')
+const autorizationErrorMsgs = document.querySelectorAll('#autorization-error-msg')
+const autorizationButtons = document.querySelectorAll('#registration-mode-btn-aurorization')
+const autorizationForms = document.querySelectorAll('#autorization-form')
+const autorizationPasswordRecallButtons = document.querySelectorAll('#autorization-password-recall-btn')
 
 const accountMainWrapper = document.getElementById('account-main-wrapper')
 
@@ -28,37 +29,55 @@ const purchasesWrapper = document.querySelector('.purchases__wrapper')
 const tabsButtons = document.querySelectorAll('.tabs__button');
 const exitButton = document.getElementById('account-exit-btn')
 
-const dialog = document.getElementById("dialog1");
+const dialog = document.getElementById("dialog-login");
 const lkButton = document.querySelector('.account-link')
 
-// Проходимся по всем кнопкам
+let dialogClose = null;
+
+if(dialog) {
+    dialogClose = dialog.querySelector('.dialog__close');
+
+}
+
+
+if(dialogClose) {
+    dialogClose.addEventListener("click", () => {
+        dialog.classList.add('popup-dialog-hidden');
+    });
+    
+}
+
+
+
+// if (loginButton) {
+
+//     loginButton.addEventListener('click', function () {
+//         if(getAuthFromLocalStorage() === 'true') {
+//             document.location.href = 'account.html'
+//         } else {
+//             dialog.classList.remove('popup-dialog-hidden');
+//         }
+    
+//     });
+// }
+
+
 tabsButtons.forEach(btn => {
-    // вешаем на каждую кнопку обработчик события клик
     btn.addEventListener('click', () => {
-        // Получаем предыдущую активную кнопку
         const prevActiveItem = document.querySelector('.tabs__item._active');
-        // Получаем предыдущую активную вкладку
         const prevActiveButton = document.querySelector('.tabs__button._active');
 
-        // Проверяем есть или нет предыдущая активная кнопка
         if (prevActiveButton) {
-            //Удаляем класс _active у предыдущей кнопки если она есть
             prevActiveButton.classList.remove('_active');
         }
 
-        // Проверяем есть или нет предыдущая активная вкладка
         if (prevActiveItem) {
-            // Удаляем класс _active у предыдущей вкладки если она есть
             prevActiveItem.classList.remove('_active');
         }
-        // получаем id новой активной вкладки, который мы перем из атрибута data-tab у кнопки
         const nextActiveItemId = `#${btn.getAttribute('data-tab')}`;
-        // получаем новую активную вкладку по id
         const nextActiveItem = document.querySelector(nextActiveItemId);
 
-        // добавляем класс _active кнопке на которую нажали
         btn.classList.add('_active');
-        // добавляем класс _active новой выбранной вкладке
         nextActiveItem.classList.add('_active');
     });
 })
@@ -170,7 +189,10 @@ function purchasesItemCreate(id, imgPath, name, date) {
 function purchasesRender(array) {
     for (const item of array) {
 
-        purchasesWrapper.append(purchasesItemCreate(item.id, item.imgPath, item.name, item.date))
+        if(purchasesWrapper) {
+            purchasesWrapper.append(purchasesItemCreate(item.id, item.imgPath, item.name, item.date))
+        }
+
     }
 }
 
@@ -178,139 +200,183 @@ purchasesRender(purchasesList);
 
 
 
-function getAuthFromLocalStorage() { // ф-я получения данных с локалсториджа
+function getAuthFromLocalStorage() { 
     let auth
-    let data = localStorage.getItem('isAuth') // достаем данные из локалсторидж по ключу объекты
-    if (data !== '' && data !== null) { // если пришли данные не пустые, тогда записываем их в наш общий массив, иначе будет ошибка
+    let data = localStorage.getItem('isAuth') 
+    if (data !== '' && data !== null) { 
         auth = data;
     }
     return auth
 }
 
 window.addEventListener('DOMContentLoaded', function () {
-    if (getAuthFromLocalStorage() === 'true') {
-        dialog.style.display = "none";
-        accountMainWrapper.style.display = "flex"
-        autorizationErrorMsg.style.display = "none"
-    } else {
-        dialog.style.visibility = 'visible';
-        autorizationWindow.style.display = "flex"
-        registrationWindow.style.display = "none";
-        continueRegistrationWindow.style.display = "none"
-        passwordRecallWindow.style.display = "none"
-        autorizationErrorMsg.style.display = "none"
-        newPasswordMsgWindow.style.display = "none"
-
+    if(this.document.location.pathname === '/account.html') {
+        if (getAuthFromLocalStorage() === 'true') {
+            accountMainWrapper.style.display = "flex"
+        } else {
+            document.getElementById('dialog-login').style.display = "flex"
+            //document.location.href = 'index.html'
+        }
     }
 })
 
-exitButton.addEventListener('click', function () {
-    dialog.style.display = "flex";
-    dialog.style.visibility = 'visible';
-    accountMainWrapper.style.display = "none"
-    registrationWindow.style.display = "none"
-    localStorage.setItem('isAuth', false)
-
-})
-
-lkButton.addEventListener("click", () => {
-    if (getAuthFromLocalStorage() === true) {
-        dialog.style.display = "none";
-        accountMainWrapper.style.display = "flex"
-        autorizationErrorMsg.style.display = "none"
-        registrationWindow.style.display = "none";
-        continueRegistrationWindow.style.display = "none";
-        passwordRecallWindow.style.display = "none";
-        autorizationErrorMsg.style.display = "none";
-        newPasswordMsgWindow.style.display = "none";
-    } else {
+if(exitButton) {
+    exitButton.addEventListener('click', function () {
+        dialog.style.display = "flex";
         dialog.style.visibility = 'visible';
-        autorizationWindow.style.display = "flex";
-        registrationWindow.style.display = "none";
-        continueRegistrationWindow.style.display = "none";
-        passwordRecallWindow.style.display = "none";
-        autorizationErrorMsg.style.display = "none";
-        newPasswordMsgWindow.style.display = "none";
+        accountMainWrapper.style.display = "none"
+        registrationWindow.style.display = "none"
+        localStorage.setItem('isAuth', false)
+    
+    })
+}
 
-    }
+autorizationErrorMsgs.forEach((msg) => {
+    msg.style.display = "flex";
 });
 
-autorizationForm.addEventListener('submit', function (e) {
-    e.preventDefault();
 
-    if (autorizationEmailInput.value === 'admin@admin.com' && autorizationPasswordInput.value === 'admin') {
-        dialog.style.display = "none";
-        accountMainWrapper.style.display = "flex"
-        autorizationErrorMsg.style.display = "none"
+if(lkButton) {
+    lkButton.addEventListener("click", () => {
+        if (getAuthFromLocalStorage() === true) {
+            dialog.style.display = "none";
+            accountMainWrapper.style.display = "flex"
+           
+            registrationWindow.style.display = "none";
+            continueRegistrationWindow.style.display = "none";
+            passwordRecallWindow.style.display = "none";
+            newPasswordMsgWindow.style.display = "none";
+        } else {
+            dialog.style.visibility = 'visible';
+            autorizationWindow.style.display = "flex";
+            registrationWindow.style.display = "none";
+            continueRegistrationWindow.style.display = "none";
+            passwordRecallWindow.style.display = "none";
+           
+            newPasswordMsgWindow.style.display = "none";
+    
+        }
+    });
+    
+}
 
-        autorizationForm.reset()
-
-        localStorage.setItem('isAuth', true)
-
-    } else {
-        autorizationErrorMsg.style.display = "flex"
-    }
-
-})
-
-autorizationButton.addEventListener('click', function () {
-    autorizationWindow.style.display = "flex"
-    registrationWindow.style.display = "none"
-})
-
-autorizationPasswordRecallButton.addEventListener('click', function () {
-    autorizationWindow.style.display = "none"
-    passwordRecallWindow.style.display = "flex"
-})
-
-passwordRecallForm.addEventListener('submit', function (e) {
-    e.preventDefault(e);
-    if (passwordRecallInput.value) {
-        newPasswordMsgWindow.style.display = "flex"
-        passwordRecallWindow.style.display = "none"
-    }
-})
-
-newPasswordMsgButton.addEventListener('click', function () {
-    newPasswordMsgWindow.style.display = "none";
-    autorizationWindow.style.display = "flex";
-    autorizationErrorMsg.style.display = "none"
-    passwordRecallForm.reset()
-})
-
-registrationButton.addEventListener('click', function () {
-    autorizationWindow.style.display = "none"
-    registrationWindow.style.display = "flex"
-})
-
-registrationForm.addEventListener('submit', function (e) {
-    e.preventDefault(e);
-    if (registrationEmailInput.value) {
-        registrationWindow.style.display = "none"
-        continueRegistrationWindow.style.display = "flex"
-    }
-})
-
-// дебаггинг смены экранной ориентации на FF в мобиле
-
-// console.log(document.querySelectorAll('input'))
-
-let allInputs = document.querySelectorAll('input')
-allInputs.forEach((e) => {
-    e.addEventListener('focus', function () {
-        if (window.matchMedia("(orientation: portrait)").matches) {
-            Screen.lockOrientation('portrait-primary')
+autorizationForms.forEach((form) => {
+    form.addEventListener('submit', function (e) {
+        parent = form.closest('.dialog-login')
+        e.preventDefault();
+        let emailInput = parent.querySelector('#autorization-email-input');
+        let passwordInput = parent.querySelector('#autorization-password-input');
+        if (emailInput.value === 'admin@admin.com' && passwordInput.value === 'admin' && parent.id != 'dialog6') {
+            localStorage.setItem('isAuth', true)
+            document.location.href = 'account.html'
+        } else {
+            form.reset()
+            autorizationErrorMsgs.forEach((msg) => {
+                msg.style.display = "flex";
+            });
         }
     })
-})
+});
 
-// window.addEventListener('orientationchange', function () {
-//     if (window.matchMedia("(orientation: portrait)").matches) {
-//         Screen.lockOrientation('portrait-primary')
+// autorizationForm.addEventListener('submit', function (e) {
+//     e.preventDefault();
+//     if (autorizationEmailInput.value === 'admin@admin.com' && autorizationPasswordInput.value === 'admin') {
+//         localStorage.setItem('isAuth', true)
+//         document.location.href = 'account.html'
+//     } else {
+//         autorizationForm.reset()
+//         autorizationErrorMsg.style.display = "flex"
 //     }
-// });
+// })
 
-// // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
-// let vh = window.innerHeight * 0.01;
-// // Then we set the value in the --vh custom property to the root of the document
-// document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+
+
+autorizationButtons.forEach((btn) => {
+    let parent = btn.closest('.dialog-login')
+
+    btn.addEventListener('click', function () {
+        let authorizationWindow = parent.querySelector('#account-autorization');
+        let registerWindow = parent.querySelector('#account-registration');
+        authorizationWindow.style.display = "flex"
+        registerWindow.style.display = "none"
+        step.classList.remove('popup-dialog-hidden')
+    })
+});
+
+
+registrationButtons.forEach((btn) => {
+    let parent = btn.closest('.dialog-login')
+
+
+    btn.addEventListener('click', function () {
+        let authorizationWindow = parent.querySelector('#account-autorization');
+        let registerWindow = parent.querySelector('#account-registration');
+        authorizationWindow.style.display = "none"
+        registerWindow.style.display = "flex"
+        step.classList.remove('popup-dialog-hidden')
+
+    })
+});
+
+autorizationPasswordRecallButtons.forEach((btn) => {
+    let parent = btn.closest('.dialog-login')
+
+    
+    btn.addEventListener('click', function () {
+        let authorizationWindow = parent.querySelector('#account-autorization');
+        let passwordRecallWindow = parent.querySelector('#account-password-recall');
+        authorizationWindow.style.display = "none"
+        passwordRecallWindow.style.display = "flex"
+        step.classList.remove('popup-dialog-hidden')
+    })
+});
+
+passwordRecallForms.forEach((form) => {
+    let parent = form.closest('.dialog-login')
+    form.addEventListener('submit', function (e) {
+        e.preventDefault(e);
+        let passwordRecallInput = parent.querySelector('#password-reacall-input')
+        if (passwordRecallInput.value) {
+            let passwordRecallWindow = parent.querySelector('#account-password-recall');
+            let newPasswordMsgWindow = parent.querySelector('#account-password-new-info-msg');
+            newPasswordMsgWindow.style.display = "flex"
+            passwordRecallWindow.style.display = "none"
+            step.classList.add('popup-dialog-hidden')
+        }
+    })
+});
+
+
+newPasswordMsgButtons.forEach((btn) => {
+    let parent = btn.closest('.dialog-login')
+    btn.addEventListener('click', function () {
+        let newPasswordMsgWindow = parent.querySelector('#account-password-new-info-msg');
+        let autorizationWindow = parent.querySelector('#account-autorization');
+        step.classList.remove('popup-dialog-hidden')
+        newPasswordMsgWindow.style.display = "none";
+        autorizationWindow.style.display = "flex";
+        let err = parent.querySelector('#autorization-error-msg')
+        err.style.display = "none"
+        let passwordRecallForm = parent.querySelector('#password-reacll-form')
+        passwordRecallForm.reset()
+    })
+});
+
+registrationForms.forEach((form) => {
+    form.addEventListener('submit', function (e) {
+        e.preventDefault(e);
+        let parent = form.closest('.dialog-login')
+        let registrationEmailInput = parent.querySelector('#registration-email-input')
+        if (registrationEmailInput.value) {
+            let registrationWindow = parent.querySelector('#account-registration');
+            let continueRegistrationWindow = parent.querySelector('#account-password-info-msg');
+            registrationWindow.style.display = "none"
+            continueRegistrationWindow.style.display = "flex"
+            step.classList.add('popup-dialog-hidden')
+        }
+    })
+});
+
+
+console.log(screen.width, screen.height, window.innerWidth, window.innerHeight)

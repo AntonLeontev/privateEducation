@@ -1,67 +1,20 @@
-const polygons = document.querySelectorAll(".polygon");
-const audios = document.querySelectorAll(".column__audio");
-const dialog = document.getElementById("dialog1");
-const buttons = document.querySelectorAll(".main__row .column .polygon button");
-
 const menu = document.querySelector(".menu");
 const drawer = document.querySelector(".drawer");
 const close = document.querySelector(".close");
+const audios = document.querySelectorAll(".column__audio");
+const dialog = document.getElementById("dialog1");
 
-buttons.forEach((column) => {
-    column.addEventListener("click", (e) => {
-        const button = e.target.closest("button");
-        const top = e.target.closest(".column").querySelector(".column__top");
-        const color = getComputedStyle(top).backgroundColor;
+const checkbox = document
+    .querySelector(".dialog__policy-wrap")
+    ?.querySelector('input[type="checkbox"]');
 
-        button.classList.remove("column__hover");
-        // button.classList.add("column__active");
-
-        // if (color.includes("233, 117, 44, 0.3")) {
-        //     top.classList.add("column__top_active_1");
-        // }
-        // if (color.includes("125, 97, 155")) {
-        //     top.classList.add("column__top_active_2");
-        // }
-        top.classList.remove("column__st3-active", "column__st2-active");
+if (checkbox) {
+    checkbox.addEventListener("change", function () {
+        const submitBtn = document.querySelector("#next-4");
+        submitBtn.style.visibility = this.checked ? "visible" : "hidden";
     });
-    column.addEventListener("mouseout", (e) => {
-        const button = e.target.closest("button");
-        const top = e.target.closest(".column").querySelector(".column__top");
-
-        button.classList.remove("column__active", "column__hover");
-        top.classList.remove("column__top_active_2", "column__top_active_1");
-    });
-    column.addEventListener("mouseover", (e) => {
-        const button = e.target.closest("button");
-        // const top = e.target.closest(".column").querySelector(".column__top");
-
-        button.classList.add("column__hover");
-    });
-});
-
-polygons.forEach((polygon) => {
-    polygon.addEventListener("mouseover", (e) => {
-        const top = e.target.closest(".column").querySelector(".column__top");
-        const color = getComputedStyle(top).backgroundColor;
-        if (color === "rgba(233, 117, 44, 0.3)") {
-            top.classList.add("column__st2-active");
-        }
-        if (color === "rgba(125, 97, 155, 0.3)") {
-            top.classList.add("column__st3-active");
-        }
-    });
-    polygon.addEventListener("mouseout", (e) => {
-        const top = e.target.closest(".column").querySelector(".column__top");
-        top.classList.remove(
-            "column__st3-active",
-            "column__st2-active",
-            "column__st2-2-active",
-            "column__st3-2-active",
-            "column__st2-3-active",
-            "column__st3-3-active"
-        );
-    });
-});
+    document.getElementById("next-4").style.visibility = "hidden";
+}
 
 menu.addEventListener("click", (e) => {
     if (drawer.classList.contains("drawer__close")) {
@@ -81,7 +34,6 @@ close.addEventListener("click", (e) => {
         drawer.classList.remove("drawer__open");
     }
 });
-
 const isDesktop = () => {
     let _window;
 
@@ -151,49 +103,146 @@ function scale(event) {
 }
 
 scale();
-// audios.forEach((audio) => {
-//     audio.addEventListener("click", () => {
-//         dialog.style.visibility = "visible";
-//     });
-// });
-// const dialogClose = dialog.querySelector(".dialog__close");
-// dialogClose.addEventListener("click", () => {
-//     dialog.style.visibility = "hidden";
-// });
-
-// =====================================================================================
-// Исправление позиционирования модалки для Ios
-// Без этих манипуляций она чуть выше и не соответствует макету
 
 const isIOS = /iPhone|iPad|iPod/.test(navigator.platform);
 
-function dialogPositionForIos() {
-    if (isIOS) {
-        switch (screen.orientation.type) {
-            case "landscape-primary":
-                dialog.style.top = "7.3vw";
-                break;
-            case "portrait-primary":
-                dialog.style.top = "20.5vw";
-                break;
-            default:
-                console.log(
-                    "The orientation API isn't supported in this browser :("
-                );
-        }
-    }
+function portraitMode() {
+    dialogs.forEach((dialog) => {
+        dialog.style.setProperty("top", `20.7vw`, "important");
+    });
+    logins.forEach((login) => {
+        login.style.setProperty("top", `20.7vw`, "important");
+    });
+
+    // window.innerWidth < 400 ? handleInputPadding('#registration-email-input', '5vw') : handleInputPadding('#registration-email-input', '3vw');
+    // window.innerWidth < 400 ? handleInputPadding('#password-reacall-input', '5vw') : handleInputPadding('#password-reacall-input', '3vw');
+
+    document
+        .getElementById("autorization-error-msg")
+        .style.setProperty("font-size", "2.3vw", "important");
 }
 
-dialogPositionForIos();
+function handleInputPadding(inputSelector, paddingValue) {
+    document.querySelectorAll(inputSelector).forEach((input) => {
+        input.style.setProperty("padding-top", paddingValue, "important");
 
-// Прослушка события смены ориентации экрана
+        const removePadding = () => {
+            input.style.setProperty("padding-top", "0vw", "important");
+            input.classList.add("hide-placeholder");
+            input.style.setProperty("line-height", "unset", "important");
+        };
 
-screen.orientation.addEventListener("change", (event) => {
-    const type = event.target.type;
-    if (type === "landscape-primary") {
-        dialogPositionForIos();
-    } else if (type === "portrait-primary") {
-        dialogPositionForIos();
+        const restorePadding = () => {
+            if (!input.value) {
+                input.style.setProperty(
+                    "padding-top",
+                    paddingValue,
+                    "important"
+                );
+            }
+            input.classList.remove("hide-placeholder");
+        };
+
+        input.addEventListener("focus", removePadding);
+        input.addEventListener("input", () => {
+            if (input.value) {
+                removePadding();
+            }
+        });
+        input.addEventListener("blur", restorePadding);
+    });
+}
+
+function landscapeMode() {
+    dialogs.forEach((dialog) => {
+        dialog.style.setProperty("top", `7.4vw`, "important");
+    });
+    logins.forEach((login) => {
+        login.style.setProperty("top", `7.4vw`, "important");
+    });
+
+    // handleInputPadding('#autorization-email-input', '2vw');
+    // handleInputPadding('#autorization-password-input', '2.5vw');
+    // handleInputPadding('#registration-email-input', '2vw');
+    // handleInputPadding('#password-reacall-input', '2vw');
+    document
+        .getElementById("autorization-error-msg")
+        .style.setProperty("font-size", "1.4vw", "important");
+
+    document
+        .querySelectorAll("#autorization-password-input")
+        .forEach((input) => {
+            //input.style.setProperty('font-size', '1.55vw', 'important');
+            // input.style.setProperty('margin-bottom', '0vw', 'important');
+            // input.style.setProperty('line-height', '10vw', 'important');
+        });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const dialogs = document.querySelectorAll(".popup-dialog");
+    const logins = document.querySelectorAll(".dialog-login");
+
+    const list = document.querySelector(".list");
+
+    if (isIOS) {
+        if (screen.orientation) {
+            switch (screen.orientation.type) {
+                case "landscape-primary":
+                    dialogs.forEach((dialog) => {
+                        dialog.style.setProperty("top", `7.4vw`, "important");
+                    });
+                    logins.forEach((login) => {
+                        login.style.setProperty("top", `7.4vw`, "important");
+                    });
+
+                    list.style.setProperty("gap", "0.9vw", "important");
+                    break;
+                case "portrait-primary":
+                    dialogs.forEach((dialog) => {
+                        dialog.style.setProperty("top", `20.7vw`, "important");
+                    });
+                    logins.forEach((login) => {
+                        login.style.setProperty("top", `20.7vw`, "important");
+                    });
+                    break;
+                case "landscape-secondary":
+                    dialogs.forEach((dialog) => {
+                        dialog.style.setProperty("top", `7.4vw`, "important");
+                    });
+                    logins.forEach((login) => {
+                        login.style.setProperty("top", `7.4vw`, "important");
+                    });
+                    break;
+                default:
+                    dialogs.forEach((dialog) => {
+                        dialog.style.setProperty("top", `7.4vw`, "important");
+                    });
+                    logins.forEach((login) => {
+                        login.style.setProperty("top", `7.4vw`, "important");
+                    });
+                    break;
+            }
+        } else {
+            window.addEventListener("orientationchange", function () {
+                if (window.orientation && window.orientation === 0) {
+                    portraitMode();
+                } else if (
+                    window.orientation &&
+                    (window.orientation === 90 || window.orientation === -90)
+                ) {
+                    landscapeMode();
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth > window.innerHeight) {
+                    landscapeMode();
+                } else {
+                    portraitMode();
+                }
+            });
+        }
+    } else {
+        document.body.classList.add("not-iphone");
     }
 });
-// =====================================================================================
