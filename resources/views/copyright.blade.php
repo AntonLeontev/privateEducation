@@ -3,7 +3,7 @@
 @section('title', __('copyright.h1'))
 
 @section('css')
-    <link rel="stylesheet" href="/css/impression.css" />
+    @vite('resources/css/impression.css')
 @endsection
 
 @section('content')

@@ -3,7 +3,7 @@
 @section('title', __('contacts.h1'))
 
 @section('css')
-    <link rel="stylesheet" href="/css/contacts.css" />
+    @vite('resources/css/contacts.css')
 @endsection
 
 @section('content')
@@ -129,5 +129,4 @@
             </div>
         </div>
     </main>
-    <script src="/js/app.bundle.js"></script>
 @endsection

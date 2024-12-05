@@ -42,7 +42,7 @@
                             </h3>
                             <div class="autorization__button-box">
                                 <button id="autorization-mode-btn-autorization"
-                                    class="autorization__btn autorization__btn--autorization">
+                                    class="autorization__btn autorization__btn_active autorization__btn--autorization">
                                     <img src="/img/user.png" alt="user" class="autorization__img" />
                                     <span class="autorization__btn-text">{!! __('login.user') !!}</span></button>
                                 <button id="autorization-mode-btn-registration"
@@ -116,7 +116,7 @@
                                         class="registration__img registration__img--grey" />
                                     <span class="registration__btn-text">{{ __('login.auth') }}</span></button>
                                 <button id="registration-mode-btn-registration"
-                                    class="registration__btn registration__btn--registration">
+                                    class="registration__btn registration__btn_active registration__btn--registration">
                                     <img src="/img/user.png" alt="user" class="registration__img" />
                                     <span class="registration__btn-text">{{ __('login.register') }}</span></button>
                             </div>
@@ -203,6 +203,6 @@
             </div>
         </div>
     </main>
-    <script src="/js/app.bundle.js"></script>
+    {{-- <script src="/js/app.bundle.js"></script> --}}
 
 @endsection

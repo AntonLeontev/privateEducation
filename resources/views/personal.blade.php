@@ -3,7 +3,8 @@
 @section('title', 'Личный кабинет')
 
 @section('css')
-    <link rel="stylesheet" href="/css/account.css" />
+    {{-- <link rel="stylesheet" href="/css/account.css" /> --}}
+	@vite('resources/css/account.css')
 @endsection
 
 @section('content')
@@ -46,23 +47,25 @@
                         <div id="tab_1" class="account-content__outer outer purchases-outer tabs__item _active">
                             <div class="account-content__inner inner purchases-inner">
                                 <div class="purchases purchases__wrapper">
-                                    <div class="purchase-item">
-                                        <span class="purchase-item__number">
-                                            #75642
-                                        </span>
-                                        <div class="purchase-item__box">
-                                            <img src="/img/audio.png" alt="shop" class="purchase-item__img">
-                                            <span class="purchase-item__name">
-                                                {{ __('personal.fragment') }} &#8470;&nbsp;4
-                                            </span>
-                                        </div>
-                                        <button class="purchase-item__btn-action">
-                                            {{ __('personal.play') }}
-                                        </button>
-                                        <span class="purchase-item__date">
-                                            15.03.2021
-                                        </span>
-                                    </div>
+									@foreach (range(1, 14) as $item)
+										<div class="purchase-item">
+											<span class="purchase-item__number">
+												#75642
+											</span>
+											<div class="purchase-item__box">
+												<img src="/img/audio.png" alt="shop" class="purchase-item__img">
+												<span class="purchase-item__name">
+													{{ __('personal.fragment') }} &#8470;&nbsp;{{ $item }}
+												</span>
+											</div>
+											<button class="purchase-item__btn-action">
+												{{ __('personal.play') }}
+											</button>
+											<span class="purchase-item__date">
+												15.03.2021
+											</span>
+										</div>
+									@endforeach
 
 
                                 </div>

@@ -3,7 +3,7 @@
 @section('title', __('commercial.h1'))
 
 @section('css')
-    <link rel="stylesheet" href="/css/agb.css" />
+    @vite(['resources/css/agb.css'])
 @endsection
 
 @section('content')
@@ -506,5 +506,4 @@
             </div>
         </div>
     </main>
-	<script src="/js/app.bundle.js"></script>
 @endsection

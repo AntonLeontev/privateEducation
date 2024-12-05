@@ -13,7 +13,7 @@
     </style>
 
 	@routes
-    @vite(['resources/js/app.js'])
+    @vite(['resources/js/app.js', 'resources/js/index.js'])
 </head>
 <body>
 

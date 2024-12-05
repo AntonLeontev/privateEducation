@@ -3,7 +3,7 @@
 @section('title', __('about.h1'))
 
 @section('css')
-    <link rel="stylesheet" href="/css/about.css" />
+    @vite(['resources/css/about.css'])
 @endsection
 
 @section('content')
@@ -99,6 +99,4 @@
             </div>
         </div>
     </main>
-    <script src="/js/app.bundle.js"></script>
-
 @endsection

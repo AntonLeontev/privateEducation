@@ -3,7 +3,7 @@
 @section('title', __('privacy.h1'))
 
 @section('css')
-    <link rel="stylesheet" href="/css/privacy.css" />
+    @vite('resources/css/datenschutz.css')
 @endsection
 
 @section('content')
