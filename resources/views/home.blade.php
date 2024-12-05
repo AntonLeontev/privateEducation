@@ -5,11 +5,6 @@
 @section('css')
     {{-- <link rel="stylesheet" href="/css/main.css" /> --}}
     @vite(['resources/css/index.css', 'node_modules/video.js/dist/video-js.min.css', 'resources/js/index.js'])
-    <style>
-        .opacity-100 {
-            opacity: 1 !important;
-        }
-    </style>
 
     {{-- Video --}}
     <style>
@@ -131,6 +126,10 @@
                 this.selectedFragment = this.fragments
                     .find(el => el.id === id)
             },
+			deactivateFragment() {
+				this.selectedFragment = null
+				this.modal = null
+			},
             activateVideo(id) {
                 this.activateFragment(id)
                 this.modal = 'video'
@@ -155,8 +154,14 @@
                 this.activateFragment(id)
                 this.modal = 'buy'
             },
+			isSelected(id, type) {
+				return this.selectedFragment?.id === id && this.modal === type
+			},
+			isPlaying(id, type) {
+				return this.playingFragment?.id === id && this.playingMedia === type
+			},
             buyClasses(id) {
-                return { 'opacity-100': this.selectedFragment === id }
+                return { 'column__active': this.selectedFragment === id }
             },
         }">
             <div class="container">
@@ -177,7 +182,8 @@
 				<img class="resize" src="{{ Vite::asset('resources/img/resize.png') }}" alt="resize"> --}}
                 </div>
                 <div class="main__center main__desk">
-                    <div class="main__row">
+                    <div class="main__row row_first">
+
                         <div class="main__player player">
                             <div class="player__top">
                                 <span x-show="playingMedia === 'audio'" x-cloak>{{ __('home.audio') }}</span>
@@ -185,8 +191,8 @@
                                 <span x-show="playingMedia === 'presentation'" x-cloak>{{ __('home.presentation') }}</span>
                                 <span style="margin-top: 4px">
                                     <span class="frag">{{ __('home.fragment') }}</span>
-                                    <span class="number">№</span><!--
-                     --><span x-text="playingFragment?.id">1</span>
+                                    <span class="number">№</span>
+									<span x-text="playingFragment?.id">1</span>
                                 </span>
                                 <div class="runningline-wrap" x-data="runningLine" x-ref="lineWrap"
                                     @play-media-start.window="reset">
@@ -198,60 +204,76 @@
                         @foreach (range(1, 6) as $number)
                             <div id="fragment{{ $number }}" class="main__column column" x-data="{ id: {{ $number }} }">
                                 <div class="column__top"
-                                    :style="selectedFragment?.id === id && modal === 'buy' &&
-                                    { background: 'rgba(233, 117, 44, 1)' }">
-                                    <span><span class="frag">{{ __('home.fragment') }}</span><br /><span
-                                            class="number"><span>№</span>{{ $number }}</span></span>
+                                    :class="selectedFragment?.id === id && 'column__top_active_1'"
+								>
+                                    <span>
+										<span class="frag">{{ __('home.fragment') }}</span>
+										<br />
+										<span class="number">№{{ $number }}</span>
+									</span>
                                 </div>
                                 <div class="polygon">
-                                    <button class="column__shop"
-                                        :class="{ 'opacity-100': selectedFragment?.id === id && modal === 'buy' }"
+                                    <button class="column__button column__shop"
+                                        :class="{ 'column__active': isSelected(id, 'buy') }"
                                         @click="activateBuySteps(id)">
                                         <img src="{{ Vite::asset('resources/img/korzina.png') }}" alt="shop">
                                     </button>
-                                    <button class="column__audio"
-                                        :class="{ 'opacity-100': selectedFragment?.id === id && modal === 'audio' }"
+                                    <button class="column__button column__audio"
+                                        :class="{ 'column__active': isSelected(id, 'audio') || isPlaying(id, 'audio') }"
                                         @click="activateAudio(id)">
                                         <img src="{{ Vite::asset('resources/img/audio.png') }}" alt="shop">
                                     </button>
-                                    <button class="column__video" @click="activateVideo(id)">
+                                    <button class="column__button column__video" 
+										:class="{ 'column__active': isSelected(id, 'video') || isPlaying(id, 'video') }"
+										@click="activateVideo(id)"
+									>
                                         <img src="{{ Vite::asset('resources/img/video.png') }}" alt="shop">
                                     </button>
-                                    <button class="column__search" @click="activatePresentation(id)">
+                                    <button class="column__button column__search" 
+										:class="{ 'column__active': isSelected(id, 'presentation') || isPlaying(id, 'presentation') }" 
+										@click="activatePresentation(id)"
+									>
                                         <img src="{{ Vite::asset('resources/img/present.png') }}" alt="shop">
                                     </button>
                                 </div>
                             </div>
                         @endforeach
                     </div>
-                    <div class="main__row">
+                    <div class="main__row row_second">
                         @foreach (range(7, 17) as $number)
                             <div id="fragment{{ $number }}" class="main__column column" x-data="{ id: {{ $number }} }">
-                                <div class="column__top">
+                                <div class="column__top"
+									:class="selectedFragment?.id === id && 'column__top_active_2'"
+								>
                                     <span>
                                         <span class="frag">{{ __('home.fragment') }}</span>
                                         <br />
                                         <span class="number @if ($number >= 10) number__br @endif">
-                                            <span>№</span>
-                                            @if ($number <= 9)
-                                                {{ $number }}
-                                            @else
-                                                <span>{{ $number }}</span>
-                                            @endif
+                                            №{{ $number }}
                                         </span>
                                     </span>
                                 </div>
                                 <div class="polygon">
-                                    <button class="column__shop" @click="activateBuySteps(id)">
+                                    <button class="column__button column__shop"
+                                        :class="{ 'column__active': isSelected(id, 'buy') }"
+                                        @click="activateBuySteps(id)">
                                         <img src="{{ Vite::asset('resources/img/korzina.png') }}" alt="shop">
                                     </button>
-                                    <button class="column__audio" @click="activateAudio(id)">
+                                    <button class="column__button column__audio"
+                                        :class="{ 'column__active': isSelected(id, 'audio') || isPlaying(id, 'audio') }"
+                                        @click="activateAudio(id)">
                                         <img src="{{ Vite::asset('resources/img/audio.png') }}" alt="shop">
                                     </button>
-                                    <button class="column__video" @click="activateVideo(id)">
+                                    <button class="column__button column__video" 
+										:class="{ 'column__active': isSelected(id, 'video') || isPlaying(id, 'video') }"
+										@click="activateVideo(id)"
+									>
                                         <img src="{{ Vite::asset('resources/img/video.png') }}" alt="shop">
                                     </button>
-                                    <button class="column__search" @click="activatePresentation(id)">
+                                    <button class="column__button column__search" 
+										:class="{ 'column__active': isSelected(id, 'presentation') || isPlaying(id, 'presentation') }" 
+										@click="activatePresentation(id)"
+									>
                                         <img src="{{ Vite::asset('resources/img/present.png') }}" alt="shop">
                                     </button>
                                 </div>
@@ -272,33 +294,39 @@
                             </span>
                             <span>Заглавие</span>
                         </div>
-                        {{-- <video  poster="img/player.png" class="video-js"
-							controls
-							preload="auto"
-							data-setup="{}">
-						Your browser does not support the video tag.
-					</video>
-					<img class="resize" src="{{ Vite::asset('resources/img/resize.png') }}" alt="resize"> --}}
                     </div>
+
                     <div class="main__row">
                         @foreach (range(1, 17) as $number)
                             <div id="fragment-mobile{{ $number }}" class="main__column column"
                                 x-data="{ id: {{ $number }} }">
-                                <button class="column__top">
+                                <button class="column__top"
+									:class="selectedFragment?.id === id && 'column__top_active_2'"
+								>
                                     <span><span class="frag">{{ __('home.fragment') }}</span><br /><span
                                             class="number">№</span>{{ $number }}</span>
                                 </button>
                                 <div class="polygon">
-                                    <button class="column__shop" @click="activateBuySteps(id)">
+                                    <button class="column__button column__shop"
+                                        :class="{ 'column__active': isSelected(id, 'buy') }"
+                                        @click="activateBuySteps(id)">
                                         <img src="{{ Vite::asset('resources/img/korzina.png') }}" alt="shop">
                                     </button>
-                                    <button class="column__audio" @click="activateAudio(id)">
+                                    <button class="column__button column__audio"
+                                        :class="{ 'column__active': isSelected(id, 'audio') || isPlaying(id, 'audio') }"
+                                        @click="activateAudio(id)">
                                         <img src="{{ Vite::asset('resources/img/audio.png') }}" alt="shop">
                                     </button>
-                                    <button class="column__video" @click="activateVideo(id)">
+                                    <button class="column__button column__video" 
+										:class="{ 'column__active': isSelected(id, 'video') || isPlaying(id, 'video') }"
+										@click="activateVideo(id)"
+									>
                                         <img src="{{ Vite::asset('resources/img/video.png') }}" alt="shop">
                                     </button>
-                                    <button class="column__search" @click="activatePresentation(id)">
+                                    <button class="column__button column__search" 
+										:class="{ 'column__active': isSelected(id, 'presentation') || isPlaying(id, 'presentation') }" 
+										@click="activatePresentation(id)"
+									>
                                         <img src="{{ Vite::asset('resources/img/present.png') }}" alt="shop">
                                     </button>
                                 </div>
@@ -330,7 +358,7 @@
 				<div id="dialog1" class="audio popup-dialog" x-show="modal === 'audio'" x-cloak>
                     <div class="dialog__top">
                         <h4>{{ __('home.windows.audio.title') }}<span x-text="selectedFragment?.id"></span></h4>
-                        <button class="dialog__close" @click="modal = null"></button>
+                        <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
                     <div class="dialog__center dialog__center-top">
                         <h5 class="dialog__h5-top dialog__player-h5">
@@ -361,7 +389,7 @@
 				<div class="video popup-dialog" x-show="modal === 'video'" x-cloak>
                     <div class="dialog__top">
                         <h4>{{ __('home.windows.video.title') }}<span x-text="selectedFragment?.id"></span></h4>
-                        <button class="dialog__close" @click="modal = null"></button>
+                        <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
                     <div class="dialog__center dialog__center-top">
                         <h5 class="dialog__h5-top dialog__player-h5">
@@ -392,7 +420,7 @@
 				<div class="presentation popup-dialog" x-show="modal === 'presentation'" x-cloak>
                     <div class="dialog__top">
                         <h4>{{ __('home.windows.presentation.title') }}<span x-text="selectedFragment?.id"></span></h4>
-                        <button class="dialog__close" @click="modal = null"></button>
+                        <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
                     <div class="dialog__center dialog__center-top">
                         <h5 class="dialog__h5-top">{{ __('home.windows.presentation.1') }}</h5>

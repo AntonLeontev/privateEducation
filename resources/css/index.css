@@ -361,13 +361,19 @@ html, body {
 .main .column .polygon:hover:after {
   opacity: 0.7;
 }
-.main .column__st3-active {
+.main .main__row .column:hover .column__button {
+	opacity: 0.5;
+}
+.main .main__row .column:hover .column__button:hover {
+	opacity: 0.7;
+}
+.main .row_second .column:hover .column__top {
   animation-name: anim2;
   animation-duration: 1s;
   animation-delay: 0.4s;
   animation-iteration-count: infinite;
 }
-.main .column__st2-active {
+.main .row_first .column:hover .column__top {
   animation-name: anim1;
   animation-duration: 1s;
   animation-delay: 0.4s;
@@ -2586,9 +2592,6 @@ input[type=radio]:checked {
   }
   .main__row:last-child .column:nth-child(1) {
     margin-left: auto !important;
-  }
-  .main__row:last-child .column:nth-child(1) .column__search {
-    opacity: 1 !important;
   }
   .wrapper-padding {
     padding: 0px !important;
