@@ -369,7 +369,8 @@
                             <x-radio-sound />
 
                             <div class="dialog__sub">
-                                {{ __('home.windows.audio.duration') }}99:02
+                                {{ __('home.windows.audio.duration') }}
+								<span x-text="selectedFragment?.audio?.media[0]?.playtime ?? '0:00'"></span>
                             </div>
                             <div class="dialog__sep"></div>
 
@@ -400,7 +401,8 @@
                             <x-radio-sound />
 							
                             <div class="dialog__sub">
-                                {{ __('home.windows.video.duration') }}25:02
+                                {{ __('home.windows.video.duration') }}
+								<span x-text="selectedFragment?.video?.media[0]?.playtime ?? '0:00'"></span>
                             </div>
                             <div class="dialog__sep dialog__sep-blue"></div>
 
@@ -429,7 +431,8 @@
                             <x-radio-sound :hasText="true" />
 
                             <div class="dialog__sub">
-                                {{ __('home.windows.presentation.duration') }}25:02
+                                {{ __('home.windows.presentation.duration') }} 
+								<span x-text="selectedFragment?.presentation?.media[0]?.playtime ?? '0:00'"></span>
                             </div>
                             <div class="dialog__sep dialog__sep-pink"></div>
 							
