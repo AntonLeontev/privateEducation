@@ -728,13 +728,14 @@ input[type=radio]:checked {
   right: 126px;
   bottom: 124px;
   transition: transform 0.3s ease;
-  transform: translateY(0px) scale(0.9);
+  transform: scale(0.9);
 }
-.popup-dialog .dialog__play:active {
-  transform: translateY(2px) scale(1);
+.popup-dialog .dialog__play:hover:active {
+  transform: scale(1);
+  bottom: 122px;;
 }
 .popup-dialog .dialog__play:hover {
-  transform: translateY(0px) scale(1);
+  transform: scale(1);
 }
 .popup-dialog .dialog__play img {
   max-width: 178px;
@@ -907,6 +908,7 @@ input[type=radio]:checked {
   font-family: "Arial", sans-serif;
   padding-inline: 52px;
   padding-block: 10px;
+  width: 100%;
 }
 .popup-dialog .dialog__texter .title {
   max-width: 80%;

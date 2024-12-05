@@ -154,11 +154,22 @@
                 this.activateFragment(id)
                 this.modal = 'buy'
             },
-			isSelected(id, type) {
+			isSelected(id, type = null) {
+				if (type === null) {
+					return this.selectedFragment?.id === id
+				}
 				return this.selectedFragment?.id === id && this.modal === type
 			},
-			isPlaying(id, type) {
+			isPlaying(id, type = null) {
+				if (type === null) {
+					return this.playingFragment?.id === id
+				}
 				return this.playingFragment?.id === id && this.playingMedia === type
+			},
+			play() {
+				if (this.modal === 'presentation' && this.sound === 'text') {
+					this.modal = 'text'
+				} 
 			},
             buyClasses(id) {
                 return { 'column__active': this.selectedFragment === id }
@@ -204,7 +215,7 @@
                         @foreach (range(1, 6) as $number)
                             <div id="fragment{{ $number }}" class="main__column column" x-data="{ id: {{ $number }} }">
                                 <div class="column__top"
-                                    :class="selectedFragment?.id === id && 'column__top_active_1'"
+									:class="{ 'column__top_active_1': isSelected(id) || isPlaying(id) }"
 								>
                                     <span>
 										<span class="frag">{{ __('home.fragment') }}</span>
@@ -243,7 +254,7 @@
                         @foreach (range(7, 17) as $number)
                             <div id="fragment{{ $number }}" class="main__column column" x-data="{ id: {{ $number }} }">
                                 <div class="column__top"
-									:class="selectedFragment?.id === id && 'column__top_active_2'"
+									:class="{ 'column__top_active_2': isSelected(id) || isPlaying(id) }"
 								>
                                     <span>
                                         <span class="frag">{{ __('home.fragment') }}</span>
@@ -381,7 +392,7 @@
 								{{ __('home.windows.audio.access_denied') }}
 							</button> --}}
                         </form>
-                        <button class="dialog__play">
+                        <button class="dialog__play" @click="play">
                             <img src="{{ Vite::asset('resources/img/play.png') }}" alt="play">
                         </button>
                     </div>
@@ -413,7 +424,7 @@
                                 {{ __('home.windows.video.access_denied') }}
                             </button> --}}
                         </form>
-                        <button class="dialog__play">
+                        <button class="dialog__play" @click="play">
                             <img src="{{ Vite::asset('resources/img/play.png') }}" alt="play" />
                         </button>
                     </div>
@@ -440,7 +451,7 @@
 
                             <h3>{{ __('home.windows.video.access_granted') }}</h3>
                         </form>
-                        <button class="dialog__play">
+                        <button class="dialog__play" @click="play">
                             <img src="{{ Vite::asset('resources/img/play.png') }}" alt="play" />
                         </button>
                     </div>
@@ -867,58 +878,26 @@
                     </div>
                 </div>
 
-                <div id="dialog11" class="presentation popup-dialog popup-dialog-hidden">
+                <div class="presentation popup-dialog" x-show="modal === 'text'" x-cloak 
+					x-data="{full: false}"
+					:class="full && 'full-page'"
+				>
                     <div class="dialog__top">
-                        <h4>Текст. Краткое содержание Фрагмента №8. Заглавие</h4>
-                        <button class="dialog__close"></button>
+                        <h4 x-text="'{{ __('home.windows.text.title1') }}' + selectedFragment?.id + '{{ __('home.windows.text.title2') }}'"></h4>
+                        <button class="dialog__close" @click="deactivateFragment(); full = false"></button>
                     </div>
 
                     <div class="dialog__center dialog__center-margin">
-                        <div class="dialog__icon">
-                            <img id="openText" width="62" height="62" src="{{ Vite::asset('resources/img/link.png') }}" alt="" />
-                        </div>
+                        <button class="dialog__icon" @click="full = !full">
+                            <img width="62" height="62" src="{{ Vite::asset('resources/img/link.png') }}" alt="" x-show="!full" />
+                            <img width="62" height="62" src="{{ Vite::asset('resources/img/29.png') }}" alt="" x-show="full" />
+                        </button>
 
                         <div class="dialog__texter">
-                            <h3 class="title">
-                                Общество в постсоветском пространстве,
-                                психически мутировано,
-                                то есть процесс эволюции сознания
-                                и самосознания находится на животном уровне.
-                            </h3>
+                            <h3 class="title" x-text="selectedFragment?.title_{{ loc() }}"></h3>
 
-                            <p class="par">
-                                Этот тезис полностью аргументируется и подкрепляется
-                                Книгой Бытия, которая для большевиков была
-                                Марксисто-Ленинская философия и Диалектический
-                                Материализм. Основополагающие постулаты, которые
-                                формировали мысли, чувства, стереотипы сознания и
-                                поведения, всего образа жизни, отношения к окружающему
-                                миру и к самому себе.
-                            </p>
-                            <p class="par">
-                                Первый Постулат - первичность материи, вторичность
-                                сознания смещал сознание советского человека на
-                                физиологические плотские нужды, поэтому
-                                физиологически-животные инстинкты гипертрофировались.
-                                Смыслом и целью советского человека являлось бесконечное
-                                бытовое накопление и потребление.
-                            </p>
-                            <p class="par">
-                                Первый Постулат - первичность материи, вторичность
-                                сознания смещал сознание советского человека на
-                                физиологические плотские нужды, поэтому
-                                физиологически-животные инстинкты гипертрофировались.
-                                Смыслом и целью советского человека являлось бесконечное
-                                бытовое накопление и потребление.
-                            </p>
-                            <p class="par">
-                                Первый Постулат - первичность материи, вторичность
-                                сознания смещал сознание советского человека на
-                                физиологические плотские нужды, поэтому
-                                физиологически-животные инстинкты гипертрофировались.
-                                Смыслом и целью советского человека являлось бесконечное
-                                бытовое накопление и потребление.
-                            </p>
+							<div x-html="selectedFragment?.presentation?.text_{{ loc() }}"></div>
+                            
                         </div>
                     </div>
                 </div>

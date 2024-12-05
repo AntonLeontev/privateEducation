@@ -160,7 +160,7 @@
 								this.modalText = true
 							},
 							clean(text) {
-								let arr = text.split(/<p>|<\/p><p>|<\/p>/)
+								let arr = text.split(/<p class=\"par\">|<\/p><p class=\"par\">|<\/p>/)
 								
 								if (arr.length === 0) {
 									return text
@@ -177,7 +177,7 @@
 								}
 
 								return text.split('\n')
-									.map(line => `<p>${line}</p>`)
+									.map(line => `<p class=\"par\">${line}</p>`)
 									.join('')
 							},
 							updatePresentationText() {
