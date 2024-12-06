@@ -7,6 +7,13 @@ export default defineConfig({
             input: [
                 "resources/css/admin.css",
                 "resources/css/tailwind.css",
+                "resources/css/index.css",
+                "resources/css/about.css",
+                "resources/css/account.css",
+                "resources/css/agb.css",
+                "resources/css/contacts.css",
+                "resources/css/datenschutz.css",
+                "resources/css/impression.css",
                 "resources/scss/app.scss",
                 "resources/js/app.js",
                 "resources/js/metrics.js",
