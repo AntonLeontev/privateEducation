@@ -27,7 +27,7 @@ class SendTestMail extends Command
      */
     public function handle()
     {
-        Mail::to('aner-anton@yandex.ru')->send(new Test());
-        Mail::to('aner.anton@gmail.com')->send(new Test());
+        Mail::to('aner-anton@yandex.ru')->send(new Test);
+        Mail::to('aner.anton@gmail.com')->send(new Test);
     }
 }
