@@ -30,9 +30,6 @@ enum Currency: string implements JsonSerializable
 
     public function jsonSerialize(): mixed
     {
-        return [
-            'code' => $this->getCode(),
-            'sign' => $this->getSign(),
-        ];
+        return $this->getCode();
     }
 }

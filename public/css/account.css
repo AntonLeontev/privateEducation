@@ -850,7 +850,7 @@ html, body {
   transition: box-shadow 0.2s linear;
 }
 .dialog__center .registration__btn:hover {
-  box-shadow: 0px 0px 19px 10px #fbec8c;
+  box-shadow: 0px 0px 19px 10px #eafec8;
   z-index: 1000;
 }
 .dialog__center .registration__btn--autorization {
@@ -944,7 +944,7 @@ html, body {
   transition: box-shadow 0.2s linear;
 }
 .dialog__center .autorization__btn:hover {
-  box-shadow: 0px 0px 19px 10px #fbec8c;
+  box-shadow: 0px 0px 19px 10px #eafec8;
   z-index: 1000;
 }
 .dialog__center .autorization__btn:hover.autorization__btn_active {

@@ -24,10 +24,20 @@ readonly class Price implements JsonSerializable
             ];
         }
 
+        // if (loc() === 'ru') {
+        //     return [
+        //         'amount' => round($this->amount() * eur_rub_rate(), 2),
+        //         'currency' => Currency::rub,
+        //         'raw' => [
+        //             'amount' => $this->amount(),
+        //             'currency' => $this->currency,
+        //         ],
+        //     ];
+        // }
         if (loc() === 'ru') {
             return [
-                'amount' => round($this->amount() * eur_rub_rate(), 2),
-                'currency' => Currency::rub,
+                'amount' => round($this->amount(), 2),
+                'currency' => Currency::eur,
                 'raw' => [
                     'amount' => $this->amount(),
                     'currency' => $this->currency,

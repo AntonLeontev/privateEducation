@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Video extends Model
 {
@@ -27,6 +28,13 @@ class Video extends Model
     protected $casts = [
         'price' => PriceCast::class,
     ];
+
+    public function subscription(): MorphOne
+    {
+        return $this->morphOne(Subscription::class, 'subscribable')
+            ->where('user_id', auth()->id())
+            ->where('ends_at', '>', now());
+    }
 
     public function media(): MorphMany
     {

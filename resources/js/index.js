@@ -4,18 +4,6 @@ const close = document.querySelector(".close");
 const audios = document.querySelectorAll(".column__audio");
 const dialog = document.getElementById("dialog1");
 
-const checkbox = document
-    .querySelector(".dialog__policy-wrap")
-    ?.querySelector('input[type="checkbox"]');
-
-if (checkbox) {
-    checkbox.addEventListener("change", function () {
-        const submitBtn = document.querySelector("#next-4");
-        submitBtn.style.visibility = this.checked ? "visible" : "hidden";
-    });
-    document.getElementById("next-4").style.visibility = "hidden";
-}
-
 menu.addEventListener("click", (e) => {
     if (drawer.classList.contains("drawer__close")) {
         drawer.classList.remove("drawer__close");

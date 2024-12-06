@@ -12,8 +12,8 @@ class HomeController extends Controller
 
         $fragments->load([
             'presentation' => fn ($q) => $q->select(['id', 'text_'.loc(), 'fragment_id']),
-            'audio' => fn ($q) => $q->select(['id', 'price', 'fragment_id']),
-            'video' => fn ($q) => $q->select(['id', 'price', 'fragment_id']),
+            'audio' => fn ($q) => $q->select(['id', 'price', 'fragment_id'])->with('subscription'),
+            'video' => fn ($q) => $q->select(['id', 'price', 'fragment_id'])->with('subscription'),
         ]);
 
         return view('home', compact('fragments'));

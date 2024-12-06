@@ -89,6 +89,7 @@
             fragments: fragments,
             modal: null,
             selectedFragment: null,
+			mediaForBuy: 'audio',
             playingFragment: null,
             playingMedia: 'presentation',
 			sound: 'stereo',
@@ -150,9 +151,10 @@
                 this.activateFragment(id)
                 this.modal = 'presentation'
             },
-            activateBuySteps(id) {
+            activateStep1(id) {
                 this.activateFragment(id)
-                this.modal = 'buy'
+				this.mediaForBuy = this.modal ?? 'audio'
+                this.modal = 'step1'
             },
 			isSelected(id, type = null) {
 				if (type === null) {
@@ -166,14 +168,28 @@
 				}
 				return this.playingFragment?.id === id && this.playingMedia === type
 			},
-			play() {
-				if (this.modal === 'presentation' && this.sound === 'text') {
+			play(mediaType) {
+				if (mediaType === 'presentation' && this.sound === 'text') {
 					this.modal = 'text'
 				} 
 			},
-            buyClasses(id) {
-                return { 'column__active': this.selectedFragment === id }
-            },
+			audioPrice() {
+				if (this.selectedFragment === null) {
+					return {amount: 0}
+				}
+
+				return this.selectedFragment.audio.price
+			},
+			videoPrice() {
+				if (this.selectedFragment === null) {
+					return {amount: 0}
+				}
+
+				return this.selectedFragment.video.price
+			},
+			startPayment() {
+				
+			},
         }">
             <div class="container">
                 @include('partials.app.header')
@@ -226,7 +242,7 @@
                                 <div class="polygon">
                                     <button class="column__button column__shop"
                                         :class="{ 'column__active': isSelected(id, 'buy') }"
-                                        @click="activateBuySteps(id)">
+                                        @click="activateStep1(id)">
                                         <img src="{{ Vite::asset('resources/img/korzina.png') }}" alt="shop">
                                     </button>
                                     <button class="column__button column__audio"
@@ -267,7 +283,7 @@
                                 <div class="polygon">
                                     <button class="column__button column__shop"
                                         :class="{ 'column__active': isSelected(id, 'buy') }"
-                                        @click="activateBuySteps(id)">
+                                        @click="activateStep1(id)">
                                         <img src="{{ Vite::asset('resources/img/korzina.png') }}" alt="shop">
                                     </button>
                                     <button class="column__button column__audio"
@@ -320,7 +336,7 @@
                                 <div class="polygon">
                                     <button class="column__button column__shop"
                                         :class="{ 'column__active': isSelected(id, 'buy') }"
-                                        @click="activateBuySteps(id)">
+                                        @click="activateStep1(id)">
                                         <img src="{{ Vite::asset('resources/img/korzina.png') }}" alt="shop">
                                     </button>
                                     <button class="column__button column__audio"
@@ -366,7 +382,7 @@
                 </div>
 
 
-				<div id="dialog1" class="audio popup-dialog" x-show="modal === 'audio'" x-cloak>
+				<div class="audio popup-dialog" x-show="modal === 'audio'" x-cloak>
                     <div class="dialog__top">
                         <h4>{{ __('home.windows.audio.title') }}<span x-text="selectedFragment?.id"></span></h4>
                         <button class="dialog__close" @click="deactivateFragment"></button>
@@ -387,12 +403,16 @@
 
                             <x-radio-device />
 
-                            <h3>{{ __('home.windows.audio.access_granted') }}</h3>
-							{{-- <button class="dialog__not-btn dialog__not-btn-yellow">
+                            <h3 x-show="selectedFragment?.video?.subscription">{{ __('home.windows.audio.access_granted') }}</h3>
+							<button class="dialog__not-btn dialog__not-btn-yellow" 
+								type="button"
+								x-show="!selectedFragment?.video?.subscription"
+								@click="activateStep1(selectedFragment?.id)"
+							>
 								{{ __('home.windows.audio.access_denied') }}
-							</button> --}}
+							</button>
                         </form>
-                        <button class="dialog__play" @click="play">
+                        <button class="dialog__play" @click="play('audio')" x-show="selectedFragment?.video?.subscription">
                             <img src="{{ Vite::asset('resources/img/play.png') }}" alt="play">
                         </button>
                     </div>
@@ -419,12 +439,16 @@
 
                             <x-radio-device />
 
-                            <h3>{{ __('home.windows.video.access_granted') }}</h3>
-							{{-- <button id="autorization-submit-btn" class="dialog__not-btn dialog__not-btn-blue">
+                            <h3 x-show="selectedFragment?.video?.subscription">{{ __('home.windows.video.access_granted') }}</h3>
+							<button class="dialog__not-btn dialog__not-btn-blue" 
+								type="button"
+								x-show="!selectedFragment?.video?.subscription"
+								@click="activateStep1(selectedFragment?.id)"
+							>
                                 {{ __('home.windows.video.access_denied') }}
-                            </button> --}}
+                            </button>
                         </form>
-                        <button class="dialog__play" @click="play">
+                        <button class="dialog__play" @click="play('video')" x-show="selectedFragment?.video?.subscription">
                             <img src="{{ Vite::asset('resources/img/play.png') }}" alt="play" />
                         </button>
                     </div>
@@ -451,13 +475,13 @@
 
                             <h3>{{ __('home.windows.video.access_granted') }}</h3>
                         </form>
-                        <button class="dialog__play" @click="play">
+                        <button class="dialog__play" @click="play('presentation')">
                             <img src="{{ Vite::asset('resources/img/play.png') }}" alt="play" />
                         </button>
                     </div>
                 </div>
 
-                <div id="dialog-login" class="dialog-login popup-dialog-hidden green">
+                {{-- <div id="dialog-login" class="dialog-login popup-dialog-hidden green">
                     <div class="dialog__top">
                         <h4>Полное содержание. Фрагмент №8</h4>
                         <button class="dialog__close"></button>
@@ -562,124 +586,9 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
-                <div id="dialog6" class="dialog-login popup-dialog-hidden green dialog-inline">
-                    <div class="dialog__top">
-                        <h4>Полное содержание. Фрагмент №8</h4>
-                        <button class="dialog__close"></button>
-                    </div>
-
-                    <div id="login-step" class="dialog__step">Шаг 3 из 5</div>
-
-                    <div class="dialog__center">
-                        <div id="account-autorization"
-                            class="dialog__autorization autorization dialog__autorization-popup">
-                            <h3 class="autorization__title dialog__h3-without">
-                                Авторизация
-                            </h3>
-                            <div class="autorization__button-box">
-                                <button id="autorization-mode-btn-autorization"
-                                    class="autorization__btn autorization__btn--autorization">
-                                    <img src="img/user.png" alt="user" class="autorization__img" />
-                                    <span class="autorization__btn-text">Я&nbsp;пользователь</span>
-                                </button>
-                                <button id="autorization-mode-btn-registration"
-                                    class="autorization__btn autorization__btn--registration">
-                                    <img src="img/user.png" alt="user"
-                                        class="autorization__img autorization__img--grey" />
-                                    <span class="autorization__btn-text">Регистрация</span>
-                                </button>
-                            </div>
-                            <form id="autorization-form" class="autorization__form">
-                                <span class="autorization__label">
-                                    Адрес электронной почты:
-                                </span>
-                                <input id="autorization-email-input" type="email" class="autorization__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *" />
-                                <div class="autorization__wrapper">
-                                    <span class="autorization__label"> Пароль: </span>
-                                    <button id="autorization-password-recall-btn" class="autorization__link">
-                                        Забыли пароль?
-                                    </button>
-                                </div>
-                                <input id="autorization-password-input" type="password" class="autorization__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *" />
-                                <span id="autorization-error-msg" class="autorization__error-msg">Не удалось войти в
-                                    аккаунт,
-                                    введенные e-mail или
-                                    пароль неверны</span>
-                                <button id="autorization-submit-btn"
-                                    class="autorization__submit-btn dialog__submit-btn-without">
-                                    ВХОД
-                                </button>
-                            </form>
-                        </div>
-                        <div id="account-registration"
-                            class="dialog__registration registration dialog__autorization-popup">
-                            <h3 class="registration__title">Регистрация</h3>
-                            <div class="registration__button-box">
-                                <button id="registration-mode-btn-aurorization"
-                                    class="registration__btn registration__btn--autorization">
-                                    <img src="img/user.png" alt="user"
-                                        class="registration__img registration__img--grey" />
-                                    <span class="registration__btn-text">Авторизация</span>
-                                </button>
-                                <button id="registration-mode-btn-registration"
-                                    class="registration__btn registration__btn--registration">
-                                    <img src="img/user.png" alt="user" class="registration__img" />
-                                    <span class="registration__btn-text">Регистрация</span>
-                                </button>
-                            </div>
-                            <form id="registration-form" class="registration__form">
-                                <span class="registration__label">
-                                    Адрес электронной почты:
-                                </span>
-                                <input id="registration-email-input" type="email" class="registration__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *" />
-                                <button id="registration-submit-btn" class="registration__submit-btn">
-                                    ПРОДОЛЖИТЬ
-                                </button>
-                            </form>
-                        </div>
-                        <div id="account-password-recall" class="dialog__password-recall password-reacll">
-                            <h3 class="password-reacll__title">Восстановить пароль</h3>
-
-                            <form id="password-reacll-form" class="password-reacll__form">
-                                <span class="password-reacll__label">
-                                    Адрес электронной почты:
-                                </span>
-                                <input id="password-reacall-input" type="email" class="password-reacll__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *" />
-                                <button id="password-reacll-submit-btn" class="password-reacll__submit-btn">
-                                    ВОССТАНОВИТЬ
-                                </button>
-                            </form>
-                        </div>
-                        <div id="account-password-info-msg" class="dialog__password-info-msg password-info-msg">
-                            <div class="password-info-msg__wrapper">
-                                <p class="password-info-msg__text">
-                                    Для продолжения покупки перейдите по&nbsp;ссылке
-                                    в&nbsp;письме и&nbsp;подтвердите e-mail
-                                </p>
-                            </div>
-                        </div>
-                        <div id="account-password-new-info-msg"
-                            class="dialog__password-new-info-msg password-new-info-msg">
-                            <div class="password-new-info-msg__wrapper">
-                                <p class="password-new-info-msg__text">
-                                    На&nbsp;вашу почту отправлен новый пароль для входа
-                                    на&nbsp;сервис
-                                </p>
-                            </div>
-                            <button id="password-new-info-msg-btn" class="password-new-info-msg__btn">
-                                АВТОРИЗАЦИЯ
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- <div id="dialog1" class="continue">
+                {{-- <div id="dialog1" class="continue">
 					<div class="dialog__top">
 						<h4>Полное содержание. Фрагмент №8</h4>
 						<button class="dialog__close">
@@ -696,181 +605,382 @@
 
 						</div>
 					</div>
-				</div> -->
+				</div> --}}
 
-                <div id="dialog4" class="continue popup-dialog popup-dialog-hidden">
+                <div class="continue popup-dialog" x-show="modal === 'step1'" x-cloak>
                     <div class="dialog__top">
-                        <h4>Полное содержание. Фрагмент №8</h4>
-                        <button class="dialog__close"></button>
+                        <h4>{{ __('home.windows.step1.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
 
-                    <div class="dialog__step">Шаг 1 из 5</div>
+                    <div class="dialog__step">{{ __('home.windows.step1.step') }}</div>
 
                     <div class="dialog__center dialog__center-small">
                         <div class="dialog__center-wrapper">
                             <form class="variant-form">
-                                <h5 class="dialog__h5-top">Выбор варианта покупки:</h5>
+                                <h5 class="dialog__h5-top">{{ __('home.windows.step1.1') }}</h5>
 
                                 <div class="dialog__products">
                                     <label class="dialog__product-option">
                                         <div class="dialog__product-option-left">
-                                            <input id="" type="radio" name="product" />
+                                            <input type="radio" name="product" value="video" x-model="mediaForBuy" />
                                             <div class="dialog__price-label">
-                                                Купить доступ к видеофайлу<br />
-                                                для просмотра и прослушивания<br />
-                                                на сайте
+                                                {{ __('home.windows.step1.2') }}<br />
+                                                {{ __('home.windows.step1.3') }}<br />
+                                                {{ __('home.windows.step1.4') }}
                                             </div>
                                         </div>
                                         <div class="dialog__price-wrapper">
-                                            <p>3,00</p>
-                                            <img src="{{ Vite::asset('resources/img/euro.png') }}" alt="" />
+                                            <p x-text="videoPrice().amount"></p>
+                                            <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency === 'EUR'" />
+                                            <img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency === 'USD'" />
+                                            <img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency === 'RUB'" />
                                         </div>
                                     </label>
 
                                     <label class="dialog__product-option">
                                         <div class="dialog__product-option-left">
-                                            <input id="" type="radio" name="product" />
+                                            <input type="radio" name="product" value="audio" x-model="mediaForBuy" />
                                             <div class="dialog__price-label">
-                                                Купить доступ к аудиофайлу<br />
-                                                для прослушивания<br />
-                                                на сайте
+                                                {{ __('home.windows.step1.5') }}<br />
+                                                {{ __('home.windows.step1.6') }}<br />
+                                                {{ __('home.windows.step1.7') }}
                                             </div>
                                         </div>
                                         <div class="dialog__price-wrapper">
-                                            <p>2,00</p>
-                                            <img src="{{ Vite::asset('resources/img/euro.png') }}" alt="" />
+                                            <p x-text="audioPrice().amount"></p>
+                                            <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency === 'EUR'" />
+                                            <img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency === 'USD'" />
+                                            <img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency === 'RUB'" />
                                         </div>
                                     </label>
                                 </div>
 
-                                <button id="next-1" class="dialog__submit-btn dialog__submit-btn-first">
-                                    Перейти к оформлению
+                                <button type="button" class="dialog__submit-btn dialog__submit-btn-first" @click="modal = 'step2'">
+                                    {{ __('home.windows.step1.button') }}
                                 </button>
                             </form>
                         </div>
                     </div>
                 </div>
 
-                <div id="dialog5" class="continue popup-dialog popup-dialog-hidden">
+                <div class="continue popup-dialog" x-show="modal === 'step2'" x-cloak>
                     <div class="dialog__top">
-                        <h4>Полное содержание. Фрагмент №8</h4>
-                        <button class="dialog__close"></button>
+                        <h4>{{ __('home.windows.step2.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
 
-                    <div class="dialog__step absolut">Шаг 2 из 5</div>
+                    <div class="dialog__step absolut">{{ __('home.windows.step2.step') }}</div>
 
                     <div class="dialog__center dialog__center-cart">
                         <div class="dialog__center-wrapper">
-                            <h5>Ваша корзина</h5>
+                            <h5>{{ __('home.windows.step2.1') }}</h5>
 
                             <div class="dialog__cart-info">
-                                <p>Медиаконтент</p>
-                                <p>Стоимость</p>
+                                <p>{{ __('home.windows.step2.2') }}</p>
+                                <p>{{ __('home.windows.step2.3') }}</p>
                             </div>
                             <div class="dialog__bg dialog__bg-small">
                                 <div class="dialog__cart">
-                                    <div class="dialog__description">
-                                        Доступ к видеофайлу
-                                        для просмотра и прослушивания
-                                        на сайте
+                                    <div class="dialog__description" x-show="mediaForBuy === 'video'">
+                                        {{ __('home.windows.step2.4') }}
                                     </div>
-                                    <div class="dialog__price-wrapper">
-                                        <p>3,00</p>
-                                        <img src="{{ Vite::asset('resources/img/euro.png') }}" alt="" />
+                                    <div class="dialog__description" x-show="mediaForBuy === 'audio'">
+                                        {{ __('home.windows.step2.5') }}
+                                    </div>
+                                    <div class="dialog__price-wrapper" x-show="mediaForBuy === 'video'">
+                                        <p x-text="videoPrice().amount"></p>
+                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency === 'EUR'" />
+										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency === 'USD'" />
+										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency === 'RUB'" />
+                                    </div>
+                                    <div class="dialog__price-wrapper" x-show="mediaForBuy === 'audio'">
+                                        <p x-text="audioPrice().amount"></p>
+                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency === 'EUR'" />
+										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency === 'USD'" />
+										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency === 'RUB'" />
                                     </div>
                                 </div>
 
                                 <div class="dialog__sub">
-                                    Продолжительность записи в минутах - 25:02
+                                    {{ __('home.windows.step2.6') }}
+									<span x-text="selectedFragment?.audio?.media[0]?.playtime ?? '0:00'" x-show="mediaForBuy === 'audio'"></span>
+									<span x-text="selectedFragment?.video?.media[0]?.playtime ?? '0:00'" x-show="mediaForBuy === 'video'"></span>
                                 </div>
                                 <div class="dialog__sep dialog__sep-white"></div>
 
                                 <div class="dialog__total">
-                                    <p class="dialog__total-p">Итоговая стоимость:</p>
+                                    <p class="dialog__total-p">{{ __('home.windows.step2.7') }}</p>
 
-                                    <div class="dialog__price-wrapper">
-                                        <p>3,00</p>
-                                        <img src="{{ Vite::asset('resources/img/euro.png') }}" alt="" />
+                                    <div class="dialog__price-wrapper" x-show="mediaForBuy === 'video'">
+                                        <p x-text="videoPrice().amount"></p>
+                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency === 'EUR'" />
+										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency === 'USD'" />
+										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency === 'RUB'" />
+                                    </div>
+                                    <div class="dialog__price-wrapper" x-show="mediaForBuy === 'audio'">
+                                        <p x-text="audioPrice().amount"></p>
+                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency === 'EUR'" />
+										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency === 'USD'" />
+										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency === 'RUB'" />
                                     </div>
                                 </div>
                             </div>
 
                             <div class="dialog__btns">
-                                <button id="back-1" class="dialog__back-btn">
-                                    Вернуться<br />
-                                    назад
+                                <button id="back-1" class="dialog__back-btn" @click="modal = 'step1'">
+                                    {{ __('home.windows.step2.back1') }}<br />
+                                    {{ __('home.windows.step2.back2') }}
                                 </button>
 
-                                <button id="next-2" class="dialog__submit-btn">
-                                    Продолжить
+                                <button id="next-2" class="dialog__submit-btn" @click="modal = 'step3'">
+                                    {{ __('home.windows.step2.next') }}
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="dialog8" class="continue popup-dialog popup-dialog-hidden">
+				<div class="dialog-login green dialog-inline" x-show="modal === 'step3'" x-cloak
+					x-data="{window: 'login'}"
+				>
                     <div class="dialog__top">
-                        <h4>Полное содержание. Фрагмент №8</h4>
-                        <button class="dialog__close"></button>
+                        <h4>{{ __('home.windows.step3.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
 
-                    <div class="dialog__step absolut">Шаг 5 из 5</div>
+                    <div id="login-step" class="dialog__step">{{ __('home.windows.step3.step') }}</div>
+
+                    <div class="dialog__center">
+                        <div class="dialog__autorization autorization dialog__autorization-popup" x-show="window === 'login'">
+                            <h3 class="autorization__title dialog__h3-without">
+                                {{ __('home.windows.step3.login.title') }}
+                            </h3>
+                            <div class="autorization__button-box">
+                                <button id="autorization-mode-btn-autorization"
+                                    class="autorization__btn autorization__btn--autorization">
+                                    <img src="img/user.png" alt="user" class="autorization__img" />
+                                    <span class="autorization__btn-text">{{ __('home.windows.step3.login.1') }}</span>
+                                </button>
+                                <button id="autorization-mode-btn-registration" @click="window = 'register'"
+                                    class="autorization__btn autorization__btn--registration">
+                                    <img src="img/user.png" alt="user"
+                                        class="autorization__img autorization__img--grey" />
+                                    <span class="autorization__btn-text">{{ __('home.windows.step3.login.2') }}</span>
+                                </button>
+                            </div>
+                            <form id="autorization-form" class="autorization__form" @submit.prevent="login"
+								x-data="{
+									isAuthorized: {{ Auth::check() ? 'true' : 'false' }},
+									login() {
+										if (this.isAuthorized) {
+											this.modal = 'step4';
+											return;
+										}
+									}
+								}"
+							>
+                                <span class="autorization__label">
+                                    {{ __('home.windows.step3.login.3') }}
+                                </span>
+                                <input id="autorization-email-input" type="email" class="autorization__input"
+                                    placeholder="* * * * * * * * * * * * * * * * *" />
+                                <div class="autorization__wrapper">
+                                    <span class="autorization__label"> {{ __('home.windows.step3.login.4') }} </span>
+                                    <button type="button" class="autorization__link" @click="window = 'remind'">
+                                        {{ __('home.windows.step3.login.5') }}
+                                    </button>
+                                </div>
+                                <input id="autorization-password-input" type="password" class="autorization__input"
+                                    placeholder="* * * * * * * * * * * * * * * * *" />
+                                <span id="autorization-error-msg" class="autorization__error-msg">
+									{{ __('home.windows.step3.login.6') }}
+								</span>
+                                <button id="autorization-submit-btn"
+                                    class="autorization__submit-btn dialog__submit-btn-without">
+                                    {{ __('home.windows.step3.login.7') }}
+                                </button>
+                            </form>
+                        </div>
+                        <div class="dialog__registration registration dialog__autorization-popup" x-show="window === 'register'">
+                            <h3 class="registration__title">{{ __('home.windows.step3.register.title') }}</h3>
+                            <div class="registration__button-box">
+                                <button id="registration-mode-btn-aurorization" @click="window = 'login'"
+                                    class="registration__btn registration__btn--autorization">
+                                    <img src="img/user.png" alt="user"
+                                        class="registration__img registration__img--grey" />
+                                    <span class="registration__btn-text">{{ __('home.windows.step3.register.1') }}</span>
+                                </button>
+                                <button id="registration-mode-btn-registration"
+                                    class="registration__btn registration__btn--registration">
+                                    <img src="img/user.png" alt="user" class="registration__img" />
+                                    <span class="registration__btn-text">{{ __('home.windows.step3.register.2') }}</span>
+                                </button>
+                            </div>
+                            <form id="registration-form" class="registration__form">
+                                <span class="registration__label">
+                                    {{ __('home.windows.step3.register.3') }}
+                                </span>
+                                <input id="registration-email-input" type="email" class="registration__input"
+                                    placeholder="* * * * * * * * * * * * * * * * *" />
+                                <button id="registration-submit-btn" class="registration__submit-btn">
+                                    {{ __('home.windows.step3.register.4') }}
+                                </button>
+                            </form>
+                        </div>
+                        <div class="dialog__password-recall password-reacll" x-show="window === 'remind'">
+                            <h3 class="password-reacll__title">{{ __('home.windows.step3.remind.title') }}</h3>
+
+                            <form id="password-reacll-form" class="password-reacll__form"
+								@submit.prevent="submit"
+								x-data="{
+									submit(event) {
+										
+									}
+								}"
+							>
+                                <span class="password-reacll__label">
+                                    {{ __('home.windows.step3.remind.1') }}
+                                </span>
+                                <input id="password-reacall-input" type="email" class="password-reacll__input"
+                                    placeholder="* * * * * * * * * * * * * * * * *" />
+                                <button id="password-reacll-submit-btn" class="password-reacll__submit-btn">
+                                    {{ __('home.windows.step3.remind.2') }}
+                                </button>
+                            </form>
+                        </div>
+                        <div class="dialog__password-info-msg password-info-msg" x-show="window === 'register-success'">
+                            <div class="password-info-msg__wrapper">
+                                <p class="password-info-msg__text">
+                                    {{ __('home.windows.step3.register-success') }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="dialog__password-new-info-msg password-new-info-msg" x-show="window === 'password-sent'">
+                            <div class="password-new-info-msg__wrapper">
+                                <p class="password-new-info-msg__text">
+                                    {{ __('home.windows.step3.password-sent.1') }}
+                                </p>
+                            </div>
+                            <button class="password-new-info-msg__btn" @click="window = 'login'">
+                                {{ __('home.windows.step3.password-sent.2') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+				<div class="continue popup-dialog" x-show="modal === 'step4'" x-cloak>
+                    <div class="dialog__top">
+                        <h4>{{ __('home.windows.step4.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <button class="dialog__close" @click="deactivateFragment"></button>
+                    </div>
+
+                    <div class="dialog__step">{{ __('home.windows.step4.step') }}</div>
+
+                    <div class="dialog__center dialog__center_without">
+                        <form class="method-form">
+                            <h5>{{ __('home.windows.step4.1') }}</h5>
+
+                            <div class="methods">
+                                <label class="cars">
+                                    <div class="imgs">
+                                        <img class="mastercard" src="{{ Vite::asset('resources/img/MasterCard.png') }}" alt="mastercard" />
+                                        <img class="visa" src="{{ Vite::asset('resources/img/VISA.png') }}" alt="visa" />
+                                    </div>
+
+                                    <div class="rado-wrap">
+                                        <input type="radio" name="method" checked />
+                                        <label class="dialog__input-label">{{ __('home.windows.step4.2') }}</label>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="btns">
+                                <button class="dialog__back-btn dialog__submit-btn-big" type="button" @click="modal = 'step2'">
+                                    {{ __('home.windows.step4.3') }} <br />
+                                    {{ __('home.windows.step4.4') }}
+                                </button>
+                                <button class="dialog__submit-btn" type="button" @click="modal = 'step5'">
+                                    {{ __('home.windows.step4.5') }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="continue popup-dialog" x-show="modal === 'step5'" x-cloak>
+                    <div class="dialog__top">
+                        <h4>{{ __('home.windows.step5.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <button class="dialog__close" @click="deactivateFragment"></button>
+                    </div>
+
+                    <div class="dialog__step absolut">{{ __('home.windows.step5.step') }}</div>
 
                     <div class="dialog__center dialog__center-confirm">
                         <div class="dialog__center-wrapper">
-                            <h5 class="dialog__confirm-h5">Подтверждение покупки</h5>
+                            <h5 class="dialog__confirm-h5">{{ __('home.windows.step5.1') }}</h5>
 
-                            <form class="complete">
-                                <div class="dialog__variant">Вариант покупки:</div>
+                            <form class="complete" x-data="{agree: true}">
+                                <div class="dialog__variant">{{ __('home.windows.step5.2') }}</div>
 
                                 <div class="dialog__confirm">
                                     <label class="dialog__confirm-product" for="sss">
                                         <div class="dialog__product-option-left">
                                             <input id="sss" type="radio" name="product" checked />
-                                            <label for="">Доступ к видеофайлу для
-                                                просмотра и прослушивания
-                                                на сайте</label>
+                                            <label x-show="mediaForBuy === 'video'">{{ __('home.windows.step5.3') }}</label>
+                                            <label x-show="mediaForBuy === 'audio'">{{ __('home.windows.step5.4') }}</label>
                                         </div>
-                                        <div class="dialog__price-wrapper">
-                                            <p>3,00</p>
-                                            <img src="{{ Vite::asset('resources/img/euro.png') }}" alt="" />
-                                        </div>
+                                        <div class="dialog__price-wrapper" x-show="mediaForBuy === 'video'">
+											<p x-text="videoPrice().amount"></p>
+											<img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency === 'EUR'" />
+											<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency === 'USD'" />
+											<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency === 'RUB'" />
+										</div>
+										<div class="dialog__price-wrapper" x-show="mediaForBuy === 'audio'">
+											<p x-text="audioPrice().amount"></p>
+											<img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency === 'EUR'" />
+											<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency === 'USD'" />
+											<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency === 'RUB'" />
+										</div>
                                     </label>
                                 </div>
 
                                 <div class="dialog__sub">
-                                    Продолжительность записи в минутах - 25:02
+                                    {{ __('home.windows.step5.5') }}
+									<span x-text="selectedFragment?.audio?.media[0]?.playtime ?? '0:00'" x-show="mediaForBuy === 'audio'"></span>
+									<span x-text="selectedFragment?.video?.media[0]?.playtime ?? '0:00'" x-show="mediaForBuy === 'video'"></span>
                                 </div>
                                 <div class="dialog__sep dialog__sep-white dialog__sep-visible"></div>
 
                                 <div class="dialog__payment-type">
-                                    <p>Способ платежа:</p> <span>онлайн карты</span>
+                                    <p>{{ __('home.windows.step5.6') }}</p> <span>{{ __('home.windows.step5.7') }}</span>
                                 </div>
 
                                 <div class="dialog__policy">
                                     <div class="dialog__policy-wrap">
-                                        <input id="policy" type="checkbox" name="policy" />
+                                        <input id="policy" type="checkbox" name="policy" x-model="agree" />
                                         <p>
-                                            <label for="policy">Я согласен
-                                            </label>
-                                            <a>с условиями продажи доступа к
-                                                медиаконтенту</a>
+                                            <label for="policy">{{ __('home.windows.step5.8') }}</label>
+                                            <a :href="route('commercial')">{{ __('home.windows.step5.9') }}</a>
                                         </p>
 
 
                                     </div>
-                                    <a>и Политикой приватности</a>
+                                    <a :href="route('privacy')">{{ __('home.windows.step5.10') }}</a>
                                 </div>
 
                                 <div class="dialog__btns">
-                                    <button id="back-3" class="dialog__back-btn">
-                                        Вернуться<br />
-                                        в корзину
+                                    <button class="dialog__back-btn" type="button" @click="modal = 'step2'">
+                                        {{ __('home.windows.step5.11') }}<br />
+                                        {{ __('home.windows.step5.12') }}
                                     </button>
 
-                                    <button id="next-4" class="dialog__submit-btn">
-                                        Продолжить
+                                    <button class="dialog__submit-btn" type="button" 
+										@click="startPayment" 
+										:style="!agree ? 'visibility: hidden;' : ''"
+										:disabled="!agree"
+									>
+                                        {{ __('home.windows.step5.13') }}
                                     </button>
                                 </div>
                             </form>
@@ -899,45 +1009,6 @@
 							<div x-html="selectedFragment?.presentation?.text_{{ loc() }}"></div>
                             
                         </div>
-                    </div>
-                </div>
-
-                <div id="dialog7" class="continue popup-dialog popup-dialog-hidden">
-                    <div class="dialog__top">
-                        <h4>Полное содержание. Фрагмент №8</h4>
-                        <button class="dialog__close"></button>
-                    </div>
-
-                    <div class="dialog__step">Шаг 4 из 5</div>
-
-                    <div class="dialog__center dialog__center_without">
-                        <form class="method-form">
-                            <h5>Выбор платежной системы:</h5>
-
-                            <div class="methods">
-                                <label class="cars">
-                                    <div class="imgs">
-                                        <img class="mastercard" src="{{ Vite::asset('resources/img/MasterCard.png') }}" alt="mastercard" />
-                                        <img class="visa" src="{{ Vite::asset('resources/img/VISA.png') }}" alt="visa" />
-                                    </div>
-
-                                    <div class="rado-wrap">
-                                        <input type="radio" name="method" checked />
-                                        <label class="dialog__input-label">Онлайн карты</label>
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="btns">
-                                <button id="back-2" class="dialog__back-btn dialog__submit-btn-big">
-                                    Вернуться <br />
-                                    назад
-                                </button>
-                                <button id="next-3" class="dialog__submit-btn">
-                                    Продолжить
-                                </button>
-                            </div>
-                        </form>
                     </div>
                 </div>
 
