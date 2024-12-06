@@ -97,5 +97,4 @@
             </div>
         </div>
     </main>
-    <script src="/js/app.bundle.js"></script>
 @endsection
