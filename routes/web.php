@@ -54,6 +54,7 @@ Route::prefix(LaravelLocalization::setLocale())
             Route::post('/login', [AuthController::class, 'login'])->name('auth');
             Route::get('/verify-email/{user:email}', [AuthController::class, 'verifyEmail'])->name('verify-email');
             Route::post('register', [AuthController::class, 'store'])->name('register');
+            Route::post('register-and-buy', [AuthController::class, 'storeAndBuy'])->name('register-and-buy');
             Route::post('/password-reset', [AuthController::class, 'resetPassword'])->name('password.reset');
         });
         Route::post('logout', [AuthController::class, 'destroy'])->name('logout');

@@ -283,10 +283,11 @@
 
                                     </ul>
                                 </section>
-                                <!-- Должно быть кнопкой ? -->
-                                <a href="#" class="inner__button">
-                                    {!! __('privacy.94') !!}
-                                </a>
+								@if (request()->has('fragment_id') && request()->has('media_type') && request()->has('step'))
+									<a href="{{ route('home', ['fragment_id' => request()->get('fragment_id'), 'media_type' => request()->get('media_type'), 'step' => request()->get('step')]) }}" class="inner__button">
+										{!! __("privacy.94") !!}
+									</a>
+								@endif
                             </div>
                         </div>
                     </div>

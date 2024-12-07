@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\DTOs\PurchaseParams;
 use App\Events\UserRegistered;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ class CreateNewUser
      *
      * @param  array<string, string>  $input
      */
-    public function create(array $input): User
+    public function create(array $input, bool $withBuy = false): User
     {
         Validator::make($input, [
             'email' => [
@@ -28,6 +29,8 @@ class CreateNewUser
                 'max:255',
                 Rule::unique(User::class),
             ],
+            'fragment_id' => ['sometimes', 'min:1', 'max:17'],
+            'media_type' => ['sometimes', 'in:audio,video'],
         ])->validate();
 
         $password = str()->password(10);
@@ -39,7 +42,17 @@ class CreateNewUser
                 'password' => Hash::make($password),
             ]);
 
-            event(new UserRegistered($user, $password));
+            if (isset($input['fragment_id']) && isset($input['media_type'])) {
+                $purchaseParams = new PurchaseParams(
+                    $input['fragment_id'],
+                    $input['media_type'],
+                    'step4',
+                );
+            } else {
+                $purchaseParams = null;
+            }
+
+            event(new UserRegistered($user, $password, $purchaseParams));
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

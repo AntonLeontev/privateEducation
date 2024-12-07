@@ -11,12 +11,17 @@
 				@auth
 					<a href="{{ route('personal') }}" class="lk">
 						<img src="/img/user.png" alt="user">
-						<span>{{ auth()->user()->email }}</span>
+						<span title="{{ auth()->user()->email }}">{{ auth()->user()->email }}</span>
 					</a>
 				@else
-					<a href="{{ route('personal') }}" class="lk" style="max-width: 245px">
+					<a href="{{ route('personal') }}" class="lk" 
+						x-data="{
+							text: '{{ __('header.personal') }}',
+						}"
+						@login.window="text = $event.detail.email"
+					>
 						<img src="/img/user.png" alt="user">
-						<span>{{ __('header.personal') }}</span>
+						<span x-text="text" :title="text"></span>
 					</a>
 				@endauth
             </li>

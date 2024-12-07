@@ -10,6 +10,6 @@ class SendRegisterEmail
 {
     public function handle(UserRegistered $event)
     {
-        Mail::to($event->user->email)->send(new VerifyEmail($event->user, $event->password, app()->getLocale()));
+        Mail::to($event->user->email)->send(new VerifyEmail($event->user, $event->password, app()->getLocale(), $event->purchaseParams));
     }
 }

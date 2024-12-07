@@ -7,6 +7,7 @@ return [
     'site' => 'private education website.',
     'password' => 'Your password to login:',
     'finish' => 'To complete your registration and activate your account, please visit the following link:',
+    'finish_and_buy' => 'To continue purchasing and activate your account, please visit the following link:',
     'contacts' => 'Contacts',
     'email' => 'Email',
     'lat_phone' => 'Telephone in Latvia',

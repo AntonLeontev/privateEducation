@@ -97,6 +97,21 @@
         
             init() {
                 this.playingFragment = this.fragments[0];
+
+				const queryString = window.location.search;
+				const urlParams = new URLSearchParams(queryString);
+
+				if (urlParams.has('fragment_id')) {
+					this.activateFragment(urlParams.get('fragment_id'));
+				}
+
+				if (urlParams.has('media_type')) {
+					this.mediaForBuy = urlParams.get('media_type');
+				}
+
+				if (urlParams.has('step')) {
+					this.modal = urlParams.get('step');
+				}
         
                 this.$nextTick(() => {
                     this.player = videojs('player', {
@@ -119,13 +134,11 @@
                         src: `/media/${this.playingMedia}/${this.playingFragment.id}/{{ loc() }}/${this.sound}/${this.device}` 
                     })
                     this.player.play()
-        
-                    {{-- this.player.removeChild('BigPlayButton'); --}}
                 })
             },
             activateFragment(id) {
                 this.selectedFragment = this.fragments
-                    .find(el => el.id === id)
+                    .find(el => el.id == id)
             },
 			deactivateFragment() {
 				this.selectedFragment = null
@@ -751,7 +764,7 @@
 
                     <div id="login-step" class="dialog__step">{{ __('home.windows.step3.step') }}</div>
 
-                    <div class="dialog__center">
+                    <div class="dialog__center" x-data="{isAuthorized: {{ Auth::check() ? 'true' : 'false' }}}">
                         <div class="dialog__autorization autorization dialog__autorization-popup" x-show="window === 'login'">
                             <h3 class="autorization__title dialog__h3-without">
                                 {{ __('home.windows.step3.login.title') }}
@@ -771,19 +784,41 @@
                             </div>
                             <form id="autorization-form" class="autorization__form" @submit.prevent="login"
 								x-data="{
-									isAuthorized: {{ Auth::check() ? 'true' : 'false' }},
+									error: false,
+									processing: false,
 									login() {
 										if (this.isAuthorized) {
 											this.modal = 'step4';
 											return;
 										}
+
+										this.processing = true;
+										this.error = false;
+
+										let data = new FormData(this.$event.target);
+										
+										axios
+											.post(route('login'), data)
+											.then(res => {
+												this.$dispatch('login', {email: data.get('email')})
+												this.modal = 'step4';
+											})
+											.catch(err => {
+												if (err.response.status === 422) {
+													this.error = true;
+													return;
+												}
+
+												console.log(err);
+											})
+											.finally(() => this.processing = false)
 									}
 								}"
 							>
                                 <span class="autorization__label">
                                     {{ __('home.windows.step3.login.3') }}
                                 </span>
-                                <input id="autorization-email-input" type="email" class="autorization__input"
+                                <input id="autorization-email-input" type="email" class="autorization__input" name="email"
                                     placeholder="* * * * * * * * * * * * * * * * *" />
                                 <div class="autorization__wrapper">
                                     <span class="autorization__label"> {{ __('home.windows.step3.login.4') }} </span>
@@ -791,13 +826,12 @@
                                         {{ __('home.windows.step3.login.5') }}
                                     </button>
                                 </div>
-                                <input id="autorization-password-input" type="password" class="autorization__input"
+                                <input id="autorization-password-input" type="password" class="autorization__input" name="password"
                                     placeholder="* * * * * * * * * * * * * * * * *" />
-                                <span id="autorization-error-msg" class="autorization__error-msg">
+                                <span id="autorization-error-msg" class="autorization__error-msg" x-show="error">
 									{{ __('home.windows.step3.login.6') }}
 								</span>
-                                <button id="autorization-submit-btn"
-                                    class="autorization__submit-btn dialog__submit-btn-without">
+                                <button class="autorization__submit-btn dialog__submit-btn-without" :disabled="processing">
                                     {{ __('home.windows.step3.login.7') }}
                                 </button>
                             </form>
@@ -817,13 +851,50 @@
                                     <span class="registration__btn-text">{{ __('home.windows.step3.register.2') }}</span>
                                 </button>
                             </div>
-                            <form id="registration-form" class="registration__form">
+                            <form id="registration-form" class="registration__form" style="position: relative"
+								@submit.prevent="submit"
+								x-data="{
+									error: false,
+									errorText: '',
+									processing: false,
+									submit(event) {
+										if (this.isAuthorized) {
+											this.modal = 'step4';
+											return;
+										}
+
+										this.processing = true;
+										this.error = false;
+										axios
+											.post(route('register-and-buy'), new FormData(event.target))
+											.then(res => {
+												this.window = 'register-success';
+											})
+											.catch(err => {
+												if (err.response.status === 422) {
+													this.error = true;
+													this.errorText = err.response.data.message;
+													return;
+												}
+											})
+											.finally(() => this.processing = false)
+									}
+								}"
+							>
                                 <span class="registration__label">
                                     {{ __('home.windows.step3.register.3') }}
                                 </span>
-                                <input id="registration-email-input" type="email" class="registration__input"
+                                <input type="email" class="registration__input" name="email"
                                     placeholder="* * * * * * * * * * * * * * * * *" />
-                                <button id="registration-submit-btn" class="registration__submit-btn">
+
+								<input type="hidden" name="fragment_id" :value="selectedFragment?.id">
+								<input type="hidden" name="media_type" :value="mediaForBuy">
+								
+								<span class="registration__error-msg" 
+									x-show="error"
+									x-text="errorText"
+								></span>
+                                <button class="registration__submit-btn" :disabled="processing">
                                     {{ __('home.windows.step3.register.4') }}
                                 </button>
                             </form>
@@ -834,17 +905,22 @@
                             <form id="password-reacll-form" class="password-reacll__form"
 								@submit.prevent="submit"
 								x-data="{
+									processing: false,
 									submit(event) {
-										
+										this.processing = true;
+
+										axios
+											.post(route('password.reset'), new FormData(event.target))
+											.then(resp => this.window = 'password-sent')
+											.finally(() => this.processing = false)
 									}
 								}"
 							>
                                 <span class="password-reacll__label">
                                     {{ __('home.windows.step3.remind.1') }}
                                 </span>
-                                <input id="password-reacall-input" type="email" class="password-reacll__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *" />
-                                <button id="password-reacll-submit-btn" class="password-reacll__submit-btn">
+                                <input type="email" class="password-reacll__input" name="email" placeholder="* * * * * * * * * * * * * * * * *" />
+                                <button class="password-reacll__submit-btn" :disabled="processing">
                                     {{ __('home.windows.step3.remind.2') }}
                                 </button>
                             </form>
@@ -961,12 +1037,28 @@
                                         <input id="policy" type="checkbox" name="policy" x-model="agree" />
                                         <p>
                                             <label for="policy">{{ __('home.windows.step5.8') }}</label>
-                                            <a :href="route('commercial')">{{ __('home.windows.step5.9') }}</a>
+                                            <a 
+												:href="route('commercial', {
+													'fragment_id': selectedFragment?.id ?? '',
+													'media_type': mediaForBuy ?? '',
+													'step': 'step5',
+												})"
+											>
+												{{ __('home.windows.step5.9') }}
+											</a>
                                         </p>
 
 
                                     </div>
-                                    <a :href="route('privacy')">{{ __('home.windows.step5.10') }}</a>
+                                    <a 
+										:href="route('privacy', {
+											'fragment_id': selectedFragment?.id ?? '',
+											'media_type': mediaForBuy ?? '',
+											'step': 'step5',
+										})"
+									>
+										{{ __('home.windows.step5.10') }}
+									</a>
                                 </div>
 
                                 <div class="dialog__btns">

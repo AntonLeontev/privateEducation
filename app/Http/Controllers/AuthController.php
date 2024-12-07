@@ -32,10 +32,23 @@ class AuthController extends Controller
 
         auth()->login($user, true);
 
+        if ($request->has('fragment_id') && $request->has('media_type') && $request->has('step')) {
+            return to_route('home', [
+                'fragment_id' => $request->get('fragment_id'),
+                'media_type' => $request->get('media_type'),
+                'step' => $request->get('step'),
+            ]);
+        }
+
         return to_route('personal');
     }
 
     public function store(Request $request, CreateNewUser $action)
+    {
+        $action->create($request->all());
+    }
+
+    public function storeAndBuy(Request $request, CreateNewUser $action)
     {
         $action->create($request->all());
     }

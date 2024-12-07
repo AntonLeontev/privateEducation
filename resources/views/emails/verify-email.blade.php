@@ -11,9 +11,24 @@
 </div>
 <br>
 <br>
+@if (is_null($purchaseParams))
 <div>{{ __('emails/verify-email.finish') }}</div>
+@else
+<div>{{ __('emails/verify-email.finish_and_buy') }}</div>	
+@endif
 <br>
-<div><a style="color: #e9752c; font-style: italic" href="{{ route('verify-email', [$user->email, 'password' => $user->password]) }}">{{ route('verify-email', [$user->email, 'password' => $user->password]) }}</a></div>
+@php
+	is_null($purchaseParams)
+		? $link = route('verify-email', [$user->email, 'password' => $user->password])
+		: $link = route('verify-email', [
+			$user->email, 
+			'password' => $user->password, 
+			'fragment_id' => $purchaseParams->fragmentId, 
+			'media_type' => $purchaseParams->mediaType, 
+			'step' => $purchaseParams->step
+		]);
+@endphp
+<div><a style="color: #e9752c; font-style: italic" href="{{ $link }}">{{ $link }}</a></div>
 @endsection
 
 

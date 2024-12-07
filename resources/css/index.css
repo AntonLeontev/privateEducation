@@ -3782,6 +3782,14 @@ input[type=radio]:checked {
     font-size: 1.4vw !important;
     color: #e9752c;
   }
+  .dialog-login .dialog__center .registration__error-msg {
+    top: 11.5vw !important;
+    left: 2.4vw !important;
+    position: absolute;
+    font-weight: 600;
+    font-size: 1.4vw !important;
+    color: #e9752c;
+  }
   .dialog-login .dialog__center .registration {
     font-family: Arial, Helvetica, sans-serif;
     display: flex;
@@ -4227,13 +4235,24 @@ input[type=radio]:checked {
   font-style: italic;
 }
 .dialog-login .dialog__center .autorization__error-msg {
-  display: none;
+  display: flex;
   top: 267px;
   left: 55px;
   position: absolute;
   font-weight: 600;
   font-size: 33.5px;
   color: #e9752c;
+}
+.dialog-login .dialog__center .registration__error-msg {
+  display: flex;
+  top: 147px;
+  left: 55px;
+  width: calc(100% - 110px);
+  position: absolute;
+  font-weight: 600;
+  font-size: 33.5px;
+  color: #e9752c;
+  justify-content: center;
 }
 .dialog-login .dialog__center .autorization__submit-btn {
   font-family: Arial, Helvetica, sans-serif;
@@ -4586,8 +4605,23 @@ input[type=radio]:checked {
     width: 100%;
     justify-content: center;
   }
+  .dialog-login .dialog__center .registration__error-msg {
+    top: 25vw !important;
+    left: 0vw !important;
+    position: absolute;
+    font-weight: 600;
+    font-size: 2.57vw !important;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
   @supports (-moz-appearance: none) {
     .dialog-login .dialog__center .autorization__error-msg {
+      top: 25.4vw !important;
+    }
+  }
+  @supports (-moz-appearance: none) {
+    .dialog-login .dialog__center .registration__error-msg {
       top: 25.4vw !important;
     }
   }

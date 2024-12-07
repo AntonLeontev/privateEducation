@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\DTOs\PurchaseParams;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,7 +18,7 @@ class VerifyEmail extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public User $user, public string $password, public $locale) {}
+    public function __construct(public User $user, public string $password, public $locale, public ?PurchaseParams $purchaseParams = null) {}
 
     /**
      * Get the message envelope.
