@@ -26,6 +26,11 @@ class Audio extends Model
         'price' => PriceCast::class,
     ];
 
+    public function subscribableType(): string
+    {
+        return 'audio';
+    }
+
     public function subscription(): MorphOne
     {
         return $this->morphOne(Subscription::class, 'subscribable')

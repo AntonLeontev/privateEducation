@@ -29,6 +29,11 @@ class Video extends Model
         'price' => PriceCast::class,
     ];
 
+    public function subscribableType(): string
+    {
+        return 'video';
+    }
+
     public function subscription(): MorphOne
     {
         return $this->morphOne(Subscription::class, 'subscribable')

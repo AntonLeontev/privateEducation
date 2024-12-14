@@ -64,6 +64,33 @@ readonly class Price implements JsonSerializable
         return $this->amount / 100;
     }
 
+    public function toUsd(): static
+    {
+        if ($this->currency === Currency::eur) {
+            return new static($this->amount() * eur_usd_rate(), Currency::usd);
+        }
+    }
+
+    public function toRub(): static
+    {
+        if ($this->currency === Currency::eur) {
+            return new static($this->amount() * eur_rub_rate(), Currency::rub);
+        }
+    }
+
+    public function localeAmount(string $locale): int|float
+    {
+        // if ($locale === 'ru') {
+        // 	return round($this->amount() * eur_rub_rate(), 2);
+        // }
+        if ($locale === 'ru') {
+            return round($this->amount(), 2);
+        }
+        if ($locale === 'en') {
+            return round($this->amount() * eur_usd_rate(), 2);
+        }
+    }
+
     public function __toString(): string
     {
         return $this->amount().' '.$this->currency->getSign();

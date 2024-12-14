@@ -112,6 +112,8 @@
 				if (urlParams.has('step')) {
 					this.modal = urlParams.get('step');
 				}
+
+				history.pushState({}, '', location.pathname);
         
                 this.$nextTick(() => {
                     this.player = videojs('player', {
@@ -201,7 +203,17 @@
 				return this.selectedFragment.video.price
 			},
 			startPayment() {
-				
+				axios
+					.post(route('payment.create'), {
+						'fragment_id': this.selectedFragment.id,
+						'media_type': this.mediaForBuy,
+					})
+					.then(response => {
+						window.location.href = response.data.redirect
+					})
+					.catch(error => {
+						console.log(error.data.response?.message ?? error.data?.message)
+					})
 			},
         }">
             <div class="container">
@@ -416,16 +428,16 @@
 
                             <x-radio-device />
 
-                            <h3 x-show="selectedFragment?.video?.subscription">{{ __('home.windows.audio.access_granted') }}</h3>
+                            <h3 x-show="selectedFragment?.audio?.subscription">{{ __('home.windows.audio.access_granted') }}</h3>
 							<button class="dialog__not-btn dialog__not-btn-yellow" 
 								type="button"
-								x-show="!selectedFragment?.video?.subscription"
+								x-show="!selectedFragment?.audio?.subscription"
 								@click="activateStep1(selectedFragment?.id)"
 							>
 								{{ __('home.windows.audio.access_denied') }}
 							</button>
                         </form>
-                        <button class="dialog__play" @click="play('audio')" x-show="selectedFragment?.video?.subscription">
+                        <button class="dialog__play" @click="play('audio')" x-show="selectedFragment?.audio?.subscription">
                             <img src="{{ Vite::asset('resources/img/play.png') }}" alt="play">
                         </button>
                     </div>
@@ -1104,17 +1116,25 @@
                     </div>
                 </div>
 
-                <div id="dialog10" class="cool-silver popup-dialog popup-dialog-hidden">
+                <div class="cool-silver popup-dialog" x-show="modal === 'fail'" x-cloak
+					x-data="{
+						activate() {
+							this.mediaForBuy === 'audio' 
+								? this.activateAudio(this.selectedFragment?.id) 
+								: this.activateVideo(this.selectedFragment?.id)
+						},
+					}"
+				>
                     <div class="dialog__top">
-                        <h4>Полное содержание. Фрагмент №8</h4>
-                        <button class="dialog__close"></button>
+                        <h4>{{ __('home.windows.fail.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
 
                     <div class="dialog__center">
                         <div class="payment-failed">
                             <h3 class="epic-font-red">
-                                К сожалению, <br />
-                                транзакция отклонена
+                                {{ __('home.windows.fail.1') }}<br />
+                                {{ __('home.windows.fail.2') }}
                             </h3>
 
                             <div class="img-wrapper">
@@ -1129,64 +1149,56 @@
                             <ul class="list">
                                 <li class="item">
                                     <p>
-                                        Пожалуйста, вернитесь в корзину и повторите
-                                        вновь оформление заказа.
+                                        {{ __('home.windows.fail.3') }}
                                     </p>
                                 </li>
                                 <li class="item">
                                     <p>
-                                        Проверьте, пожалуйста, достаточно ли средств на счету Вашей карты.
+                                        {{ __('home.windows.fail.4') }}
                                     </p>
                                 </li>
                                 <li class="item">
-                                    <p>Правильно ли Вы ввели данные своей карты.</p>
+                                    <p>{{ __('home.windows.fail.5') }}</p>
                                 </li>
                                 <li class="item">
                                     <p>
-                                        Обратитесь, пожалуйста, в свой банк в случае
-                                        технического сбоя процесинга оплаты
+                                        {{ __('home.windows.fail.6') }}
                                     </p>
                                 </li>
                             </ul>
 
-                            <!-- <div class="list">
-                            <div class="item">
-                                <input id="1" type="radio" name="1">
-                                <label for="1">Пожалуйста, вернитесь в корзину и повторите вновь оформление
-                                    заказа.</label>
-                            </div>
-                            <div class="item"> <input id="2" type="radio" name="1">
-                                <label for="2">Пожалуйста, вернитесь в корзину и повторите вновь оформление
-                                    заказа.</label>
-                                </div>
-                            <div class="item"> <input id="3" type="radio" name="1"><label for="3">Правильно ли Вы ввели данные своей карты.</label></div>
-                            <div class="item"> <input id="4" type="radio" name="1"><label for="4">Обратитесь, пожалуйста, в свой банк в случае технического сбоя процесинга
-                                оплаты</label>
-                                </div>
-                        </div> -->
-
-                            <button id="next-6">Вернуться <br />в корзину</button>
+                            <button @click="activate">{{ __('home.windows.fail.7') }} <br />{{ __('home.windows.fail.8') }}</button>
                         </div>
                     </div>
                 </div>
 
-                <div id="dialog9" class="done popup-dialog popup-dialog-hidden">
+                <div class="done popup-dialog" x-show="modal === 'success'" x-cloak
+					x-data="{
+						activate() {
+							this.mediaForBuy === 'audio' 
+								? this.activateAudio(this.selectedFragment?.id) 
+								: this.activateVideo(this.selectedFragment?.id)
+						},
+					}"
+				>
                     <div class="dialog__top">
-                        <h4>Полное содержание. Фрагмент №8</h4>
-                        <button class="dialog__close"></button>
+                        <h4>{{ __('home.windows.success.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
 
                     <div class="dialog__center">
                         <div class="payment-success">
-                            <h3 class="epic-font-green">Ваш заказ успешно оплачен!</h3>
+                            <h3 class="epic-font-green">{{ __('home.windows.success.1') }}</h3>
 
                             <div class="img-wrapper">
                                 <img src="{{ Vite::asset('resources/img/mark.png') }}" alt="" />
                             </div>
 
-                            <button id="next-5" class="p-button">
-                                Активируйте доступ <br />
-                                к медиаконтенту
+                            <button id="next-5" class="p-button" 
+								@click="activate"
+							>
+                                {{ __('home.windows.success.2') }}<br />
+                                {{ __('home.windows.success.3') }}
                             </button>
                         </div>
                     </div>

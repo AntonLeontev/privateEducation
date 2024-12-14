@@ -116,6 +116,23 @@ return [
             '12' => '',
             '13' => 'Confirm',
         ],
+        'success' => [
+            'title' => 'Full content. Fragment №',
+            '1' => 'YOUR ORDER IS SUCCESSFULLY PAID!',
+            '2' => 'Activate access',
+            '3' => 'to media content',
+        ],
+        'fail' => [
+            'title' => 'Полное содержание. Фрагмент №',
+            '1' => 'YOUR TRANSACTION',
+            '2' => 'HAS BEEN DECLINED',
+            '3' => 'Please return to your cart and place the order again.',
+            '4' => 'Please check if there are enough funds in your card account.',
+            '5' => 'Have you entered your card detales correctly?',
+            '6' => 'Please contact your bank in case of a technical problem while processing your payment. ',
+            '7' => 'Back',
+            '8' => 'to cart',
+        ],
         'radio-inputs' => [
             'volume' => [
                 'mono1' => 'Mono',

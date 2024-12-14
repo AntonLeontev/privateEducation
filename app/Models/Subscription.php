@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Casts\PriceCast;
 use App\Casts\SubscribableTypeCast;
 use App\Events\SubscriptionCreated;
-use App\Events\SubscriptionCreating;
 use App\Support\Enums\MediaLang;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,7 +37,6 @@ class Subscription extends Model
     protected $with = [];
 
     protected $dispatchesEvents = [
-        'creating' => SubscriptionCreating::class,
         'created' => SubscriptionCreated::class,
     ];
 
