@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.8",
         "mcamara/laravel-localization": "^2.0",
         "owen-oj/laravel-getid3": "^2.2",
+        "stripe/stripe-php": "^16.3",
         "tightenco/ziggy": "^1.6"
     },
     "require-dev": {

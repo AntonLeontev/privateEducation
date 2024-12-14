@@ -36,7 +36,7 @@ readonly class Price implements JsonSerializable
         // }
         if (loc() === 'ru') {
             return [
-                'amount' => round($this->amount(), 2),
+                'amount' => \number_format($this->amount(), 2, '.', ' '),
                 'currency' => Currency::eur,
                 'raw' => [
                     'amount' => $this->amount(),
@@ -47,7 +47,7 @@ readonly class Price implements JsonSerializable
 
         if (loc() === 'en') {
             return [
-                'amount' => round($this->amount() * eur_usd_rate(), 2),
+                'amount' => \number_format($this->amount() * eur_usd_rate(), 2, '.', ' '),
                 'currency' => Currency::usd,
                 'raw' => [
                     'amount' => $this->amount(),
