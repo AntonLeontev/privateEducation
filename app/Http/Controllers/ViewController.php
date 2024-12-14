@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ViewsStatsRequest;
+use App\Models\View;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ViewController extends Controller
@@ -125,5 +127,15 @@ class ViewController extends Controller
         }
 
         return response()->json($sales);
+    }
+
+    public function store(Request $request)
+    {
+        View::create([
+            'user_id' => auth()->id(),
+            'viewable_id' => $request->get('viewable_id'),
+            'viewable_type' => $request->get('viewable_type'),
+            'lang' => $request->get('lang'),
+        ]);
     }
 }

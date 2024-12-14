@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PresentationStatsRequest;
+use App\Models\PresentationView;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PresentationViewController extends Controller
@@ -173,5 +175,16 @@ class PresentationViewController extends Controller
         }
 
         return response()->json($sales);
+    }
+
+    public function store(Request $request)
+    {
+        PresentationView::create([
+            'user_id' => auth()->id(),
+            'presentation_id' => $request->get('presentation_id'),
+            'is_reading' => $request->get('is_reading'),
+            'is_passive' => $request->get('is_passive'),
+            'lang' => $request->get('lang'),
+        ]);
     }
 }

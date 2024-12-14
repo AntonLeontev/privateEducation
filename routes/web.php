@@ -5,7 +5,9 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PresentationViewController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Stripe\Checkout\Session;
@@ -92,7 +94,12 @@ Route::get('media/{type}/{fragmentId}/{lang}/{sound}/{device}', [MediaController
     ->whereIn('device', ['mobile', 'tablet', 'notebook'])
     ->name('media.show');
 
-Route::post('checkout', [PaymentController::class, 'checkout'])->name('payment.create');
-Route::get('payment/{payment:external_id}/success', [PaymentController::class, 'success'])->name('payment.success');
+Route::middleware(['auth'])->group(function () {
+    Route::post('checkout', [PaymentController::class, 'checkout'])->name('payment.create');
+    Route::get('payment/{payment:external_id}/success', [PaymentController::class, 'success'])->name('payment.success');
+
+    Route::post('view', [ViewController::class, 'store'])->name('view.store');
+    Route::post('presentation-view', [PresentationViewController::class, 'store'])->name('presentation-view.store');
+});
 
 include 'admin.php';

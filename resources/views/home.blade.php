@@ -123,19 +123,18 @@
         
                     this.player.on('ended', () => {
                         this.playingFragment = this.fragments[this.playingFragment.id === 17 ? 0 : this.playingFragment.id]
-                        this.player.src({
-                            type: this.playingFragment[this.playingMedia].media[0].format,
-                            src: `/media/${this.playingMedia}/${this.playingFragment.id}/{{ loc() }}/stereo/notebook`
-                        })
-                        this.$dispatch('play-media-start')
-                        this.player.play()
+						this.startPlay(this.playingMedia)
+
+						axios
+							.post(route('presentation-view.store'), {
+								'presentation_id': this.playingFragment.id,
+								'is_reading': false,
+								'is_passive': true,
+								'lang': '{{ loc() }}',
+							})
                     });
         
-                    this.player.src({
-                        type: this.playingFragment[this.playingMedia].media[0].format,
-                        src: `/media/${this.playingMedia}/${this.playingFragment.id}/{{ loc() }}/${this.sound}/${this.device}` 
-                    })
-                    this.player.play()
+					this.startPlay(this.playingMedia)
                 })
             },
             activateFragment(id) {
@@ -184,9 +183,48 @@
 				return this.playingFragment?.id === id && this.playingMedia === type
 			},
 			play(mediaType) {
-				if (mediaType === 'presentation' && this.sound === 'text') {
-					this.modal = 'text'
+				if (mediaType === 'presentation') {
+					let isReading = false
+					
+					if (this.sound === 'text') {
+						this.modal = 'text'
+						isReading = true
+					}
+
+					if (!isReading) {
+						this.playingFragment = this.selectedFragment
+						this.startPlay(mediaType)
+					}
+					
+					axios
+						.post(route('presentation-view.store'), {
+							'presentation_id': this.playingFragment.id,
+							'is_reading': isReading,
+							'is_passive': false,
+							'lang': '{{ loc() }}',
+						})
+					return
 				} 
+
+				this.playingFragment = this.selectedFragment
+				this.startPlay(mediaType)
+
+				axios
+					.post(route('view.store'), {
+						'viewable_id': this.playingFragment.id,
+						'viewable_type': mediaType,
+						'lang': '{{ loc() }}',
+					})
+			},
+			startPlay(mediaType) {
+				let sound = this.sound === 'text' ? 'stereo' : this.sound
+
+				this.player.src({
+					type: this.playingFragment[mediaType].media[0].format,
+					src: `/media/${mediaType}/${this.playingFragment.id}/{{ loc() }}/${sound}/${this.device}` 
+				})
+				this.player.play()
+				this.$dispatch('play-media-start')
 			},
 			audioPrice() {
 				if (this.selectedFragment === null) {

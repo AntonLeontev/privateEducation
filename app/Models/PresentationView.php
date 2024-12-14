@@ -17,11 +17,13 @@ class PresentationView extends Model
         'presentation_id',
         'lang',
         'is_reading',
+        'is_passive',
     ];
 
     protected $casts = [
         'lang' => MediaLang::class,
         'is_reading' => 'boolean',
+        'is_passive' => 'boolean',
     ];
 
     protected $dispatchesEvents = [
