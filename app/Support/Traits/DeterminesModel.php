@@ -11,8 +11,10 @@ trait DeterminesModel
     public function getModel(string $content): ?string
     {
         return match ($content) {
-            'video' => Video::class,
-            'audio' => Audio::class,
+            // 'video' => Video::class,
+            // 'audio' => Audio::class,
+            'video' => 'video',
+            'audio' => 'audio',
             'presentation' => Presentation::class,
             default => null,
         };

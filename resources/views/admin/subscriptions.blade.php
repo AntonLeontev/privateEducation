@@ -62,9 +62,8 @@
 					if (search == '') return;
 					
 					axios
-						.post(
-							route('admin.users.subscriptions.search'), 
-							{search: search},
+						.get(
+							route('admin.users.subscriptions.search', {search: search}), 
 						)
 						.then(response => this.users = response.data)
 				},

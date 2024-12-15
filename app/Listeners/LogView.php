@@ -11,7 +11,7 @@ class LogView implements ShouldQueue
 {
     public function handle(ViewCreated $event): void
     {
-        if ($event->view->viewable_type === 'App\Models\Audio') {
+        if ($event->view->viewable_type === 'audio') {
             $action = 'Прослушивание аудио фрагмента №'.$event->view->viewable_id;
             $type = ActionLogType::listen;
         } else {

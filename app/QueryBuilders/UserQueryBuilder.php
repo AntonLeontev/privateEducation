@@ -9,7 +9,9 @@ class UserQueryBuilder extends Builder
 {
     public function search(): self
     {
-        return $this->when(request()->filled('search'), function ($query) {
+        dump(request());
+
+        return $this->when(request()->has('search'), function ($query) {
             $query->where('email', 'LIKE', '%'.request('search').'%')
                 ->orWhere('name', 'LIKE', '%'.request('search').'%')
                 ->when(is_numeric(request('search')), function (Builder $query) {

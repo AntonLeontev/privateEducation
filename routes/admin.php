@@ -48,7 +48,7 @@ Route::prefix('admin')
                         Route::delete('admins/{admin}/delete', [AdminController::class, 'adminDestroy'])->name('admins.destroy');
 
                         Route::get('users/subscriptions', [UserController::class, 'subscriptions'])->name('users.subscriptions');
-                        Route::post('users/subscriptions/search', [UserController::class, 'subscriptionsSearch'])->name('users.subscriptions.search');
+                        Route::get('users/subscriptions/search', [UserController::class, 'subscriptionsSearch'])->name('users.subscriptions.search');
 
                         Route::get('sales', [SubscriptionController::class, 'sales'])->name('sales');
                         Route::get('sales/popular-fragments', [SubscriptionController::class, 'popularFragments'])->name('sales.popular-fragments');
