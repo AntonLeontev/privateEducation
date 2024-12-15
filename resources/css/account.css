@@ -619,6 +619,7 @@ html, body {
   border-radius: 20px;
   margin-right: auto;
   transition: color 0.2s linear, background-color 0.2s linear;
+  cursor: pointer;
 }
 .main .inner .purchase-item__btn-action:hover {
   color: #ffffff;

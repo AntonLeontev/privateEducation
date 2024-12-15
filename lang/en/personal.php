@@ -8,6 +8,7 @@ return [
     'exit' => 'Exit',
     'fragment' => 'Fragment',
     'play' => 'Play',
+    'remains' => 'Remains :value',
     'edit' => 'Modify Personal Account',
     'data' => 'Personal data',
     'email' => 'E-mail',

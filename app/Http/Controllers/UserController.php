@@ -28,7 +28,10 @@ class UserController extends Controller
 
     public function personal()
     {
-        return view('personal');
+        $subscriptions = auth()->user()->activeSubscriptions()->get();
+
+        // dd($subscriptions);
+        return view('personal', compact('subscriptions'));
     }
 
     public function update(UpdateProfileRequest $request)

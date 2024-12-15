@@ -47,22 +47,32 @@
                         <div id="tab_1" class="account-content__outer outer purchases-outer tabs__item _active">
                             <div class="account-content__inner inner purchases-inner">
                                 <div class="purchases purchases__wrapper">
-									@foreach (range(1, 14) as $item)
+									@foreach ($subscriptions as $subscription)
 										<div class="purchase-item">
 											<span class="purchase-item__number">
-												#75642
+												#{{ $subscription->id }}
 											</span>
 											<div class="purchase-item__box">
-												<img src="/img/audio.png" alt="shop" class="purchase-item__img">
+												@if ($subscription->subscribable_type == 'audio')
+													<img src="{{ Vite::asset('resources/img/audio.png') }}" alt="shop" class="purchase-item__img">
+												@else
+													<img src="{{ Vite::asset('resources/img/video.png') }}" alt="shop" class="purchase-item__img">
+												@endif
 												<span class="purchase-item__name">
-													{{ __('personal.fragment') }} &#8470;&nbsp;{{ $item }}
+													{{ __('personal.fragment') }} &#8470;{{ $subscription->subscribable_id }}
 												</span>
 											</div>
-											<button class="purchase-item__btn-action">
-												{{ __('personal.play') }}
-											</button>
+											@if ($subscription->subscribable_type == 'audio')
+												<a href="{{ route('home', ['step' => 'audio', 'fragment_id' => $subscription->subscribable_id]) }}" class="purchase-item__btn-action">
+													{{ __('personal.play') }}
+												</a>
+											@else
+												<a href="{{ route('home', ['step' => 'video', 'fragment_id' => $subscription->subscribable_id]) }}" class="purchase-item__btn-action">
+													{{ __('personal.play') }}
+												</a>
+											@endif
 											<span class="purchase-item__date">
-												15.03.2021
+												{{ __('personal.remains', ['value' => $subscription->ends_at->longAbsoluteDiffForHumans()]) }}
 											</span>
 										</div>
 									@endforeach
