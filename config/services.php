@@ -18,4 +18,8 @@ return [
         'secret_key' => env('STRIPE_SECRET_KEY'),
     ],
 
+    'ip2location' => [
+        'key' => env('IP2LOCATION_KEY'),
+    ],
+
 ];

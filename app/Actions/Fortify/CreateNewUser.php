@@ -40,6 +40,7 @@ class CreateNewUser
             $user = User::create([
                 'email' => $input['email'],
                 'password' => Hash::make($password),
+                'ip' => request()->ip(),
             ]);
 
             if (isset($input['fragment_id']) && isset($input['media_type'])) {

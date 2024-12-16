@@ -7,6 +7,7 @@ use App\Events\SubscriptionCreated;
 use App\Events\TwoFactorRequested;
 use App\Events\UserRegistered;
 use App\Events\ViewCreated;
+use App\Listeners\GetLocationByIp;
 use App\Listeners\LogPresentationView;
 use App\Listeners\LogSubscription;
 use App\Listeners\LogView;
@@ -25,6 +26,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         UserRegistered::class => [
             SendRegisterEmail::class,
+            GetLocationByIp::class,
         ],
 
         SubscriptionCreated::class => [

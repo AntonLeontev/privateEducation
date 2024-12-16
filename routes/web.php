@@ -50,7 +50,6 @@ if (app()->isLocal()) {
             'return_url' => $domain.'/stripe/return',
             'cancel_url' => $domain,
         ]);
-        dd($session);
     });
 }
 

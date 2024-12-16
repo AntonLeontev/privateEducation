@@ -11,6 +11,17 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property ?string $name
+ * @property ?string $surname
+ * @property string $email
+ * @property string $password
+ * @property ?string $ip
+ * @property ?string $country_from_ip
+ * @property ?string $country_code
+ * @property ?string $region
+ * @property ?string $region_code
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -33,6 +44,7 @@ class User extends Authenticatable
         'apartment',
         'zip',
         'last_subscription_time',
+        'ip',
     ];
 
     /**
