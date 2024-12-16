@@ -52,6 +52,7 @@ Route::prefix('admin')
 
                         Route::get('sales', [SubscriptionController::class, 'sales'])->name('sales');
                         Route::get('sales/popular-fragments', [SubscriptionController::class, 'popularFragments'])->name('sales.popular-fragments');
+                        Route::get('sales/geo', [SubscriptionController::class, 'geoSales'])->name('sales.geo');
                         Route::get('metrics/sales', [SubscriptionController::class, 'metrics'])->name('metrics.sales');
 
                         Route::get('views', [ViewController::class, 'views'])->name('views');

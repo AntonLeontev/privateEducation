@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SalesStatsRequest;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class SubscriptionController extends Controller
@@ -125,5 +126,39 @@ class SubscriptionController extends Controller
         }
 
         return response()->json($sales);
+    }
+
+    public function geoSales(): JsonResponse
+    {
+        $countries = DB::table('subscriptions')
+            ->selectRaw('country_code, SUM(price) AS sum')
+            ->whereNotNull('country_code')
+            ->groupBy('country_code')
+            ->get()
+            ->map(function ($el) {
+                return ['id' => $el->country_code, 'value' => $el->sum / 100];
+            });
+
+        $ru = DB::table('subscriptions')
+            ->selectRaw('region_code, SUM(price) AS sum')
+            ->where('country_code', 'RU')
+            ->whereNotNull('region_code')
+            ->groupBy('region_code')
+            ->get()
+            ->map(function ($el) {
+                return ['id' => $el->region_code, 'value' => $el->sum / 100];
+            });
+
+        $us = DB::table('subscriptions')
+            ->selectRaw('region_code, SUM(price) AS sum')
+            ->where('country_code', 'US')
+            ->whereNotNull('region_code')
+            ->groupBy('region_code')
+            ->get()
+            ->map(function ($el) {
+                return ['id' => $el->region_code, 'value' => $el->sum / 100];
+            });
+
+        return response()->json(compact('countries', 'ru', 'us'));
     }
 }

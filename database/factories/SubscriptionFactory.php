@@ -20,22 +20,34 @@ class SubscriptionFactory extends Factory
         $locale = $this->faker->randomElement(['en', 'ru']);
 
         $countries = [
-            'en' => ['США', 'Канада', 'Мексика'],
-            'ru' => ['Россия', 'Беларусь', 'Казахстан'],
+            'en' => ['US', 'FR', 'IT', 'DE'],
+            'ru' => ['RU', 'UA', 'KZ'],
         ];
 
-        $location = $this->faker->randomElement($countries[$locale]);
+        $countryCode = $this->faker->randomElement($countries[$locale]);
+
+        if ($countryCode === 'RU') {
+            $regionCode = $this->faker->randomElement(['RU-IRK', 'RU-LEN', 'RU-MOS']);
+        }
+        if ($countryCode === 'US') {
+            $regionCode = $this->faker->randomElement(['US-CA', 'US-WA']);
+        }
 
         $userIds = User::all('id')->pluck('id');
+
+        $createdAt = $this->faker->dateTimeBetween('-6 months');
+        $endsAt = clone $createdAt;
 
         return [
             'user_id' => $this->faker->randomElement($userIds),
             'subscribable_id' => $this->faker->randomElement(range(1, 17)),
             'subscribable_type' => $this->faker->randomElement(['video', 'audio']),
             'lang' => $locale,
-            'price' => $this->faker->numberBetween(3, 10),
-            'location' => $location,
-            'created_at' => $this->faker->dateTimeBetween('-6 months'),
+            'price' => $this->faker->numberBetween(300, 1000),
+            'country_code' => $countryCode,
+            'region_code' => $regionCode ?? null,
+            'created_at' => $createdAt,
+            'ends_at' => $endsAt,
         ];
     }
 }
