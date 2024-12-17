@@ -33,16 +33,17 @@ class DbRefresh extends Command
         Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
         Artisan::call('db:seed', ['--class' => 'UserSeeder']);
 
+        Artisan::call('db:seed', ['--class' => 'CountrySeeder']);
         Artisan::call('db:seed', ['--class' => 'FragmentSeeder']);
         Artisan::call('db:seed', ['--class' => 'AudioSeeder']);
         Artisan::call('db:seed', ['--class' => 'VideoSeeder']);
         Artisan::call('db:seed', ['--class' => 'PresentationSeeder']);
-        Artisan::call('db:seed', ['--class' => 'SubscriptionSeeder']);
-        Artisan::call('db:seed', ['--class' => 'ViewsSeeder']);
-        Artisan::call('db:seed', ['--class' => 'PresentationViewSeeder']);
-        Artisan::call('db:seed', ['--class' => 'PaymentSeeder']);
+        // Artisan::call('db:seed', ['--class' => 'SubscriptionSeeder']);
+        // Artisan::call('db:seed', ['--class' => 'ViewsSeeder']);
+        // Artisan::call('db:seed', ['--class' => 'PresentationViewSeeder']);
+        // Artisan::call('db:seed', ['--class' => 'PaymentSeeder']);
 
-        UserFactory::new()->count(3)->create();
+        // UserFactory::new()->count(3)->create();
 
         Storage::disk('local')->deleteDirectory('media');
 

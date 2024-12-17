@@ -23,8 +23,10 @@ class PaymentFactory extends Factory
         return [
             'user_id' => $this->faker->randomElement($userIds),
             'external_id' => (string) Str::uuid(),
-            'amount' => $this->faker->numberBetween(1, 250),
-            'currency' => $this->faker->randomElement(['$', 'руб']),
+            'fragment_id' => $this->faker->numberBetween(1, 17),
+            'media_type' => $this->faker->randomElement(['video', 'audio']),
+            'amount' => $this->faker->numberBetween(100, 25000),
+            'currency' => $this->faker->randomElement(['usd', 'eur', 'rub']),
             'status' => $this->faker->randomElement(['init', 'success', 'declined', 'canceled']),
             'created_at' => $this->faker->dateTimeBetween('-6 months'),
         ];
