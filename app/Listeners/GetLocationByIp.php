@@ -30,7 +30,7 @@ class GetLocationByIp implements ShouldQueue
         $user->country_code = $location->countryCode;
         $user->region = $location->regionName;
 
-        if ($location->countryCode === 'RU' || $location->countryCode === 'US') {
+        if (in_array($location->countryCode, ['RU', 'US'])) {
             $user->region_code = $this->regionConverter->getCodeByName($location->countryCode, $location->regionName);
 
             if ($user->region_code === null) {
@@ -45,5 +45,11 @@ class GetLocationByIp implements ShouldQueue
         }
 
         $user->save();
+
+        foreach ($user->subscriptions as $subscription) {
+            $subscription->country_code = $user->country_code;
+            $subscription->region_code = $user->region_code;
+            $subscription->save();
+        }
     }
 }

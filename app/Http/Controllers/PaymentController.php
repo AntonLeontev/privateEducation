@@ -7,6 +7,7 @@ use App\Http\Requests\PaymentsIndexRequest;
 use App\Models\Audio;
 use App\Models\Payment;
 use App\Models\Subscription;
+use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -91,12 +92,15 @@ class PaymentController extends Controller
             ->first();
 
         if (empty($media->subscription)) {
+            $user = User::find($payment->user_id);
+
             Subscription::create([
                 'user_id' => $payment->user_id,
                 'subscribable_id' => $media->id,
                 'subscribable_type' => $media->subscribableType(),
                 'lang' => loc(),
-                'location' => loc() === 'ru' ? 'Россия' : 'США',
+                'country_code' => $user->country_code,
+                'region_code' => $user->region_code,
                 'price' => $media->price,
                 'ends_at' => now()->addMonths(1),
             ]);

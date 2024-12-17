@@ -23,7 +23,8 @@ class Subscription extends Model
         'lang',
         'price',
         'currency_id',
-        'location',
+        'country_code',
+        'region_code',
         'ends_at',
     ];
 
