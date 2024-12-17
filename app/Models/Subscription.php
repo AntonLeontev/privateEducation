@@ -32,7 +32,7 @@ class Subscription extends Model
         'ends_at' => 'date',
         'lang' => MediaLang::class,
         'price' => PriceCast::class,
-        'subscribable_type' => SubscribableTypeCast::class,
+        // 'subscribable_type' => SubscribableTypeCast::class,
     ];
 
     protected $with = [];

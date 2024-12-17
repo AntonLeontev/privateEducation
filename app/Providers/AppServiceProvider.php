@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\ServiceProvider;
@@ -26,5 +27,11 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setLocale('ru');
         Paginator::defaultView('vendor.pagination.tailwind');
         Paginator::defaultSimpleView('vendor.pagination.simple-tailwind');
+
+        Relation::enforceMorphMap([
+            'audio' => 'App\Models\Audio',
+            'video' => 'App\Models\Video',
+            'App\Models\Presentation' => 'App\Models\Presentation',
+        ]);
     }
 }

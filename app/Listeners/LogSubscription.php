@@ -11,7 +11,7 @@ class LogSubscription implements ShouldQueue
 {
     public function handle(SubscriptionCreated $event): void
     {
-        $action = $event->subscription->subscribable_type->value === 'audio'
+        $action = $event->subscription->subscribable_type === 'audio'
             ? 'Оформлена подписка на аудио фрагмента №'
             : 'Оформлена подписка на видео фрагмента №';
 
