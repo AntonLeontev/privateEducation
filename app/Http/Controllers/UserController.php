@@ -30,7 +30,6 @@ class UserController extends Controller
     {
         $subscriptions = auth()->user()->activeSubscriptions()->get();
 
-        // dd($subscriptions);
         return view('personal', compact('subscriptions'));
     }
 

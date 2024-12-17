@@ -105,7 +105,7 @@ x-data="{
 			</li>
 		@endif
 
-		@if (Route::has('admin.admins'))
+		{{-- @if (Route::has('admin.admins'))
 			<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.admins')) !bg-[#50657c] @endif">
 				<a class="right-menu__link" href="{{ route('admin.admins') }}">
 					<span class="right-menu-link__wrapper">
@@ -113,10 +113,10 @@ x-data="{
 					</span>
 				</a>
 			</li>
-		@endif
+		@endif --}}
 	@endif
 
-	@if (admin()->user()->isAdmin() || admin()->user()->isSeo())
+	{{-- @if (admin()->user()->isAdmin() || admin()->user()->isSeo())
 		@if (Route::has('admin.seo.index'))
 			<li class="transition duration-300 border border-t-0 right-menu__item border-x-0 @if (Route::is('admin.seo.index')) !bg-[#50657c] @endif">
 				<a class="right-menu__link" href="{{ route('admin.seo.index') }}">
@@ -126,7 +126,7 @@ x-data="{
 				</a>
 			</li>
 		@endif
-	@endif
+	@endif --}}
 
 	@if (Route::has('home'))
 		<li class="transition duration-300 border border-t-0 right-menu__item border-x-0">
