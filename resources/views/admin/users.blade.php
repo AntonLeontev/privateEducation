@@ -39,16 +39,17 @@
 						x-model="filter.search"
 						@input.debounce.400ms="update"
 					/>
-					<select class="w-full max-w-[200px] select select-primary bg-primary rounded-xl">
+					<select class="w-full max-w-[200px] select select-primary bg-primary rounded-xl" x-model="filter.country" @change="update">
 						<option value="" selected>Страна</option>
-						<option>Россия</option>
-						<option>США</option>
+						@foreach ($countries as $country)
+							<option value="{{ $country->code }}">{{ $country->name }}</option>
+						@endforeach
 					</select>
-					<select class="w-full max-w-[200px] select select-primary bg-primary rounded-xl">
+					{{-- <select class="w-full max-w-[200px] select select-primary bg-primary rounded-xl">
 						<option value="" selected>Регион</option>
 						<option>Москва</option>
 						<option>Волгоград</option>
-					</select>
+					</select> --}}
 					<select 
 						class="w-full max-w-[400px] select select-primary bg-primary rounded-xl"
 						x-ref="media"
@@ -108,6 +109,7 @@
 					search: null,
 					media: null,
 					fragment: null,
+					country: null,
 				},
 				usersCategory: 'active', //active, customers, all
 				paginatorMeta: null,
@@ -135,6 +137,7 @@
 								search: this.filter.search,
 								media: this.filter.media,
 								fragment: this.filter.fragment,
+								country: this.filter.country,
 							}
 						})
 						.then(response => {

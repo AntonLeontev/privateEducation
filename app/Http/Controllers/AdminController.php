@@ -6,6 +6,7 @@ use App\Http\Requests\AdminCreateRequest;
 use App\Http\Requests\AdminDeleteRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Admin;
+use App\Models\Country;
 use App\Models\CurrencyRate;
 use App\Models\Fragment;
 use App\Models\User;
@@ -43,19 +44,30 @@ class AdminController extends Controller
             $total = User::count();
             $buyers = User::whereHas('subscriptions')->count();
             $active = User::whereHas('activeSubscriptions')->count();
+            $userCountries = DB::table('users')
+                ->select('country_code')
+                ->distinct()
+                ->whereNotNull('country_code')
+                ->get()
+                ->pluck('country_code');
 
-            return view('admin.users', compact('total', 'buyers', 'active'));
+            $countries = Country::whereIn('code', $userCountries)->get();
+
+            return view('admin.users', compact('total', 'buyers', 'active', 'countries'));
         }
 
         $users = User::query()
-            ->select(['id', 'email', 'last_subscription_time', 'created_at'])
-            ->with(['lastSubscriptions', 'presentationViews', 'views'])
+            ->select(['id', 'email', 'last_subscription_time', 'created_at', 'country_code'])
+            ->with(['lastSubscriptions', 'presentationViews', 'views', 'country'])
             ->withCount(['activeSubscriptions', 'subscriptions'])
             ->withSum('activeSubscriptions', 'price')
             ->withSum('subscriptions', 'price')
             ->search()
             ->fragmentOrMediaFilter()
             ->categoryFilter()
+            ->when(request()->filled('country'), function ($query) {
+                $query->where('country_code', request('country'));
+            })
             ->cursorPaginate();
 
         $users = UserResource::collection($users);

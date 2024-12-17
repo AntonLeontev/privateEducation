@@ -34,8 +34,8 @@
 	>
 		<div class="w-[5%] text-center text-secondary" title="Порядковый номер" x-text="user.id"></div>
 		<div class="w-[18%] grow-0 shrink-0 overflow-hidden truncate text-secondary" :title="user.email" x-text="user.email"></div>
-		<div class="w-[10%] text-center text-secondary" title="Страна">Россия</div>
-		<div class="w-[10%] text-center text-secondary" title="Город">Москва</div>
+		<div class="w-[20%] text-center text-secondary" title="Страна" x-text="user.country.name"></div>
+		{{-- <div class="w-[10%] text-center text-secondary" title="Город">Москва</div> --}}
 		<div class="flex justify-center gap-3 w-[30%]">
 			<label class="px-1 text-center transition text-secondary swap swap-rotate rounded-xl hover:bg-primary">
 				<input type="checkbox" x-model="userStat" />
