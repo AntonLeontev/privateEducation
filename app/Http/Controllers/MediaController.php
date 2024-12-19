@@ -19,7 +19,7 @@ class MediaController extends Controller
         $media = Media::where('sound', $request->get('sound'))
             ->where('device', $request->get('device'))
             ->where('lang', $request->get('lang'))
-            ->where('mediable_type', 'App\\Models\\'.ucfirst($request->get('type')))
+            ->where('mediable_type', $request->get('type'))
             ->where('mediable_id', $request->get('fragment_id'))
             ->first();
 
@@ -35,12 +35,13 @@ class MediaController extends Controller
             $path = $request->file('video')->storeAs($request->get('type'), "$fileName.{$track->getFileFormat()}", 'media');
         }
 
+        dump($request->get('type'));
         $media = Media::updateOrCreate(
             [
                 'sound' => $request->get('sound'),
                 'device' => $request->get('device'),
                 'lang' => $request->get('lang'),
-                'mediable_type' => 'App\\Models\\'.ucfirst($request->get('type')),
+                'mediable_type' => $request->get('type'),
                 'mediable_id' => $request->get('fragment_id'),
             ],
             [
@@ -49,6 +50,7 @@ class MediaController extends Controller
                 'path' => $path,
             ]
         );
+        dump($media);
 
         return response()->json($media);
     }
@@ -58,7 +60,7 @@ class MediaController extends Controller
         $media = Media::where('sound', $sound)
             ->where('device', $device)
             ->where('lang', $lang)
-            ->where('mediable_type', 'App\\Models\\'.ucfirst($type))
+            ->where('mediable_type', $type)
             ->where('mediable_id', $fragmentId)
             ->first();
 

@@ -29,7 +29,7 @@ class Media extends Model
         'sound' => MediaSound::class,
         'device' => MediaDevice::class,
         'lang' => MediaLang::class,
-        'mediable_type' => MediableCast::class,
+        // 'mediable_type' => MediableCast::class,
     ];
 
     public function mediable(): MorphTo

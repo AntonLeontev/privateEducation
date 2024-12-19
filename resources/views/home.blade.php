@@ -228,14 +228,14 @@
 			},
 			audioPrice() {
 				if (this.selectedFragment === null) {
-					return {amount: 0}
+					return {amount: 0, currency: {code: 'EUR'}}
 				}
 
 				return this.selectedFragment.audio.price
 			},
 			videoPrice() {
 				if (this.selectedFragment === null) {
-					return {amount: 0}
+					return {amount: 0, currency: {code: 'EUR'}}
 				}
 
 				return this.selectedFragment.video.price
@@ -695,9 +695,9 @@
                                         </div>
                                         <div class="dialog__price-wrapper">
                                             <p x-text="videoPrice().amount"></p>
-                                            <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency === 'EUR'" />
-                                            <img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency === 'USD'" />
-                                            <img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency === 'RUB'" />
+                                            <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency.code === 'EUR'" />
+                                            <img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency.code === 'USD'" />
+                                            <img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency.code === 'RUB'" />
                                         </div>
                                     </label>
 
@@ -712,9 +712,9 @@
                                         </div>
                                         <div class="dialog__price-wrapper">
                                             <p x-text="audioPrice().amount"></p>
-                                            <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency === 'EUR'" />
-                                            <img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency === 'USD'" />
-                                            <img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency === 'RUB'" />
+                                            <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency.code === 'EUR'" />
+                                            <img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency.code === 'USD'" />
+                                            <img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency.code === 'RUB'" />
                                         </div>
                                     </label>
                                 </div>
@@ -753,15 +753,15 @@
                                     </div>
                                     <div class="dialog__price-wrapper" x-show="mediaForBuy === 'video'">
                                         <p x-text="videoPrice().amount"></p>
-                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency === 'EUR'" />
-										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency === 'USD'" />
-										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency === 'RUB'" />
+                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency.code === 'EUR'" />
+										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency.code === 'USD'" />
+										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency.code === 'RUB'" />
                                     </div>
                                     <div class="dialog__price-wrapper" x-show="mediaForBuy === 'audio'">
                                         <p x-text="audioPrice().amount"></p>
-                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency === 'EUR'" />
-										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency === 'USD'" />
-										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency === 'RUB'" />
+                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency.code === 'EUR'" />
+										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency.code === 'USD'" />
+										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency.code === 'RUB'" />
                                     </div>
                                 </div>
 
@@ -777,15 +777,15 @@
 
                                     <div class="dialog__price-wrapper" x-show="mediaForBuy === 'video'">
                                         <p x-text="videoPrice().amount"></p>
-                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency === 'EUR'" />
-										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency === 'USD'" />
-										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency === 'RUB'" />
+                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency.code === 'EUR'" />
+										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency.code === 'USD'" />
+										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency.code === 'RUB'" />
                                     </div>
                                     <div class="dialog__price-wrapper" x-show="mediaForBuy === 'audio'">
                                         <p x-text="audioPrice().amount"></p>
-                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency === 'EUR'" />
-										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency === 'USD'" />
-										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency === 'RUB'" />
+                                        <img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency.code === 'EUR'" />
+										<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency.code === 'USD'" />
+										<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency.code === 'RUB'" />
                                     </div>
                                 </div>
                             </div>
@@ -1058,15 +1058,15 @@
                                         </div>
                                         <div class="dialog__price-wrapper" x-show="mediaForBuy === 'video'">
 											<p x-text="videoPrice().amount"></p>
-											<img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency === 'EUR'" />
-											<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency === 'USD'" />
-											<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency === 'RUB'" />
+											<img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="videoPrice().currency.code === 'EUR'" />
+											<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="videoPrice().currency.code === 'USD'" />
+											<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="videoPrice().currency.code === 'RUB'" />
 										</div>
 										<div class="dialog__price-wrapper" x-show="mediaForBuy === 'audio'">
 											<p x-text="audioPrice().amount"></p>
-											<img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency === 'EUR'" />
-											<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency === 'USD'" />
-											<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency === 'RUB'" />
+											<img src="{{ Vite::asset('resources/img/euro.png') }}"  alt="euro" x-show="audioPrice().currency.code === 'EUR'" />
+											<img src="{{ Vite::asset('resources/img/usd.png') }}" alt="usd" x-show="audioPrice().currency.code === 'USD'" />
+											<img src="{{ Vite::asset('resources/img/rub.png') }}" alt="rub" x-show="audioPrice().currency.code === 'RUB'" />
 										</div>
                                     </label>
                                 </div>

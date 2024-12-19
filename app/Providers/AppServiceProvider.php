@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
             'audio' => 'App\Models\Audio',
             'video' => 'App\Models\Video',
-            'App\Models\Presentation' => 'App\Models\Presentation',
+            'presentation' => 'App\Models\Presentation',
         ]);
     }
 }
