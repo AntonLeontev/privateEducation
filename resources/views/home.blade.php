@@ -257,19 +257,12 @@
             <div class="container">
                 @include('partials.app.header')
 
-                <div class="player-mobile">
-                    <div class="player-mobile__top">
-                        <span>Видео.</span>
-                        <span>Презентация: <span class="frag">Фрагмент</span> <span class="number">№</span>1.</span>
-                        <span>Заглавие</span>
+                <div class="player-mobile" style="max-width: 92.8vw !important;">
+                    <div class="player-mobile__top" x-data="runningLine" x-ref="lineWrap" @play-media-start.window="reset">
+						<span class="runningline" x-ref="line" x-text="mobileText" style="padding: 0 1.5vw">
+						</span>
                     </div>
                     <div class="video-js" style="background-color: transparent"></div>
-                    {{-- <video  class="video-js"
-						controls
-						data-setup="{}"  poster="/img/player.png">
-					Your browser does not support the video tag.
-				</video>
-				<img class="resize" src="{{ Vite::asset('resources/img/resize.png') }}" alt="resize"> --}}
                 </div>
                 <div class="main__center main__desk">
                     <div class="main__row row_first">
@@ -279,7 +272,7 @@
                                 <span x-show="playingMedia === 'audio'" x-cloak>{{ __('home.audio') }}</span>
                                 <span x-show="playingMedia === 'video'" x-cloak>{{ __('home.video') }}</span>
                                 <span x-show="playingMedia === 'presentation'" x-cloak>{{ __('home.presentation') }}</span>
-                                <span style="margin-top: 4px">
+                                <span style="margin-top: 6px">
                                     <span class="frag">{{ __('home.fragment') }}</span>
                                     <span class="number">№</span>
 									<span x-text="playingFragment?.id">1</span>
@@ -374,15 +367,8 @@
 
                 <div class="main__center main__tablet">
                     <div class="main__player player">
-                        <div class="player__top">
-                            <span>Видео<span class="table-only">.</span></span>
-                            <span>
-                                <span class="frag">{{ __('home.fragment') }}</span>
-                                <span class="number">№</span>
-                                <span x-text="playingFragment?.id">1</span>
-                                <span class="table-only">.</span>
-                            </span>
-                            <span>Заглавие</span>
+                        <div class="player__top" style="max-width: 49vw" x-data="runningLine" x-ref="lineWrap" @play-media-start.window="reset">
+							<span class="runningline" x-ref="line" x-text="mobileText" style="padding: 0 1.1vw"></span>
                         </div>
                     </div>
 
@@ -1300,151 +1286,25 @@
                         }
                     }, 500)
                 },
+				mobileText() {
+					let media;
+
+					switch (this.playingMedia) {
+						case 'video':
+							media = '{{ __('home.video') }}';
+							break
+						case 'audio':
+							media = '{{ __('home.audio') }}';
+							break
+						case 'presentation':
+							media = '{{ __('home.presentation') }}';
+							break
+					} 
+
+					return `${media}. {{ __('home.fragment') }} №${this.playingFragment?.id}. ${this.playingFragment?.title_{{ loc() }}}` 				
+				},
             }))
         })
     </script>
 
-    {{-- <script>
-        const videoButton = document.querySelector('.column__video');
-        if (videoButton) {
-            videoButton.addEventListener('click', (e) => {
-                document.getElementById('dialog2').classList.remove('popup-dialog-hidden');
-            });
-        }
-
-        const searchButton = document.querySelector('.column__search');
-        if (searchButton) {
-            searchButton.addEventListener('click', (e) => {
-                document.getElementById('dialog3').classList.remove('popup-dialog-hidden');
-            });
-        }
-
-
-        const openTextButton = document.querySelector('#openText');
-        if (openTextButton) {
-            openTextButton.addEventListener('click', (e) => {
-                const dialog = document.getElementById('dialog11');
-                if (dialog.classList.contains('full-page')) {
-                    dialog.classList.remove('full-page');
-                    dialog.querySelector('img').src = "{{ Vite::asset('resources/img/link.png') }}"
-                } else {
-                    dialog.classList.add('full-page');
-                    dialog.querySelector('img').src = "{{ Vite::asset('resources/img/29.png') }}"
-                }
-            });
-        }
-
-
-
-
-        const buyButton = document.querySelectorAll('.column__shop');
-        let i = 1;
-        buyButton.forEach(button => {
-            let dialog = document.getElementById(`dialog${i}`);
-            if (dialog) {
-                button.addEventListener('click', (e) => {
-                    dialog.classList.remove('popup-dialog-hidden');
-
-                    if (i === 6) {
-                        dialog.querySelector("#login-step").classList.remove('popup-dialog-hidden');
-                    }
-
-
-                });
-            }
-            if (i === 15) {
-                button.addEventListener('click', (e) => {
-                    dialog = document.getElementById('dialog6');
-                    dialog.classList.remove('popup-dialog-hidden');
-                    let authorizationWindow = dialog.querySelector('#account-autorization');
-                    let passwordRecallWindow = dialog.querySelector('#account-password-info-msg');
-                    let newPasswordMsgWindow = dialog.querySelector('#account-password-new-info-msg');
-                    let passwordRecal = dialog.querySelector('#account-password-recall');
-                    passwordRecal.style.display = "none"
-                    newPasswordMsgWindow.style.display = "none"
-                    authorizationWindow.style.display = "none"
-                    passwordRecallWindow.style.display = "flex"
-                    dialog.querySelector("#login-step").classList.add('popup-dialog-hidden');
-                });
-            } else if (i === 16) {
-                button.addEventListener('click', (e) => {
-                    dialog = document.getElementById('dialog6');
-                    dialog.classList.remove('popup-dialog-hidden');
-                    let authorizationWindow = dialog.querySelector('#account-autorization');
-                    let newPasswordMsgWindow = dialog.querySelector('#account-password-new-info-msg');
-                    let passwordRecallWindow = dialog.querySelector('#account-password-info-msg');
-                    passwordRecallWindow.style.display = "none"
-                    authorizationWindow.style.display = "none"
-                    newPasswordMsgWindow.style.display = "flex"
-                    dialog.querySelector("#login-step").classList.add('popup-dialog-hidden');
-                });
-            }
-            i++;
-            if (i === 18) {
-                i = 1;
-            }
-        });
-
-        const audioButton = document.querySelector('.column__audio');
-        if (audioButton) {
-            audioButton.addEventListener('click', (e) => {
-                document.getElementById('dialog1').classList.remove('popup-dialog-hidden');
-            });
-        }
-
-
-
-        const buttons = document.querySelectorAll('.main__row .column .polygon button');
-        buttons.forEach(column => {
-            column.addEventListener('click', (e) => {
-                const button = e.target.closest('button')
-                const top = e.target.closest('.column').querySelector('.column__top')
-                const color = getComputedStyle(top).backgroundColor;
-
-                button.classList.remove('column__hover')
-                button.classList.add('column__active')
-
-                if (color.includes('233, 117, 44, 0.3')) {
-                    top.classList.add('column__top_active_1');
-                }
-                if (color.includes('125, 97, 155')) {
-                    top.classList.add('column__top_active_2');
-                }
-                top.classList.remove('column__st3-active', 'column__st2-active');
-            })
-            column.addEventListener('mouseout', (e) => {
-                const button = e.target.closest('button')
-                const top = e.target.closest('.column').querySelector('.column__top')
-
-                button.classList.remove('column__active', 'column__hover')
-                top.classList.remove('column__top_active_2', 'column__top_active_1')
-            })
-            column.addEventListener('mouseover', (e) => {
-                const button = e.target.closest('button')
-                const top = e.target.closest('.column').querySelector('.column__top')
-
-                button.classList.add('column__hover')
-            })
-        })
-
-
-        const polygons = document.querySelectorAll('.polygon');
-        polygons.forEach(polygon => {
-            polygon.addEventListener('mouseover', e => {
-                const top = e.target.closest('.column').querySelector('.column__top');
-                const color = getComputedStyle(top).backgroundColor;
-                if (color === 'rgba(233, 117, 44, 0.3)') {
-                    top.classList.add('column__st2-active');
-                }
-                if (color === 'rgba(125, 97, 155, 0.3)') {
-                    top.classList.add('column__st3-active');
-                }
-            });
-            polygon.addEventListener('mouseout', e => {
-                const top = e.target.closest('.column').querySelector('.column__top');
-                top.classList.remove('column__st3-active', 'column__st2-active', 'column__st2-2-active',
-                    'column__st3-2-active', 'column__st2-3-active', 'column__st3-3-active');
-            });
-        });
-    </script> --}}
 @endsection

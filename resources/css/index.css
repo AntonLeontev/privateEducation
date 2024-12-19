@@ -1724,7 +1724,7 @@ input[type=radio]:checked {
     font-size: 3vw !important;
   }
   .player__top {
-    padding-left: 1.22vw !important;
+    padding-left: unset !important;
     padding-right: 0.039vw !important;
     padding-top: 0 !important;
     align-items: center;
@@ -1759,7 +1759,7 @@ input[type=radio]:checked {
 }
 @media screen and (max-width: 1024px) and (orientation: landscape) and (max-width: 800px) and (min-width: 701px) {
   .player__top span:last-child {
-    max-width: 14.9vw;
+    max-width: unset;
   }
 }
 @media screen and (max-width: 1024px) and (orientation: landscape) and (max-width: 700px) {
@@ -2639,8 +2639,7 @@ input[type=radio]:checked {
   .player-mobile__top {
     width: 100%;
     background-color: #908a8a;
-    padding-left: 2.708vw;
-    padding-left: 2vw;
+    /* padding-left: 2vw; */
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -2656,7 +2655,7 @@ input[type=radio]:checked {
   }
   .player-mobile__top span:last-child {
     white-space: nowrap;
-    max-width: 8vw;
+    /* max-width: 8vw; */
   }
   .container {
     width: 100%;
