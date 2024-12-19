@@ -333,7 +333,12 @@
                                         <span class="frag">{{ __('home.fragment') }}</span>
                                         <br />
                                         <span class="number @if ($number >= 10) number__br @endif">
-                                            №{{ $number }}
+											@if ($number >= 10)
+												№
+												{{ $number }}
+											@else
+												№{{ $number }}
+											@endif
                                         </span>
                                     </span>
                                 </div>
