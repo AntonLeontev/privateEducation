@@ -1214,6 +1214,7 @@ html, body {
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "title exit" "buttons empty";
     margin-bottom: 2vw;
+	justify-items: end;
   }
   .main .account-content__title {
     padding: 1.32vw 1.5vw;
@@ -1223,6 +1224,7 @@ html, body {
     width: 25vw;
     padding: 1.32vw 2.5vw;
     margin-bottom: 0.77vw;
+	justify-self: start;
   }
   .main .account-content__exit-button {
     grid-area: exit;
@@ -1506,6 +1508,7 @@ html, body {
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "title exit" "buttons buttons";
     margin-bottom: 0;
+	justify-items: end;
   }
   .main .account-content__title {
     padding: 2.42vw 2.9vw;
@@ -1540,6 +1543,8 @@ html, body {
     display: flex;
     gap: 4vw;
     margin-right: auto;
+	justify-content: space-between;
+	width: 100%;
   }
   .main .account-content .action-button-bar__action-button {
     padding: 1.7vw 3vw;
@@ -1560,7 +1565,7 @@ html, body {
   .main .outer {
     padding-left: 3vw;
     padding-top: 3.3vw;
-    padding-right: 0.79vw;
+    padding-right: 0;
     height: 84vh;
     overflow: hidden;
     padding-bottom: 3vw;
@@ -1743,7 +1748,7 @@ html, body {
     margin-bottom: 9vw;
   }
   .main .purchases-inner {
-    padding-right: 1.5vw;
+    padding-right: 0;
   }
   ::-webkit-scrollbar {
     width: 2.2vw;
