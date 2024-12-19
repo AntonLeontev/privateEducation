@@ -65,11 +65,13 @@ Route::prefix(LaravelLocalization::setLocale())
 
         Route::middleware(['guest'])->group(function () {
             Route::get('/login', [AuthController::class, 'create'])->name('login');
-            Route::post('/login', [AuthController::class, 'login'])->name('auth');
+            Route::post('/login', [AuthController::class, 'login'])->name('auth')
+                ->middleware(['throttle:10,1']);
             Route::get('/verify-email/{user:email}', [AuthController::class, 'verifyEmail'])->name('verify-email');
             Route::post('register', [AuthController::class, 'store'])->name('register');
             Route::post('register-and-buy', [AuthController::class, 'storeAndBuy'])->name('register-and-buy');
-            Route::post('/password-reset', [AuthController::class, 'resetPassword'])->name('password.reset');
+            Route::post('/password-reset', [AuthController::class, 'resetPassword'])->name('password.reset')
+                ->middleware(['throttle:5,1']);
         });
         Route::post('logout', [AuthController::class, 'destroy'])->name('logout');
 

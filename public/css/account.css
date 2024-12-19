@@ -2444,12 +2444,6 @@ html, body {
     font-size: 2.57vw;
     color: #e9752c;
   }
-  @supports (-moz-appearance: none) {
-    .dialog__center .autorization__error-msg {
-      /*The following CSS only applies to Firefox users*/
-      top: 26.4vw;
-    }
-  }
   .dialog__center .registration {
     font-family: Arial, Helvetica, sans-serif;
     display: none;
@@ -2865,7 +2859,7 @@ button {
     border-radius: 7px !important;
     height: 7vw !important;
     margin-bottom: 12.1vw !important;
-    width: 65.55% !important;
+    width: 77.55% !important;
     padding-top: 2vw !important;
   }
   .dialog-login .dialog__center .registration__input:focus::placeholder {

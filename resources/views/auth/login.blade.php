@@ -14,7 +14,7 @@
 
                 @include('partials.app.sidebar')
 
-                <div id="dialog1" class="" style="visibility: visible" x-data="{
+                <div id="dialog1" class="dialog-login" style="visibility: visible" x-data="{
 					window: 'login',
 				}">
                     <div class="dialog__top" style="align-items: center">
@@ -89,6 +89,12 @@
 								font-size: 33.5px;
 								color: #e9752c;
 							}
+							@media screen and (max-width: 500px) {
+								.dialog__center .registration .registration__error-msg	{
+									top: 240px;
+									font-size: 2.57vw;
+								}
+							}
 						</style>
                         <div id="account-registration" class="dialog__registration registration" x-show="window === 'register'" x-data="{
 							processing: false, 
@@ -125,7 +131,7 @@
                                     {{ __('login.email') }}:
                                 </span>
                                 <input id="registration-email-input" type="email" class="registration__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *" name="email">
+                                    placeholder="* * * * * * * * * * * * * * * * *" name="email" required>
                                 <button id="registration-submit-btn" class="registration__submit-btn" :disabled="processing">
                                     {{ __('login.register_btn') }}
                                 </button>
@@ -161,7 +167,7 @@
                                     {{ __('login.email') }}:
                                 </span>
                                 <input id="password-reacall-input" type="email" class="password-reacll__input"
-                                    placeholder="* * * * * * * * * * * * * * * * *" name="email">
+                                    placeholder="* * * * * * * * * * * * * * * * *" name="email" required>
                                 <button id="password-reacll-submit-btn" class="password-reacll__submit-btn" :disabled="processing">
                                     {{ __('login.restore_btn') }}
                                 </button>
