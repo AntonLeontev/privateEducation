@@ -3,7 +3,6 @@
 @section('title', __('home.title'))
 
 @section('css')
-    {{-- <link rel="stylesheet" href="/css/main.css" /> --}}
     @vite(['resources/css/index.css', 'node_modules/video.js/dist/video-js.min.css', 'resources/js/index.js'])
 
     {{-- Video --}}
@@ -125,13 +124,15 @@
                         this.playingFragment = this.fragments[this.playingFragment.id === 17 ? 0 : this.playingFragment.id]
 						this.startPlay(this.playingMedia)
 
-						axios
-							.post(route('presentation-view.store'), {
-								'presentation_id': this.playingFragment.id,
-								'is_reading': false,
-								'is_passive': true,
-								'lang': '{{ loc() }}',
-							})
+						@if (auth()->check()) 
+							axios
+								.post(route('presentation-view.store'), {
+									'presentation_id': this.playingFragment.id,
+									'is_reading': false,
+									'is_passive': true,
+									'lang': '{{ loc() }}',
+								})
+						@endif
                     });
         
 					this.startPlay(this.playingMedia)
