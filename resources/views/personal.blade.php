@@ -249,6 +249,19 @@
             </div>
         </div>
     </main>
-    <script src="/js/app.bundle.js"></script>
-
+	
+	<script>
+		w = document.querySelectorAll(".tabs__button");
+		w.forEach((e) => {
+			e.addEventListener("click", () => {
+				const t = document.querySelector(".tabs__item._active"),
+					n = document.querySelector(".tabs__button._active");
+				n && n.classList.remove("_active"),
+					t && t.classList.remove("_active");
+				const a = `#${e.getAttribute("data-tab")}`,
+					o = document.querySelector(a);
+				e.classList.add("_active"), o.classList.add("_active");
+			});
+		});
+	</script>
 @endsection
