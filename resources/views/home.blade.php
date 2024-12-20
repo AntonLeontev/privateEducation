@@ -273,12 +273,13 @@
                                 <span x-show="playingMedia === 'audio'" x-cloak>{{ __('home.audio') }}</span>
                                 <span x-show="playingMedia === 'video'" x-cloak>{{ __('home.video') }}</span>
                                 <span x-show="playingMedia === 'presentation'" x-cloak>{{ __('home.presentation') }}</span>
-                                <span style="margin-top: 6px">
+                                <span style="margin-top: 4px">
                                     <span class="frag">{{ __('home.fragment') }}</span>
                                     <span class="number">№</span>
 									<span x-text="playingFragment?.id">1</span>
                                 </span>
                                 <div class="runningline-wrap" x-data="runningLine" x-ref="lineWrap"
+									style="margin-top: 4px"
                                     @play-media-start.window="reset">
                                     <span class="runningline" x-text="playingFragment?.title_{{ loc() }}"
                                         x-ref="line">Заглавие</span>
