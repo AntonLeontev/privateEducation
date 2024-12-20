@@ -26,6 +26,7 @@ class Subscription extends Model
         'country_code',
         'region_code',
         'ends_at',
+        'payment_id',
     ];
 
     protected $casts = [
@@ -49,5 +50,10 @@ class Subscription extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function payment(): BelongsTo
+    {
+        return $this->belongsTo(Payment::class);
     }
 }

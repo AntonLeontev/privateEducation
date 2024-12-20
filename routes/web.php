@@ -6,11 +6,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PresentationViewController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Stripe\Checkout\Session;
 use Stripe\Stripe;
 
 /*
@@ -26,30 +26,7 @@ use Stripe\Stripe;
 
 if (app()->isLocal()) {
     Route::get('/test', function (Stripe $stripe) {
-        $stripe->setApiKey(config('services.stripe.secret_key'));
-
-        $domain = 'http://127.0.0.1:8000';
-        $session = Session::create([
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => 'usd',
-                        'unit_amount' => 623,
-                        'product_data' => [
-                            'name' => 'Fragment 1. Video',
-                        ],
-                    ],
-                    'quantity' => 1,
-                ],
-            ],
-            'mode' => 'payment',
-            // 'client_reference_id' => auth()->id() ?? 123,
-            // 'customer' => 'string',
-            'locale' => 'ru',
-            'success_url' => $domain.'/stripe/success',
-            'return_url' => $domain.'/stripe/return',
-            'cancel_url' => $domain,
-        ]);
+        // $stripe->setApiKey(config('services.stripe.secret_key'));
     });
 }
 
@@ -97,10 +74,12 @@ Route::get('media/{type}/{fragmentId}/{lang}/{sound}/{device}', [MediaController
 
 Route::middleware(['auth'])->group(function () {
     Route::post('checkout', [PaymentController::class, 'checkout'])->name('payment.create');
-    Route::get('payment/{payment:external_id}/success', [PaymentController::class, 'success'])->name('payment.success');
+    Route::get('payment/{payment}/success', [PaymentController::class, 'success'])->name('payment.success');
 
     Route::post('view', [ViewController::class, 'store'])->name('view.store');
     Route::post('presentation-view', [PresentationViewController::class, 'store'])->name('presentation-view.store');
 });
+
+Route::post('webhooks/stripe', [StripeController::class, 'webhook'])->name('webhooks.stripe');
 
 include 'admin.php';

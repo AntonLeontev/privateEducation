@@ -13,6 +13,7 @@ use App\Listeners\LogSubscription;
 use App\Listeners\LogView;
 use App\Listeners\SendAuthorizationCode;
 use App\Listeners\SendRegisterEmail;
+use App\Listeners\SendSubscriptionTicketEmail;
 use App\Listeners\SyncCreatingDateInUsersTable;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -32,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
         SubscriptionCreated::class => [
             SyncCreatingDateInUsersTable::class,
             LogSubscription::class,
+            SendSubscriptionTicketEmail::class,
         ],
 
         TwoFactorRequested::class => [

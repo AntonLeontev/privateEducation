@@ -9,6 +9,7 @@ use App\Models\Payment;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Video;
+use App\Services\Stripe\StripeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class PaymentController extends Controller
         return response()->json($actions);
     }
 
-    public function checkout(Request $request): JsonResponse
+    public function checkout(Request $request, StripeService $stripe): JsonResponse
     {
         if ($request->get('media_type') === 'video') {
             $media = Video::where('fragment_id', $request->get('fragment_id'))->first();
@@ -54,13 +55,8 @@ class PaymentController extends Controller
             $price = $media->price->toUsd();
         }
 
-        //TODO create stripe session
-
-        $stripeSessionId = str()->random(10).time();
-
-        Payment::create([
+        $payment = Payment::create([
             'user_id' => auth()->id(),
-            'external_id' => $stripeSessionId,
             'amount' => $price,
             'currency' => $price->currency,
             'fragment_id' => $request->get('fragment_id'),
@@ -68,17 +64,18 @@ class PaymentController extends Controller
             'status' => PaymentStatus::init,
         ]);
 
-        return response()->json(['redirect' => route('payment.success', $stripeSessionId)]);
+        $stripeSession = $stripe->createSession($price, $request->get('fragment_id'), $request->get('media_type'), $payment->id);
+
+        $payment->external_id = $stripeSession->id;
+        $payment->save();
+
+        return response()->json(['redirect' => $stripeSession->url]);
     }
 
-    public function success(Payment $payment): RedirectResponse
+    public function success(Payment $payment, StripeService $stripe): RedirectResponse
     {
-        if ($payment->status !== PaymentStatus::init) {
-            abort(404);
-        }
-
-        if ($payment->created_at->diffInHours(now()) > 24) {
-            abort(404);
+        if (! $stripe->checkSessionSuccess($payment->external_id)) {
+            return to_route('home', ['step' => 'fail', 'fragment_id' => $payment->fragment_id, 'media_type' => $payment->media_type]);
         }
 
         $payment->confirmed_by_redirect_at = now();
@@ -103,6 +100,7 @@ class PaymentController extends Controller
                 'region_code' => $user->region_code,
                 'price' => $media->price,
                 'ends_at' => now()->addMonths(1),
+                'payment_id' => $payment->id,
             ]);
         }
 

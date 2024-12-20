@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="ru">
+<html lang="{{ app()->getLocale() }}">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="color-scheme" content="light" />
         <meta name="supported-color-schemes" content="light" />
-        <title>Email2</title>
+        <title>{{ __('emails/ticket.title') }}</title>
 
         <link rel="stylesheet" href="style.css" />
     </head>
@@ -49,7 +49,7 @@
                         margin-top: 16px;
                     "
                 >
-                    Квитанция от поставщика
+					{{ __('emails/ticket.h1') }}
                     <span
                         style="
                             font-size: 21px;
@@ -76,7 +76,7 @@
                         margin-top: 24px;
                     "
                 >
-                    Квитанция №1358-<img src="" width="0" height="0" />0557
+                    {{ __('emails/ticket.1') }}{{ $subscription->payment->id }}<img src="" width="0" height="0" />
                 </div>
 
                 <table
@@ -100,7 +100,7 @@
                                     width: 36%;
                                 "
                             >
-                                УПЛАЧЕННАЯ СУММА
+							{{ __('emails/ticket.2') }}
                             </td>
 
                             <td
@@ -114,7 +114,7 @@
                                     width: 38.8%;
                                 "
                             >
-                                ДАТА ПЛАТЕЖА
+							{{ __('emails/ticket.3') }}
                             </td>
                             <td
                                 valign="top"
@@ -126,7 +126,7 @@
                                     font-family: Arial, sans-serif;
                                 "
                             >
-                                СПОСОБ ОПЛАТЫ
+							{{ __('emails/ticket.4') }}
                             </td>
                         </tr>
 
@@ -141,7 +141,7 @@
                                     font-weight: 500;
                                 "
                             >
-                                3,00 €
+                                {{ $subscription->payment->amount }}
                             </td>
                             <td
                                 style="
@@ -154,7 +154,11 @@
                                     padding-top: 9px;
                                 "
                             >
-                                11 окт. 2023 г., 15:45:50
+								@if (app()->getLocale() == 'ru')
+                                    {{ $subscription->payment->created_at->translatedFormat('j F Y') }}
+								@else
+									{{ $subscription->payment->created_at->translatedFormat('F d, Y') }}
+								@endif
                             </td>
                             <td
                                 style="
@@ -176,7 +180,7 @@
                                         margin-top: 1px;
                                     "
                                 ></span
-                                >- 2024
+                                >{{ __('emails/ticket.5') }}
                             </td>
                         </tr>
                     </tbody>
@@ -201,7 +205,7 @@
                             margin-top: 31px;
                         "
                     >
-                        СВОДКА
+					{{ __('emails/ticket.6') }}
                     </h3>
 
                     <table
@@ -228,8 +232,13 @@
                                     "
                                 >
                                     <div style="margin-bottom: 5px">
-                                        Доступ к видеофайлу для просмотра <br />
-                                        и прослушивания на сайте
+										@if ($subscription->subscribable_type === 'video')
+                                        {{ __('emails/ticket.7') }} <br />
+                                        {{ __('emails/ticket.8') }}
+										@else
+										{{ __('emails/ticket.9') }} <br />
+                                        {{ __('emails/ticket.10') }}
+										@endif
                                     </div>
                                     <div
                                         style="
@@ -248,7 +257,7 @@
                                             border: none;
                                         "
                                     >
-                                        Фрагмент № 1
+                                        {{ __('emails/ticket.11') }}{{ $subscription->subscribable_id }}
                                     </div>
                                 </td>
                                 <td
@@ -261,7 +270,7 @@
                                         width: 40%;
                                     "
                                 >
-                                    3,00 €
+                                    {{ $subscription->payment->amount }}
                                 </td>
                             </tr>
                         </tbody>
@@ -298,7 +307,7 @@
                                     /* padding-left: 8px; */
                                 "
                             >
-                                Снятая сумма
+                                {{ __('emails/ticket.12') }}
                             </td>
                             <!-- Spacer column to fill the gap -->
                             <td
@@ -312,7 +321,7 @@
                                     /* padding-right: 23px; */
                                 "
                             >
-                                3,00 €
+                                {{ $subscription->payment->amount }}
                             </td>
                         </tr>
                     </tbody>

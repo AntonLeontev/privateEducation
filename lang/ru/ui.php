@@ -84,5 +84,10 @@ return [
             'file_required' => 'Файл обязателен',
             'extension_not_supported' => 'Расширения не поддерживается',
         ],
+        'stripe' => [
+            'fragment' => 'Фрагмент №',
+            'video' => 'Видео',
+            'audio' => 'Аудио',
+        ],
     ],
 ];
