@@ -35,7 +35,6 @@ class MediaController extends Controller
             $path = $request->file('video')->storeAs($request->get('type'), "$fileName.{$track->getFileFormat()}", 'media');
         }
 
-        dump($request->get('type'));
         $media = Media::updateOrCreate(
             [
                 'sound' => $request->get('sound'),
@@ -50,7 +49,6 @@ class MediaController extends Controller
                 'path' => $path,
             ]
         );
-        dump($media);
 
         return response()->json($media);
     }

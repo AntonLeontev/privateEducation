@@ -60,6 +60,7 @@
 					)
 					.then(response => {
 						let media = this.findMedia()
+						console.log(response.data)
 
 						if (!media) {
 							this.selectedFragment[this.page].media.push(response.data)
