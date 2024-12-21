@@ -431,7 +431,7 @@
 
                 <div class="video-player" :class="isExpanded && 'video_expanded'" x-data="{
                     isExpanded: false,
-                }">
+                }" @contextmenu.prevent="false">
                     <video id="player" class="video-js" poster="/img/player.png">
                         Your browser does not support the video tag.
                     </video>
