@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GetMediaRequest extends FormRequest
@@ -19,7 +18,18 @@ class GetMediaRequest extends FormRequest
             return true;
         }
 
-        //TODO users auth for media
+        if (! auth()->check()) {
+            return false;
+        }
+
+        $subscription = auth()->user()->activeSubscriptions
+            ->where('type', $this->route('type'))
+            ->where('fragment_id', $this->route('fragmentId'))
+            ->first();
+        if ($subscription !== null) {
+            return true;
+        }
+
         return false;
     }
 

@@ -67,7 +67,10 @@ class MediaController extends Controller
         return response()
             ->file(
                 storage_path("app/media/{$media->path}"),
-                ['Content-Type' => $media->get('format')]
+                [
+                    'Content-Type' => $media->get('format'),
+                    'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                ]
             );
     }
 }
