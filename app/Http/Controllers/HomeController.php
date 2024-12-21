@@ -16,6 +16,8 @@ class HomeController extends Controller
             'video' => fn ($q) => $q->select(['id', 'price', 'fragment_id'])->with('subscription'),
         ]);
 
-        return view('home', compact('fragments'));
+        return response()->view('home', compact('fragments'))
+            ->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache');
     }
 }
