@@ -23,8 +23,8 @@ class GetMediaRequest extends FormRequest
         }
 
         $subscription = auth()->user()->activeSubscriptions
-            ->where('type', $this->route('type'))
-            ->where('fragment_id', $this->route('fragmentId'))
+            ->where('subscribable_type', $this->route('type'))
+            ->where('subscribable_id', $this->route('fragmentId'))
             ->first();
         if ($subscription !== null) {
             return true;
