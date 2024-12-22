@@ -150,4 +150,7 @@ return [
             ],
         ],
     ],
+    'errors' => [
+        'already_bought' => 'You have already bought this fragment',
+    ],
 ];

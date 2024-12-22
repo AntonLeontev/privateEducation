@@ -259,6 +259,17 @@
 						window.location.href = response.data.redirect
 					})
 					.catch(error => {
+						if (error.response?.status === 422 && error.response?.data?.message === 'Already subscribed') {
+							@if (auth()->check())
+								this.modal = this.mediaForBuy;
+							@else
+								{{-- alert('{{ __('home.errors.already_bought') }}'); --}}
+								location.replace(route('home', {step: this.mediaForBuy, fragment_id: this.selectedFragment.id}));
+							@endif
+
+							return
+						}
+
 						console.log(error.data.response?.message ?? error.data?.message)
 					})
 			},
