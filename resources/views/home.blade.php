@@ -365,23 +365,29 @@
                                 <div class="polygon">
                                     <button class="column__button column__shop"
                                         :class="{ 'column__active': isSelected(id, 'buy') }"
-                                        @click="activateStep1(id)">
+                                        @click="activateStep1(id)"
+										@disabled(app()->getLocale() === 'en' && $number === 9)	
+									>
                                         <img src="{{ Vite::asset('resources/img/korzina.png') }}" alt="shop">
                                     </button>
                                     <button class="column__button column__audio"
                                         :class="{ 'column__active': isSelected(id, 'audio') || isPlaying(id, 'audio') }"
-                                        @click="activateAudio(id)">
+                                        @click="activateAudio(id)"
+										@disabled(app()->getLocale() === 'en' && $number === 9)
+									>
                                         <img src="{{ Vite::asset('resources/img/audio.png') }}" alt="shop">
                                     </button>
                                     <button class="column__button column__video" 
 										:class="{ 'column__active': isSelected(id, 'video') || isPlaying(id, 'video') }"
 										@click="activateVideo(id)"
+										@disabled(app()->getLocale() === 'en' && $number === 9)
 									>
                                         <img src="{{ Vite::asset('resources/img/video.png') }}" alt="shop">
                                     </button>
                                     <button class="column__button column__search" 
 										:class="{ 'column__active': isSelected(id, 'presentation') || isPlaying(id, 'presentation') }" 
 										@click="activatePresentation(id)"
+										@disabled(app()->getLocale() === 'en' && $number === 9)
 									>
                                         <img src="{{ Vite::asset('resources/img/present.png') }}" alt="shop">
                                     </button>
@@ -754,7 +760,7 @@
                                 <span class="autorization__label">
                                     {{ __('home.windows.step3.login.3') }}
                                 </span>
-                                <input id="autorization-email-input" type="email" class="autorization__input" name="email"
+                                <input id="autorization-email-input" type="email" class="autorization__input" name="email" required
                                     placeholder="* * * * * * * * * * * * * * * * *" />
                                 <div class="autorization__wrapper">
                                     <span class="autorization__label"> {{ __('home.windows.step3.login.4') }} </span>
@@ -820,7 +826,7 @@
                                 <span class="registration__label">
                                     {{ __('home.windows.step3.register.3') }}
                                 </span>
-                                <input type="email" class="registration__input" name="email"
+                                <input type="email" class="registration__input" name="email" required
                                     placeholder="* * * * * * * * * * * * * * * * *" />
 
 								<input type="hidden" name="fragment_id" :value="selectedFragment?.id">
@@ -855,7 +861,7 @@
                                 <span class="password-reacll__label">
                                     {{ __('home.windows.step3.remind.1') }}
                                 </span>
-                                <input type="email" class="password-reacll__input" name="email" placeholder="* * * * * * * * * * * * * * * * *" />
+                                <input type="email" class="password-reacll__input" name="email" placeholder="* * * * * * * * * * * * * * * * *" / required>
                                 <button class="password-reacll__submit-btn" :disabled="processing">
                                     {{ __('home.windows.step3.remind.2') }}
                                 </button>
