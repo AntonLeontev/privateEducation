@@ -38,6 +38,8 @@ class PaymentController extends Controller
 
     public function checkout(Request $request, StripeService $stripe): JsonResponse
     {
+        app()->setLocale($request->get('locale'));
+
         if ($request->get('media_type') === 'video') {
             $media = Video::where('fragment_id', $request->get('fragment_id'))->first();
         }

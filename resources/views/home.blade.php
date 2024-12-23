@@ -254,6 +254,7 @@
 					.post(route('payment.create'), {
 						'fragment_id': this.selectedFragment.id,
 						'media_type': this.mediaForBuy,
+						'locale': '{{ loc() }}',
 					})
 					.then(response => {
 						window.location.href = response.data.redirect

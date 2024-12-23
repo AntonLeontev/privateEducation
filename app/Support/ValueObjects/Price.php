@@ -67,14 +67,18 @@ readonly class Price implements JsonSerializable
     public function toUsd(): static
     {
         if ($this->currency === Currency::eur) {
-            return new static($this->amount() * eur_usd_rate(), Currency::usd);
+            $amount = round($this->amount() * eur_usd_rate(), 2) * 100;
+
+            return new static($amount, Currency::usd);
         }
     }
 
     public function toRub(): static
     {
         if ($this->currency === Currency::eur) {
-            return new static($this->amount() * eur_rub_rate(), Currency::rub);
+            $amount = round($this->amount() * eur_usd_rate(), 2) * 100;
+
+            return new static($amount, Currency::rub);
         }
     }
 

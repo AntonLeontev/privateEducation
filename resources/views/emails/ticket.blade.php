@@ -210,6 +210,7 @@
 
                     <table
                         style="
+							width: 100%;
                             min-height: 92px;
                             border-radius: 17px;
                             border: 1px solid #70aac2;

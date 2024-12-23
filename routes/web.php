@@ -9,6 +9,7 @@ use App\Http\Controllers\PresentationViewController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Stripe\Stripe;
@@ -26,7 +27,10 @@ use Stripe\Stripe;
 
 if (app()->isLocal()) {
     Route::get('/test', function (Stripe $stripe) {
-        // $stripe->setApiKey(config('services.stripe.secret_key'));
+        app()->setLocale('en');
+        $payment = Payment::find(28);
+
+        dump($payment->amount);
     });
 }
 
