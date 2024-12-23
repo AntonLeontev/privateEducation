@@ -31,6 +31,13 @@ class Payment extends Model
         'confirmed_by_redirect_at' => 'datetime',
     ];
 
+    public function toArray()
+    {
+        return array_merge(parent::toArray(), [
+            'status' => $this->status->toString(),
+        ]);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

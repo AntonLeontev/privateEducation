@@ -70,7 +70,7 @@
 						>
 							<div class="flex w-full">
 								<div class="w-[25%] overflow-hidden truncate text-secondary" x-text="payment.user.email"></div>
-								<div class="w-[35%]" :class="colorClass(payment)" x-text="payment.external_id"></div>
+								<div class="w-[35%] overflow-hidden truncate" :class="colorClass(payment)" x-text="payment.external_id"></div>
 								<div class="w-[10%]" :class="colorClass(payment)" x-text="payment.status"></div>
 								<div class="w-[10%] text-secondary" x-text="payment.amount.amount + ' ' + payment.amount.currency.sign"></div>
 								<div class="w-[15%] text-secondary" x-text="new Date(payment.created_at).toLocaleString()"></div>
