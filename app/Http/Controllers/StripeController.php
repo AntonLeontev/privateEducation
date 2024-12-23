@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Currency;
 use App\Enums\PaymentStatus;
 use App\Models\Audio;
 use App\Models\Payment;
@@ -38,13 +39,14 @@ class StripeController extends Controller
             ->exists();
 
         if (! $subscriptionExists) {
+            $locale = $payment->currency === Currency::usd ? 'en' : 'ru';
             $user = User::find($payment->user_id);
 
             Subscription::create([
                 'user_id' => $payment->user_id,
                 'subscribable_id' => $media->id,
                 'subscribable_type' => $media->subscribableType(),
-                'lang' => loc(),
+                'lang' => $locale,
                 'country_code' => $user->country_code,
                 'region_code' => $user->region_code,
                 'price' => $media->price,
