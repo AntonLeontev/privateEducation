@@ -129,6 +129,15 @@
 					});
         
 					this.startPlay(this.playingMedia)
+					@if (auth()->check()) 
+						axios
+							.post(route('presentation-view.store'), {
+								'presentation_id': this.playingFragment.id,
+								'is_reading': false,
+								'is_passive': true,
+								'lang': '{{ loc() }}',
+							})
+					@endif
                 })
             },
 			playNext() {
