@@ -222,7 +222,7 @@
                                         </li>
                                         <li class="section__item">
                                             {!! __('privacy.81') !!} <i><a
-                                                    href="mailto:voldemar606060@gmail.com">voldemar606060@gmail.com</a></i>
+                                                    href="mailto:info@private-new-education.de">info@private-new-education.de</a></i>
                                         </li>
                                     </ul>
                                 </section>
@@ -274,7 +274,7 @@
                                                     <i><a
                                                             href="https://private-new-education.com">private-new-education.com</a></i><br />
                                                     e-mail:<i><a
-                                                            href="mailto:voldemar606060@gmail.com">voldemar606060@gmail.com</a></i><br />
+                                                            href="mailto:info@private-new-education.de">info@private-new-education.de</a></i><br />
                                                     {!! __('privacy.93') !!}<a href="tel:+4915221942007">(+4915221942007)</a><br />
                                                 </dd>
 

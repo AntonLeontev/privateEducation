@@ -119,7 +119,7 @@
                         "
                         >Электронная почта:</span
                     >
-                    voldemar606060@gmail.com
+                    info@private-new-education.de
                 </div>
 
                 <div

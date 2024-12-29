@@ -63,7 +63,7 @@
                                                 href="https://private-new-education.de">private-new-education.com</a></i>
 												<br />
                                         {{ __('copyright.13') }}<i><a
-                                                href="mailto:voldemar606060@gmail.com">voldemar606060@gmail.com</a></i>
+                                                href="mailto:info@private-new-education.de">info@private-new-education.de</a></i>
 												<br />
                                         {{ __('copyright.14') }}<a href="tel:+4915221942007">(+4915221942007)</a><br />
                                     </dd>

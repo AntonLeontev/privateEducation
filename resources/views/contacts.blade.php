@@ -30,7 +30,7 @@
                                             </div>
                                             <div class="connections__column connections__column--data">
                                                 <i><a
-                                                        href="mailto:voldemar606060@gmail.com">voldemar606060@gmail.com</a></i>
+                                                        href="mailto:info@private-new-education.de">info@private-new-education.de</a></i>
                                             </div>
                                         </li>
 

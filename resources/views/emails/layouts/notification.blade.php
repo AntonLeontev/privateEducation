@@ -8,7 +8,7 @@
 	<tbody>
 		<tr>
 			<th width="40%" align="left">{{ __('emails/verify-email.email') }}</th>
-			<td>voldemar606060@gmail.com </td>
+			<td>info@private-new-education.de </td>
 		</tr>
 		<tr>
 			<th width="40%" align="left">{{ __('emails/verify-email.lat_phone') }}</th>

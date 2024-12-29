@@ -181,7 +181,7 @@
                                                 </li>
                                                 <li>
                                                    {!! __("commercial.46") !!}
-                                                    <a href="mailto:voldemar606060@gmail.com">voldemar606060@gmail.com</a> 
+                                                    <a href="mailto:info@private-new-education.de">info@private-new-education.de</a> 
 													{!! __("commercial.47") !!}
                                                 </li>
                                                 <li>
@@ -331,7 +331,7 @@
                                     <ul class="section__list">
                                         <li class="section__item">
                                             {!! __("commercial.89") !!} <i><a
-                                                    href="mailto:voldemar606060@gmail.com">voldemar606060@gmail.com</a></i>
+                                                    href="mailto:info@private-new-education.de">info@private-new-education.de</a></i>
                                         </li>
                                         <li class="section__item">
                                             {!! __("commercial.90") !!}
@@ -488,7 +488,7 @@
                                             <i><a
                                                     href="https://private-new-education.com">private-new-education.com</a></i><br />
                                             e-mail: <a
-                                                href="mailto:voldemar606060@gmail.com">voldemar606060@gmail.com</a><br />
+                                                href="mailto:info@private-new-education.de">info@private-new-education.de</a><br />
                                             {!! __("commercial.131") !!} <a href="tel:+4915221942007">(+4915221942007)</a>
                                         </li>
                                     </ul>
