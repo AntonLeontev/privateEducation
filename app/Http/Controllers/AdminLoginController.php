@@ -30,9 +30,6 @@ class AdminLoginController extends Controller
         ]);
 
         event(new TwoFactorRequested($admin));
-
-        //TODO delete returning code
-        return response()->json(['code' => $admin->two_factor_code]);
     }
 
     public function twoFactorCheckCode(TwoFactorCheckCodeRequest $request)
