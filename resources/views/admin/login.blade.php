@@ -21,7 +21,7 @@
 						.then(response => {
 							this.$refs.email.value = data.get('email')
 							this.section = '2factor'
-							this.$refs.code.innerText = response.data.code
+							this.$refs.code.innerText = response.data.code ?? ''
 						})
 						.catch(error => {
 							this.$refs.loginError.innerText = 'Не удалось войти в аккаунт, введенные логин или пароль неверны'
