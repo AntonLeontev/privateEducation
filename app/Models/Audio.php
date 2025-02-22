@@ -16,6 +16,8 @@ class Audio extends Model
     protected $fillable = [
         'id',
         'price',
+        'text_ru',
+        'text_en',
     ];
 
     protected $with = [

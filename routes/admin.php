@@ -66,6 +66,7 @@ Route::prefix('admin')
                         Route::post('fragments/{fragment}/update', [FragmentController::class, 'update'])->name('fragments.update');
 
                         Route::post('audio/{audio}/update', [AudioController::class, 'update'])->name('audio.update');
+                        Route::post('audio/{audio}/update-text', [AudioController::class, 'updateText'])->name('audio.update-text');
 
                         Route::post('videos/{video}/update', [VideoController::class, 'update'])->name('video.update');
 

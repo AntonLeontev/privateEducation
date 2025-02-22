@@ -130,18 +130,31 @@
 					style="display: none"
 				>
 					<div class="modal-content__header">
-						<span class="modal-header-text" x-text="`Текст презентации фрагмента №${selectedFragment?.id}`"></span>
+						<span class="modal-header-text" x-text="headerText()"></span>
 						<button class="myBtn modal-content__close-btn" @click="modalText = false"></button>
 					</div>
 					<div class="justify-center modal-content__body">
+						<div class="flex justify-between gap-3 mb-2">
+							<button class="p-1 rounded" :class="mode === 'presentation' && 'bg-[#ffaa74]'" @click="mode = 'presentation'">Текст презентации</button>
+							<button class="p-1 rounded" :class="mode === 'full' && 'bg-[#ffaa74]'" @click="mode = 'full'">Полный текст</button>
+						</div>
 						<div class="w-full h-full pb-5">
-							<form class="flex flex-col h-full active:outline-none gap-y-2" @submit.prevent="updatePresentationText">
+							<form class="flex flex-col h-full active:outline-none gap-y-2" @submit.prevent="updatePresentationText" x-show="mode === 'presentation'">
 								<textarea 
 									class="h-full p-1 text-black resize-none rounded-xl" 
 									:name="lang === 'ru' ? 'text_ru' : 'text_en'" 
 									:value="text"
 								></textarea>
-								<button class="myBtn action-btn auth-modal__login-btn">СОХРАНИТЬ</button>
+								<button class="!mt-3 myBtn action-btn auth-modal__login-btn">СОХРАНИТЬ</button>
+							</form>
+
+							<form class="flex flex-col h-full active:outline-none gap-y-2" @submit.prevent="updateFullText" x-show="mode === 'full'">
+								<textarea 
+									class="h-full p-1 text-black resize-none rounded-xl" 
+									:name="lang === 'ru' ? 'text_ru' : 'text_en'" 
+									:value="fullText"
+								></textarea>
+								<button class="!mt-3 myBtn action-btn auth-modal__login-btn">СОХРАНИТЬ</button>
 							</form>
 						</div>
 					</div>
@@ -151,11 +164,17 @@
 					document.addEventListener('alpine:init', () => {
 						Alpine.data('redactor', () => ({
 							text: null,
+							fullText: null,
+							mode: 'presentation',
 
 							open() {
 								this.text = this.lang === 'ru' 
 									? this.clean(this.selectedFragment.presentation.text_ru) 
 									: this.clean(this.selectedFragment.presentation.text_en)
+
+								this.fullText = this.lang === 'ru' 
+									? this.clean(this.selectedFragment.audio.text_ru ?? '') 
+									: this.clean(this.selectedFragment.audio.text_en ?? '')
 
 								this.modalText = true
 							},
@@ -200,6 +219,32 @@
 										this.modalText = false
 									})
 									
+							},
+							updateFullText() {
+								let data = new FormData(this.$event.target)
+
+								let text = this.addParagraphs(data.get(`text_${this.lang}`))
+
+								data.set(`text_${this.lang}`, text)
+
+								axios
+									.post(
+										route('admin.audio.update-text', this.selectedFragment.id),
+										data
+									)
+									.then(response => {
+										this.selectedFragment.audio = response.data
+									})
+									.catch(error => alert('Ошибка сохранения'))
+									.finally(() => {
+										this.modalText = false
+									})
+									
+							},
+							headerText() {
+								return this.mode === 'presentation'
+									? `Текст презентации фрагмента №${this.selectedFragment?.id}`
+									: `Полный текст фрагмента №${this.selectedFragment?.id}`
 							},
 						}))
 					})

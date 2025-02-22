@@ -11,4 +11,11 @@ class AudioController extends Controller
     {
         $audio->update($request->validated());
     }
+
+    public function updateText(Audio $audio, AudioUpdateRequest $request)
+    {
+        $audio->update($request->validated());
+
+        return response()->json($audio);
+    }
 }
