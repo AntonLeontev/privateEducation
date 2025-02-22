@@ -4,6 +4,7 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/account.css" />
+	<script async src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
 @endsection
 
 @section('content')
@@ -27,14 +28,21 @@
                         <!-- для авторизации -->
                         <div id="account-autorization" class="dialog__autorization autorization" x-show="window === 'login'" x-data="{
 							login(event) {
+								let data = new FormData(event.target);
 								this.$refs.err.style.display = 'none'
-								axios
-									.post(route('auth'), new FormData(event.target))
-									.then(res => location.replace(route('personal')))
-									.catch(err => {
-										console.log(err)
-										this.$refs.err.style.display = 'block'
-									})
+								grecaptcha.ready(() => {
+									grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'submit'}).then((token) => {
+										data.append('recaptcha_token', token)
+										
+										axios
+											.post(route('auth'), data)
+											.then(res => location.replace(route('personal')))
+											.catch(err => {
+												console.log(err)
+												this.$refs.err.style.display = 'block'
+											})
+									});
+								});
 							},
 						}">
                             <h3 class="autorization__title">
@@ -102,14 +110,22 @@
 							register() {
 								this.processing = true;
 								this.$refs.err.innerText = ''
-								axios
-									.post(route('register'), new FormData(this.$event.target))
-									.then(() => window = 'register-msg')
-									.catch(err => {
-										this.$refs.err.innerText = err.response.data.message
-										console.log(err)
-									})
-									.finally(() => this.processing = false)
+
+								let data = new FormData(this.$event.target);
+								grecaptcha.ready(() => {
+									grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'submit'}).then((token) => {
+										data.append('recaptcha_token', token)
+										
+										axios
+											.post(route('register'), data)
+											.then(() => window = 'register-msg')
+											.catch(err => {
+												this.$refs.err.innerText = err.response.data.message
+												console.log(err)
+											})
+											.finally(() => this.processing = false)
+									});
+								});
 							},
 						}">
                             <h3 class="registration__title">

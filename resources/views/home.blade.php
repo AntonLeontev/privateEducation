@@ -3,6 +3,7 @@
 @section('title', __('home.title'))
 
 @section('css')
+	<script async src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
     @vite(['resources/css/index.css', 'node_modules/video.js/dist/video-js.min.css', 'resources/js/index.js'])
 
     {{-- Video --}}
@@ -748,22 +749,28 @@
 										this.error = false;
 
 										let data = new FormData(this.$event.target);
-										
-										axios
-											.post(route('login'), data)
-											.then(res => {
-												this.$dispatch('login', {email: data.get('email')})
-												this.modal = 'step4';
-											})
-											.catch(err => {
-												if (err.response.status === 422) {
-													this.error = true;
-													return;
-												}
 
-												console.log(err);
-											})
-											.finally(() => this.processing = false)
+										grecaptcha.ready(() => {
+											grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'submit'}).then((token) => {
+												data.append('recaptcha_token', token)
+												
+												axios
+													.post(route('login'), data)
+													.then(res => {
+														this.$dispatch('login', {email: data.get('email')})
+														this.modal = 'step4';
+													})
+													.catch(err => {
+														if (err.response.status === 422) {
+															this.error = true;
+															return;
+														}
+
+														console.log(err);
+													})
+													.finally(() => this.processing = false)
+													});
+										});
 									}
 								}"
 							>
@@ -817,19 +824,27 @@
 
 										this.processing = true;
 										this.error = false;
-										axios
-											.post(route('register-and-buy'), new FormData(event.target))
-											.then(res => {
-												this.window = 'register-success';
-											})
-											.catch(err => {
-												if (err.response.status === 422) {
-													this.error = true;
-													this.errorText = err.response.data.message;
-													return;
-												}
-											})
-											.finally(() => this.processing = false)
+										let data = new FormData(event.target);
+										grecaptcha.ready(() => {
+											grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'submit'}).then((token) => {
+												data.append('recaptcha_token', token)
+												
+												axios
+													.post(route('register-and-buy'), data)
+													.then(res => {
+														this.window = 'register-success';
+													})
+													.catch(err => {
+														if (err.response.status === 422) {
+															this.error = true;
+															this.errorText = err.response.data.message;
+															return;
+														}
+													})
+													.finally(() => this.processing = false)
+											});
+										});
+										
 									}
 								}"
 							>

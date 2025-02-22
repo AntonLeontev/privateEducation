@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Fortify\CreateNewUser;
 use App\Mail\PasswordReset;
 use App\Models\User;
+use App\Services\Grecaptcha\GrecaptchaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -53,12 +54,14 @@ class AuthController extends Controller
         $action->create($request->all());
     }
 
-    public function login(Request $request)
+    public function login(Request $request, GrecaptchaService $grecaptcha)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
+
+        $grecaptcha->check($request->get('recaptcha_token'));
 
         if (Auth::attempt($credentials, true)) {
             $request->session()->regenerate();

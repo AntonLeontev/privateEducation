@@ -3,6 +3,7 @@
 @section('title', __('contacts.h1'))
 
 @section('css')
+	<script async src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
     @vite('resources/css/contacts.css')
 @endsection
 
@@ -93,10 +94,18 @@
 										@submit.prevent="submit"
 										x-data="{
 											submit(e) {
-												axios
-													.post(route('feedback'), new FormData(e.target))
-													.then(resp => e.target.reset())
-													.catch(() => alert('Error!'))
+												let data = new FormData(e.target);
+
+												grecaptcha.ready(() => {
+													grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', {action: 'submit'}).then((token) => {
+														data.append('recaptcha_token', token)
+														
+														axios
+															.post(route('feedback'), data)
+															.then(resp => e.target.reset())
+															.catch(() => alert('Error!'))
+													});
+												});
 											},
 										}"
 									>

@@ -5,6 +5,7 @@ namespace App\Actions\Fortify;
 use App\DTOs\PurchaseParams;
 use App\Events\UserRegistered;
 use App\Models\User;
+use App\Services\Grecaptcha\GrecaptchaService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -13,6 +14,8 @@ use Illuminate\Validation\Rule;
 class CreateNewUser
 {
     use PasswordValidationRules;
+
+    public function __construct(private GrecaptchaService $grecaptcha) {}
 
     /**
      * Validate and create a newly registered user.
@@ -34,6 +37,8 @@ class CreateNewUser
         ])->validate();
 
         $password = str()->password(10);
+
+        $this->grecaptcha->check($input['recaptcha_token']);
 
         try {
             DB::beginTransaction();
