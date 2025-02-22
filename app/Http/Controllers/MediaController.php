@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GetMediaRequest;
 use App\Http\Requests\MediaStoreRequest;
+use App\Models\Audio;
 use App\Models\Media;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 use Owenoj\LaravelGetId3\GetId3;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -72,5 +74,30 @@ class MediaController extends Controller
                     'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
                 ]
             );
+    }
+
+    public function text(int $fragmentId, string $lang): JsonResponse
+    {
+        if (! admin()->user()?->isAdmin()) {
+            abort(401);
+        }
+
+        if (! auth()->check()) {
+            abort(401);
+        }
+
+        $subscription = auth()->user()->activeSubscriptions
+            ->where('subscribable_type', 'audio')
+            ->where('subscribable_id', $fragmentId)
+            ->first();
+        if ($subscription === null) {
+            abort(401);
+        }
+
+        $text = Audio::where('fragment_id', $fragmentId)
+            ->first()
+            ->{'text_'.$lang};
+
+        return response()->json($text);
     }
 }

@@ -244,6 +244,15 @@
 				})
 				this.player.play()
 				this.$dispatch('play-media-start')
+
+				if (mediaType === 'audio') {
+					axios
+						.get(route('media.text', [this.playingFragment.id, '{{ loc() }}']))
+						.then(response => {
+							this.$dispatch('full-text-change', response.data)
+							this.modal = 'fullText'
+						})
+				}
 			},
 			audioPrice() {
 				if (this.selectedFragment === null) {
@@ -1066,6 +1075,31 @@
                             <h3 class="title" x-text="selectedFragment?.title_{{ loc() }}"></h3>
 
 							<div x-html="selectedFragment?.presentation?.text_{{ loc() }}"></div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="presentation popup-dialog" x-show="modal === 'fullText'" x-cloak 
+					x-data="{full: false, text: ''}"
+					@full-text-change.window="text = $event.detail"
+					:class="full && 'full-page'"
+				>
+                    <div class="dialog__top">
+                        <h4 x-text="'{{ __('home.windows.full_text.title1') }}' + selectedFragment?.id + '{{ __('home.windows.full_text.title2') }}'"></h4>
+                        <button class="dialog__close" @click="deactivateFragment(); full = false"></button>
+                    </div>
+
+                    <div class="dialog__center dialog__center-margin">
+                        <button class="dialog__icon" @click="full = !full">
+                            <img width="62" height="62" src="{{ Vite::asset('resources/img/link.png') }}" alt="" x-show="!full" />
+                            <img width="62" height="62" src="{{ Vite::asset('resources/img/29.png') }}" alt="" x-show="full" />
+                        </button>
+
+                        <div class="dialog__texter">
+                            <h3 class="title" x-text="selectedFragment?.title_{{ loc() }}"></h3>
+
+							<div x-html="text"></div>
                             
                         </div>
                     </div>

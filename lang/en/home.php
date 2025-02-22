@@ -33,6 +33,10 @@ return [
             'title1' => 'Text. Summary of Fragment №',
             'title2' => '. Title',
         ],
+        'full_text' => [
+            'title1' => 'Text. Full content of Fragment №',
+            'title2' => '.',
+        ],
         'step1' => [
             'title' => 'Full content. Fragment №',
             'step' => 'Step 1 of 5',

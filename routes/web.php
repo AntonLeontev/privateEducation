@@ -75,6 +75,10 @@ Route::get('media/{type}/{fragmentId}/{lang}/{sound}/{device}', [MediaController
     ->whereIn('sound', ['mono', 'stereo'])
     ->whereIn('device', ['mobile', 'tablet', 'notebook'])
     ->name('media.show');
+Route::get('media/text/{fragmentId}/{lang}', [MediaController::class, 'text'])
+    ->whereIn('fragmentId', range(1, 17))
+    ->whereIn('lang', ['en', 'ru'])
+    ->name('media.text');
 
 Route::middleware(['auth'])->group(function () {
     Route::post('checkout', [PaymentController::class, 'checkout'])->name('payment.create');
