@@ -13,6 +13,6 @@ class FeedbackController extends Controller
     {
         $grecaptcha->check($request->get('recaptcha_token'));
 
-        Mail::to(config('auth.two_factor_email'))->send(new FeedbackRequest($request->all()));
+        Mail::to('info@private-new-education.de')->send(new FeedbackRequest($request->all()));
     }
 }
