@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GetMediaRequest;
 use App\Http\Requests\MediaStoreRequest;
 use App\Models\Audio;
+use App\Models\Fragment;
 use App\Models\Media;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Owenoj\LaravelGetId3\GetId3;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -57,6 +59,10 @@ class MediaController extends Controller
 
     public function show(string $type, int $fragmentId, string $lang, string $sound, string $device, GetMediaRequest $request)
     {
+        $fragment = Fragment::find($fragmentId);
+
+        abort_if($fragment->is_active === false, Response::HTTP_FORBIDDEN, 'Fragment is not active');
+
         $media = Media::where('sound', $sound)
             ->where('device', $device)
             ->where('lang', $lang)
