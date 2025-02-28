@@ -47,19 +47,22 @@
 											@play-media.window="reset"
 											@change-lang.window="reset"
 										>
-											<div class="relative right-0 transition ease-linear whitespace-nowrap w-max" x-text="lang === 'ru' ? playingFragment?.title_ru : playingFragment?.title_en" x-ref="line"></div>
+											<div class="relative right-0 transition ease-linear whitespace-nowrap w-max" x-text="text()" x-ref="line"></div>
 										</div>
 										<script>
 											document.addEventListener('alpine:init', () => {
 												Alpine.data('runningLine', () => ({
 													shift: null,
 													timerId: null,
-
+													isStart: true,
 													init() {
 														this.$nextTick(() => {
-															this.shift = this.$refs.lineWrap.offsetWidth - this.$refs.line.offsetWidth
+															this.shift = this.calcShift()
 															this.timerId = setTimeout(() => this.moveLeft(), 500)
 														})
+													},
+													text() {
+														return this.lang === 'ru' ? this.playingFragment?.title_ru : this.playingFragment?.title_en
 													},
 													reset() {
 														clearTimeout(this.timerId);
@@ -68,22 +71,29 @@
 														this.$refs.line.classList.remove('ease-linear')
 														this.$refs.line.style.transitionDuration = '0s'
 														this.$refs.line.style.transform = `translateX(0px)`
+														this.isStart = true
 														
 														
 														this.$nextTick(() => {
 															this.$refs.line.classList.add('transition')
 															this.$refs.line.classList.add('ease-linear')
-															this.shift = this.$refs.lineWrap.offsetWidth - this.$refs.line.offsetWidth
+															this.shift = this.calcShift()
 															this.moveLeft()
 														})
 														
 													},
 													moveLeft() {
 														this.timerId = setTimeout(() => {
-															if (this.shift >= 0) return
+															if (this.$refs.lineWrap.offsetWidth - this.$refs.line.offsetWidth >= 0) return
 
-															this.$refs.line.style.transitionDuration = Math.abs(this.shift) * 10 + 'ms'
-															this.$refs.line.style.transform = `translateX(${this.shift}px)`
+															if (this.isStart) {
+																this.$refs.line.style.transitionDuration = Math.abs(this.$refs.line.offsetWidth) * 10 + 'ms'
+																this.isStart = false
+															} else {
+																this.$refs.line.style.transitionDuration = 
+																	Math.abs(this.$refs.line.offsetWidth + this.$refs.lineWrap.offsetWidth) * 10 + 'ms'
+															}
+															this.$refs.line.style.transform = `translateX(${-this.shift}px)`
 
 															this.$refs.line.ontransitionend = () => {
 																this.moveRight()
@@ -91,15 +101,13 @@
 														}, 500)
 													},
 													moveRight() {
-														this.timerId = setTimeout(() => {
-															if (this.shift >= 0) return
+														this.$refs.line.style.transitionDuration = 0 + 'ms';
+														this.$refs.line.style.transform = `translateX(${this.$refs.lineWrap.offsetWidth}px)`;
 
-															this.$refs.line.style.transform = `translateX(1px)`
-
-															this.$refs.line.ontransitionend = () => {
-																this.moveLeft()
-															}
-														}, 500)
+														this.moveLeft()
+													},
+													calcShift() {
+														return this.$refs.line.offsetWidth + 10;
 													},
 												}))
 											})

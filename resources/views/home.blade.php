@@ -140,6 +140,10 @@
 							})
 					@endif
                 })
+
+				this.$watch('modal', () => {
+					this.$dispatch('modal-change')
+				})
             },
 			playNext() {
 				this.playingFragment = this.fragments[this.playingFragment.id === 17 ? 0 : this.playingFragment.id]
@@ -298,7 +302,7 @@
                 @include('partials.app.header')
 
                 <div class="player-mobile" style="max-width: 92.8vw !important;">
-                    <div class="player-mobile__top" x-data="runningLine" x-ref="lineWrap" @play-media-start.window="reset">
+                    <div class="player-mobile__top" x-data="runningLine" x-ref="lineWrap" @play-media-start.window="reset" data-speed="17">
 						<span class="runningline" x-ref="line" x-text="mobileText" style="padding: 0 1.5vw">
 						</span>
                     </div>
@@ -485,7 +489,9 @@
 
 				<div class="audio popup-dialog" x-show="modal === 'audio'" x-cloak>
                     <div class="dialog__top">
-                        <h4>{{ __('home.windows.audio.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <h4 class="runningline-wrap" x-data="runningLine" x-ref="lineWrap" @modal-change.window="reset" data-speed="8">
+							<span x-text="modalText" x-ref="line"></span>
+						</h4>
                         <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
                     <div class="dialog__center dialog__center-top">
@@ -521,7 +527,9 @@
 
 				<div class="video popup-dialog" x-show="modal === 'video'" x-cloak>
                     <div class="dialog__top">
-                        <h4>{{ __('home.windows.video.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <h4 class="runningline-wrap" x-data="runningLine" x-ref="lineWrap" @modal-change.window="reset" data-speed="8">
+							<span x-text="modalText" x-ref="line"></span>
+						</h4>
                         <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
                     <div class="dialog__center dialog__center-top">
@@ -584,7 +592,9 @@
 
                 <div class="continue popup-dialog" x-show="modal === 'step1'" x-cloak>
                     <div class="dialog__top">
-                        <h4>{{ __('home.windows.step1.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <h4 class="runningline-wrap" x-data="runningLine" x-ref="lineWrap" @modal-change.window="reset" data-speed="8">
+							<span x-text="modalText" x-ref="line"></span>
+						</h4>
                         <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
 
@@ -1200,57 +1210,67 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('runningLine', () => ({
                 shift: null,
-                timerId: null,
+				timerId: null,
+				isStart: true,
+				speed: 10,
 
                 init() {
-                    this.$nextTick(() => {
-                        this.shift = this.$refs.lineWrap.offsetWidth - this.$refs.line
-                            .offsetWidth
-                        this.timerId = setTimeout(() => this.moveLeft(), 500)
-                    })
-                },
-                reset() {
-                    clearTimeout(this.timerId);
+					if (this.$refs.lineWrap.dataset.speed) {
+						this.speed = this.$refs.lineWrap.dataset.speed
+					}
 
-                    this.$refs.line.classList.remove('transition')
-                    this.$refs.line.classList.remove('ease-linear')
-                    this.$refs.line.style.transitionDuration = '0s'
-                    this.$refs.line.style.transform = `translateX(0px)`
+					this.$nextTick(() => {
+						this.shift = this.calcShift()
+						this.timerId = setTimeout(() => this.moveLeft(), 500)
+					})
+				},
+                text() {
+					return this.lang === 'ru' ? this.playingFragment?.title_ru : this.playingFragment?.title_en
+				},
+				reset() {
+					clearTimeout(this.timerId);
 
+					this.$refs.line.classList.remove('transition')
+					this.$refs.line.classList.remove('ease-linear')
+					this.$refs.line.style.transitionDuration = '0s'
+					this.$refs.line.style.transform = `translateX(0px)`
+					this.isStart = true
+					
+					this.$nextTick(() => {
+						this.$refs.line.classList.add('transition')
+						this.$refs.line.classList.add('ease-linear')
+						this.shift = this.calcShift()
+						this.moveLeft()
+					})
+					
+				},
+				moveLeft() {
+					this.timerId = setTimeout(() => {
+						if (this.$refs.lineWrap.offsetWidth - this.$refs.line.offsetWidth >= 0) return
 
-                    this.$nextTick(() => {
-                        this.$refs.line.classList.add('transition')
-                        this.$refs.line.classList.add('ease-linear')
-                        this.shift = this.$refs.lineWrap.offsetWidth - this.$refs.line
-                            .offsetWidth
-                        this.moveLeft()
-                    })
+						if (this.isStart) {
+							this.$refs.line.style.transitionDuration = Math.abs(this.$refs.line.offsetWidth) * this.speed + 'ms'
+							this.isStart = false
+						} else {
+							this.$refs.line.style.transitionDuration = 
+								Math.abs(this.$refs.line.offsetWidth + this.$refs.lineWrap.offsetWidth) * this.speed + 'ms'
+						}
+						this.$refs.line.style.transform = `translateX(${-this.shift}px)`
 
-                },
-                moveLeft() {
-                    this.timerId = setTimeout(() => {
-                        if (this.shift >= 0) return
+						this.$refs.line.ontransitionend = () => {
+							this.moveRight()
+						}
+					}, 500)
+				},
+				moveRight() {
+					this.$refs.line.style.transitionDuration = 0 + 'ms';
+					this.$refs.line.style.transform = `translateX(${this.$refs.lineWrap.offsetWidth}px)`;
 
-                        this.$refs.line.style.transitionDuration = Math.abs(this.shift) * 10 +
-                            'ms'
-                        this.$refs.line.style.transform = `translateX(${this.shift}px)`
-
-                        this.$refs.line.ontransitionend = () => {
-                            this.moveRight()
-                        }
-                    }, 500)
-                },
-                moveRight() {
-                    this.timerId = setTimeout(() => {
-                        if (this.shift >= 0) return
-
-                        this.$refs.line.style.transform = `translateX(1px)`
-
-                        this.$refs.line.ontransitionend = () => {
-                            this.moveLeft()
-                        }
-                    }, 500)
-                },
+					this.moveLeft()
+				},
+				calcShift() {
+					return this.$refs.line.offsetWidth + 10;
+				},
 				mobileText() {
 					let media;
 
@@ -1267,6 +1287,9 @@
 					} 
 
 					return `${media}. {{ __('home.fragment') }} №${this.playingFragment?.id}. ${this.playingFragment?.title_{{ loc() }}}` 				
+				},
+				modalText() {
+					return `{{ __('home.windows.video.title') }}${this.selectedFragment?.id}. ${this.selectedFragment?.title_{{ loc() }}}`
 				},
             }))
         })
