@@ -252,7 +252,10 @@
 				style="display: none"
 				:class="wide && '!top-0 !bottom-0 !left-0 !right-0 !w-auto !h-auto'"
 				x-show="modalPresentationText"
-				x-data="{wide: false}"
+				x-data="{
+					wide: false,
+					mode: 'presentation',
+				}"
 			>
 				<div class="modal-content__header">
 					<span class="modal-header-text" x-text="`Текст презентации фрагмента ${selectedFragment?.id}`"></span>
@@ -263,7 +266,12 @@
 						<img src="{{ Vite::asset('resources/images/text-expand-out.png') }}" x-show="!wide">
 						<img src="{{ Vite::asset('resources/images/text-expand-in.png') }}" x-show="wide">
 					</button>
-					<div class="relative overflow-hidden presentation-text pr-[4.4vw]">
+					<div class="relative overflow-auto presentation-text pr-[4.4vw]">
+						<div class="flex justify-center gap-3 mb-2">
+							<button class="p-1 rounded" :class="mode === 'presentation' && 'bg-[#ffaa74]'" @click="mode = 'presentation'">Текст презентации</button>
+							<button class="p-1 rounded" :class="mode === 'full' && 'bg-[#ffaa74]'" @click="mode = 'full'">Полный текст</button>
+						</div>
+						
 						<div class="mb-4 modal-content__title">
 							<span class="px-4" x-text="lang === 'ru' ? selectedFragment?.title_ru : selectedFragment?.title_en"></span>
 						</div>
@@ -274,7 +282,8 @@
 								text-align: justify;
 							}
 						</style>
-						<div class="whitespace-pre-line text-[20px] presentation-text" x-html="lang === 'ru' ? selectedFragment?.presentation.text_ru : selectedFragment?.presentation.text_en"></div>
+						<div class="whitespace-pre-line text-[20px] presentation-text" x-html="lang === 'ru' ? selectedFragment?.presentation.text_ru : selectedFragment?.presentation.text_en" x-show="mode === 'presentation'"></div>
+						<div class="whitespace-pre-line text-[20px] presentation-text" x-html="lang === 'ru' ? selectedFragment?.audio.text_ru : selectedFragment?.audio.text_en" x-show="mode === 'full'"></div>
 					</div>
 				</div>
 			</div>
