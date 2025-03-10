@@ -20,6 +20,12 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
         Telescope::filter(function (IncomingEntry $entry) {
             if ($this->app->environment('local')) {
+                $ignoredPathes = ['/',  'ru', 'en'];
+
+                if ($entry->type === 'request' && strtolower(request()->method()) == 'head' && in_array(request()->path(), $ignoredPathes)) {
+                    return false;
+                }
+
                 return true;
             }
 
