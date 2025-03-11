@@ -23,8 +23,8 @@ class AudioUpdateRequest extends FormRequest
     {
         return [
             'price' => ['sometimes', 'numeric', 'min:0', 'max:42949671'],
-            'text_ru' => ['sometimes', 'string', 'max:50000'],
-            'text_en' => ['sometimes', 'string', 'max:50000'],
+            'text_ru' => ['sometimes', 'string'],
+            'text_en' => ['sometimes', 'string'],
         ];
     }
 }

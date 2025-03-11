@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('audio', function (Blueprint $table) {
             $table->after('fragment_id', function (Blueprint $table) {
-                $table->text('text_ru')->nullable();
-                $table->text('text_en')->nullable();
+                $table->mediumText('text_ru')->nullable();
+                $table->mediumText('text_en')->nullable();
             });
         });
     }
