@@ -60,7 +60,6 @@
 					)
 					.then(response => {
 						let media = this.findMedia()
-						console.log(response.data)
 
 						if (!media) {
 							this.selectedFragment[this.page].media.push(response.data)
@@ -70,7 +69,11 @@
 						let index = this.selectedFragment[this.page].media.indexOf(media)
 						this.selectedFragment[this.page].media[index] = response.data
 					})
-					.catch(error => alert('Ошибка загрузки'))
+					.catch(error => {
+						console.log(error);
+						axios.post(route('error.watch', {test: true, error: error}));
+						alert('Ошибка загрузки')
+					})
 					.finally(() => {
 						setTimeout(() => {
 							this.progressbar = false

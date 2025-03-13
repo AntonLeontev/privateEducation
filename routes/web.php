@@ -89,5 +89,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::post('webhooks/stripe', [StripeController::class, 'webhook'])->name('webhooks.stripe');
+Route::post('error-watch', function () {})->name('error.watch');
 
 include 'admin.php';
