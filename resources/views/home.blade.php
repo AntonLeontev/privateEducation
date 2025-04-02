@@ -1,6 +1,7 @@
 @extends('layouts.app.app')
 
 @section('title', __('home.title'))
+@section('description', __('home.description'))
 
 @section('css')
 	<script async src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
