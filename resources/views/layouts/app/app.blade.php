@@ -7,6 +7,8 @@
     <title>@yield('title')</title>
 	<meta name="description" content="@yield('description')">
 
+	<meta name="yandex-verification" content="891e8411e553ebea" />
+
 	@yield('css')
 
 	<style>
