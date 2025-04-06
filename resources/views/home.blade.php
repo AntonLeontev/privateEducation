@@ -650,7 +650,7 @@
                     </div>
                 </div>
 
-                <div class="continue popup-dialog" x-show="modal === 'step2'" x-cloak>
+                <div class="continue popup-dialog" x-show="modal === 'step2'" x-cloak x-data="{isAuthorized: {{ Auth::check() ? 'true' : 'false' }}}">
                     <div class="dialog__top">
                         <h4>{{ __('home.windows.step2.title') }}<span x-text="selectedFragment?.id"></span></h4>
                         <button class="dialog__close" @click="deactivateFragment"></button>
@@ -719,7 +719,7 @@
                                     {{ __('home.windows.step2.back2') }}
                                 </button>
 
-                                <button id="next-2" class="dialog__submit-btn" @click="modal = 'step3'">
+                                <button id="next-2" class="dialog__submit-btn" @click="modal = isAuthorized ? 'step4' : 'step3'">
                                     {{ __('home.windows.step2.next') }}
                                 </button>
                             </div>
