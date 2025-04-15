@@ -564,9 +564,19 @@
                     </div>
                 </div>
 
-				<div class="presentation popup-dialog" x-show="modal === 'presentation'" x-cloak>
+				<div class="presentation popup-dialog" x-show="modal === 'presentation'" x-cloak
+					x-data="{
+						title() {
+							if (this.sound === 'text') {
+								return '{{ __('home.windows.presentation.title_text') }}' + this.selectedFragment?.id;
+							}
+
+							return '{{ __('home.windows.presentation.title') }}' + this.selectedFragment?.id;
+						},
+					}"
+				>
                     <div class="dialog__top">
-                        <h4>{{ __('home.windows.presentation.title') }}<span x-text="selectedFragment?.id"></span></h4>
+                        <h4><span x-text="title()"></span></h4>
                         <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
                     <div class="dialog__center dialog__center-top">

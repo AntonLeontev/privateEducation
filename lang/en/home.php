@@ -25,7 +25,8 @@ return [
             'access_denied' => 'ACCESS NOT ACTIVATED',
         ],
         'presentation' => [
-            'title' => 'Summary. Fragment №',
+            'title_text' => 'Summary. Fragment №',
+            'title' => 'Video presentation. Fragment №',
             '1' => 'Presentation of a part of a fragment',
             'duration' => 'Record duration in minutes - ',
             'access_granted' => 'ACCESS ACTIVATED',
