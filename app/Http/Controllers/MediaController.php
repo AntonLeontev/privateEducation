@@ -84,11 +84,7 @@ class MediaController extends Controller
 
     public function text(int $fragmentId, string $lang): JsonResponse
     {
-        if (! admin()->user()?->isAdmin()) {
-            abort(401);
-        }
-
-        if (! auth()->check()) {
+        if (! auth()->check() && ! admin()->user()?->isAdmin()) {
             abort(401);
         }
 
