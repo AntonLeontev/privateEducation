@@ -24,12 +24,13 @@
 	<link rel="manifest" href="/site.webmanifest">
 
 	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=AW-16987671881">
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
+	<script async src="https://www.googletagmanager.com/gtag/js?id=AW-16987671881"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
 
-		gtag('config', 'AW-16987671881');
+	gtag('config', 'AW-16987671881');
 	</script>
 </head>
 <body>
