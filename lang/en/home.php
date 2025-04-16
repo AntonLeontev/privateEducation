@@ -26,7 +26,7 @@ return [
         ],
         'presentation' => [
             'title_text' => 'Summary. Fragment №',
-            'title' => 'Video presentation. Fragment №',
+            'title' => 'Video. Presentation of Fragment №',
             '1' => 'Presentation of a part of a fragment',
             'duration' => 'Record duration in minutes - ',
             'access_granted' => 'ACCESS ACTIVATED',

@@ -568,15 +568,17 @@
 					x-data="{
 						title() {
 							if (this.sound === 'text') {
-								return '{{ __('home.windows.presentation.title_text') }}' + this.selectedFragment?.id;
+								return `{{ __('home.windows.presentation.title_text') }}${this.selectedFragment?.id}. ${this.selectedFragment?.title_{{ loc() }}}`
 							}
 
-							return '{{ __('home.windows.presentation.title') }}' + this.selectedFragment?.id;
+							return `{{ __('home.windows.presentation.title') }}${this.selectedFragment?.id}. ${this.selectedFragment?.title_{{ loc() }}}`
 						},
 					}"
 				>
                     <div class="dialog__top">
-                        <h4><span x-text="title()"></span></h4>
+						<h4 class="runningline-wrap" x-data="runningLine" x-ref="lineWrap" @modal-change.window="reset" data-speed="8">
+							<span x-text="title()" x-ref="line"></span>
+						</h4>
                         <button class="dialog__close" @click="deactivateFragment"></button>
                     </div>
                     <div class="dialog__center dialog__center-top">
