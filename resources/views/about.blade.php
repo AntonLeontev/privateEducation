@@ -93,8 +93,10 @@
                                 </ul>
 
 								<div class="content">
+									<p class="text highlight" >{{ __('about.22') }}</p>
+									<p class="text highlight">{{ __('about.23') }}</p>
 									@php
-										$highlights = [22, 23, 39];
+										$highlights = [39];
 										$paddingBottom = [32];
 									@endphp
 
