@@ -1095,7 +1095,7 @@ button {
 	line-height: 1.39em;
 }
 .highlight:nth-child(2) {
-	margin-top: 37px;
+	margin-top: 37px!important;
 }
 @media (max-width: 690px) {
 	.text {
