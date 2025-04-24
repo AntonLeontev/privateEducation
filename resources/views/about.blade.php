@@ -91,6 +91,26 @@
                                         </p>
                                     </li>
                                 </ul>
+
+								<div class="content">
+									@php
+										$highlights = [22, 23, 39];
+										$paddingBottom = [32];
+									@endphp
+
+									@foreach (range(22, 70) as $i)
+										@if ($i === 70 && app()->getLocale() === 'ru')
+											@continue
+										@endif
+
+
+										<p @class([
+											'text', 
+											'highlight' => in_array($i, $highlights),
+											'pb' => in_array($i, $paddingBottom),
+										])>{{ __('about.'.$i) }}</p>
+									@endforeach
+								</div>
                             </div>
                         </div>
                     </div>
