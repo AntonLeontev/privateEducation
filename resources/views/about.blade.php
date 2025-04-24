@@ -100,7 +100,7 @@
 										$paddingBottom = [32];
 									@endphp
 
-									@foreach (range(22, 70) as $i)
+									@foreach (range(24, 70) as $i)
 										@if ($i === 70 && app()->getLocale() === 'ru')
 											@continue
 										@endif
