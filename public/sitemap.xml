@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd">
+  <url>
+    <loc>https://private-new-education.com/</loc>
+	<priority>1.0</priority>
+	<lastmod>2025-04-03T16:15:45+03:00</lastmod>
+	<changefreq>monthly</changefreq>
+	<xhtml:link rel="alternate" hreflang="ru" href="https://private-new-education.com/ru"/>
+	<xhtml:link rel="alternate" hreflang="en" href="https://private-new-education.com/en"/>
+  </url>
+  <url>
+    <loc>https://private-new-education.com/en/about</loc>
+    <priority>0.9</priority>
+	<lastmod>2025-04-03T16:15:45+03:00</lastmod>
+	<changefreq>monthly</changefreq>
+	<xhtml:link rel="alternate" hreflang="ru" href="https://private-new-education.com/ru/about"/>
+	<xhtml:link rel="alternate" hreflang="en" href="https://private-new-education.com/en/about"/>
+  </url>
+  <url>
+    <loc>https://private-new-education.com/en/copyright</loc>
+    <priority>0.5</priority>
+	<lastmod>2025-04-03T16:15:45+03:00</lastmod>
+	<changefreq>monthly</changefreq>
+	<xhtml:link rel="alternate" hreflang="ru" href="https://private-new-education.com/ru/copyright"/>
+	<xhtml:link rel="alternate" hreflang="en" href="https://private-new-education.com/en/copyright"/>
+  </url>
+  <url>
+    <loc>https://private-new-education.com/en/commercial</loc>
+    <priority>0.5</priority>
+	<lastmod>2025-04-03T16:15:45+03:00</lastmod>
+	<changefreq>monthly</changefreq>
+	<xhtml:link rel="alternate" hreflang="ru" href="https://private-new-education.com/ru/commercial"/>
+	<xhtml:link rel="alternate" hreflang="en" href="https://private-new-education.com/en/commercial"/>
+  </url>
+  <url>
+    <loc>https://private-new-education.com/en/privacy</loc>
+    <priority>0.8</priority>
+	<lastmod>2025-04-03T16:15:45+03:00</lastmod>
+	<changefreq>monthly</changefreq>
+	<xhtml:link rel="alternate" hreflang="ru" href="https://private-new-education.com/ru/privacy"/>
+	<xhtml:link rel="alternate" hreflang="en" href="https://private-new-education.com/en/privacy"/>
+  </url>
+  <url>
+    <loc>https://private-new-education.com/en/contacts</loc>
+    <priority>0.8</priority>
+	<lastmod>2025-04-03T16:15:45+03:00</lastmod>
+	<changefreq>monthly</changefreq>
+	<xhtml:link rel="alternate" hreflang="ru" href="https://private-new-education.com/ru/contacts"/>
+	<xhtml:link rel="alternate" hreflang="en" href="https://private-new-education.com/en/contacts"/>
+  </url>
+</urlset>
