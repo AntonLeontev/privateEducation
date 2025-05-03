@@ -1,6 +1,7 @@
 @extends('layouts.app.app')
 
-@section('title', __('about.h1'))
+@section('title', __('about.title'))
+@section('description', __('about.description'))
 
 @section('css')
     @vite(['resources/css/about.css'])

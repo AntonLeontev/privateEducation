@@ -2,6 +2,9 @@
 
 return [
     'h1' => 'About project',
+    'title' => 'Private education as a guide to life',
+    'description' => 'Assessing the student (child) for professional carrier options or a future
+in business and technology.',
     '1' => 'The Private Education Project',
     '2' => 'Presented as an e-book, audiobook, and video-book.',
     '3' => 'Preamble',

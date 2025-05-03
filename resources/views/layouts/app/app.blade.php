@@ -9,10 +9,15 @@
 
 	<meta name="yandex-verification" content="891e8411e553ebea" />
 
+	<meta property="og:title" content="@yield('title')">
+	<meta property="og:description" content="@yield('description')">
+	<meta property="og:url" content="{{ url()->current() }}">
+	<meta property="og:type" content="website">
+
 	@yield('css')
 
 	<style>
-        [x-cloak] {display: none; !important}
+        [x-cloak] {display: none !important;}
     </style>
 
 	@routes
