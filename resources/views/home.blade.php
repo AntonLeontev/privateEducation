@@ -82,6 +82,14 @@
 
 @section('content')
     <main>
+        @if(request('is_purchase'))
+            <script>
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-16987671881/2_N3CML21ukbEMmaraQ_',
+                    'transaction_id': ''
+                });
+          </script>
+        @endif
         <script>
             let fragments = @json($fragments);
         </script>
@@ -1308,4 +1316,14 @@
         })
     </script>
 
+    <script>
+        (function() {
+            var url = new URL(location.href);
+            if (url.searchParams.has('is_purchase')) {
+                url.searchParams.delete('is_purchase');
+                var newUrl = url.pathname + (url.search ? url.search : '') + (url.hash || '');
+                history.replaceState({}, '', newUrl);
+            }
+        })();
+    </script>
 @endsection

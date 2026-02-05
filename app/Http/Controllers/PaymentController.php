@@ -108,7 +108,7 @@ class PaymentController extends Controller
             ]);
         }
 
-        return to_route('home', ['step' => 'success', 'fragment_id' => $payment->fragment_id, 'media_type' => $payment->media_type]);
+        return to_route('home', ['step' => 'success', 'fragment_id' => $payment->fragment_id, 'media_type' => $payment->media_type, 'is_purchase' => 1]);
     }
 
     public function fail(Payment $payment): RedirectResponse
