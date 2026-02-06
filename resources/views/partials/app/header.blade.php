@@ -1,6 +1,9 @@
 <header>
     <nav>
         <ul>
+            <li>
+                <x-lang-nav />
+            </li>
             <li><a href="{{ route('home') }}">{{ __('header.menu.home') }}</a></li>
             <li><a href="{{ route('about') }}">{{ __('header.menu.about') }}</a></li>
             <li><a href="{{ route('copyright') }}">{{ __('header.menu.copyright') }}</a></li>

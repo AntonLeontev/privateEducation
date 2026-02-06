@@ -208,7 +208,7 @@ html, body {
   align-items: center;
 }
 .main header nav {
-  padding-left: 120px;
+  /* padding-left: 120px; */
   width: 100%;
 }
 .main header nav ul {
@@ -224,17 +224,20 @@ html, body {
   cursor: pointer;
   color: #344760;
 }
-.main header nav ul li:nth-child(2), .main header nav ul li:nth-child(6) {
-  margin-left: 97px;
+.main header nav ul li:nth-child(2) {
+  margin-left: 80px;
 }
-.main header nav ul li:nth-child(3) {
-  margin-left: 118px;
+.main header nav ul li:nth-child(3), .main header nav ul li:nth-child(7) {
+  margin-left: 80px;
 }
-.main header nav ul li:nth-child(4), .main header nav ul li:nth-child(5) {
-  margin-left: 124px;
+.main header nav ul li:nth-child(4) {
+  margin-left: 80px;
 }
-.main header nav ul li:nth-child(7) {
-  margin-left: 56px;
+.main header nav ul li:nth-child(5), .main header nav ul li:nth-child(6) {
+  margin-left: 84px;
+}
+.main header nav ul li:nth-child(8) {
+  margin-left: 86px;
 }
 .main header nav ul li:last-child {
   margin-left: auto;
@@ -1797,8 +1800,14 @@ input[type=radio]:checked {
   }
 }
 @media screen and (max-width: 1024px) and (orientation: landscape) {
-  nav ul li:nth-child(-n+6) {
+  nav ul li:nth-child(-n+7) {
     display: none;
+  }
+  nav ul li:nth-child(1) {
+    display: block;
+  }
+  nav ul li:nth-child(8) {
+    margin-left: auto !important;
   }
   nav ul li:last-child {
     margin-left: 0 !important;
@@ -2683,8 +2692,14 @@ input[type=radio]:checked {
     justify-content: flex-end !important;
     gap: 3.889vw;
   }
-  nav ul li:nth-child(-n+6) {
+  nav ul li:nth-child(-n+7) {
     display: none;
+  }
+  nav ul li:nth-child(1) {
+    display: block;
+  }
+  nav ul li:nth-child(8) {
+    margin-left: auto !important;
   }
   nav ul li:last-child {
     margin-left: 0 !important;

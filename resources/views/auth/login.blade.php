@@ -3,7 +3,7 @@
 @section('title', 'Вход')
 
 @section('css')
-    <link rel="stylesheet" href="/css/account.css" />
+    @vite(['resources/css/account.css'])
 	<script async src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
 @endsection
 
