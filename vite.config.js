@@ -15,6 +15,7 @@ export default defineConfig({
                 "resources/css/datenschutz.css",
                 "resources/css/impression.css",
                 "resources/scss/app.scss",
+                "resources/scss/lang-panel.scss",
                 "resources/js/app.js",
                 "resources/js/metrics.js",
                 "resources/js/index.js",
