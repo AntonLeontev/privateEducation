@@ -312,7 +312,7 @@
                 @include('partials.app.header')
 
                 <div class="player-mobile" style="max-width: 92.8vw !important;">
-                    <div class="player-mobile__top" x-data="runningLine" x-ref="lineWrap" @play-media-start.window="reset" data-speed="17">
+                    <div class="player-mobile__top" x-data="runningLine" x-ref="lineWrap" @play-media-start.window="reset" @orientationchange.window="reset()" data-speed="17">
 						<span class="runningline" x-ref="line" x-text="mobileText" style="padding: 0 1.5vw">
 						</span>
                     </div>
@@ -333,7 +333,8 @@
                                 </span>
                                 <div class="runningline-wrap" x-data="runningLine" x-ref="lineWrap"
 									style="margin-top: 4px"
-                                    @play-media-start.window="reset">
+                                    @play-media-start.window="reset"
+                                >
                                     <span class="runningline" x-text="playingFragment?.title_{{ loc() }}"
                                         x-ref="line">Заглавие</span>
                                 </div>
