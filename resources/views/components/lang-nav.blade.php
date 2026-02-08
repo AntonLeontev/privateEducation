@@ -15,6 +15,17 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
         </svg>
     </button>
+
+    @foreach ($supportedLocales as $localeCode => $properties)
+        @if ($localeCode !== $currentLocale)
+        <a class="lang-nav__link-mobile" rel="alternate" hreflang="{{ $localeCode }}"
+            href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+            <img src="{{ Vite::asset('resources/images/flags/' . $properties['flag'] . '.svg') }}"
+                alt="" width="32" height="32">
+        </a>
+        @endif
+    @endforeach
+
     <div class="accordion-animation lang-nav__list-animation" :class="{ 'accordion-animation_active': open }">
         <div class="accordion-wrapper">
             <ul class="lang-nav__list">

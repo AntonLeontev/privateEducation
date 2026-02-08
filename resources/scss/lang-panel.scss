@@ -27,6 +27,13 @@
 			height: 1rem;
 			transition: transform 0.3s ease-in-out;
 			transform: rotate(0deg);
+
+			@media screen and (max-width: 1024px) and (orientation: landscape) {
+				display: none!important;
+			}
+			@media screen and (max-width: 680px) and (orientation: portrait) {
+				display: none!important;
+			}
 		}
 
 		&_active {
@@ -51,6 +58,13 @@
 		margin: 0;
 		padding: 0.2rem 0rem;
 		background: #ffffffdc;
+
+		@media screen and (max-width: 1024px) and (orientation: landscape) {
+			display: none!important;
+		}
+		@media screen and (max-width: 680px) and (orientation: portrait) {
+			display: none!important;
+		}
 	}
 	
 	&__item {
@@ -73,8 +87,21 @@
 	}
 
 	&__name {
+		@media screen and (max-width: 1024px) and (orientation: landscape) {
+			display: none;
+		}
 		@media screen and (max-width: 680px) and (orientation: portrait) {
 			display: none;
+		}
+	}
+
+	.lang-nav__link-mobile {
+		display: none;
+		@media screen and (max-width: 680px) and (orientation: portrait) {
+			display: block;
+		}
+		@media screen and (max-width: 1024px) and (orientation: landscape) {
+			display: block;
 		}
 	}
 }
