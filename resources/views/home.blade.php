@@ -85,10 +85,7 @@
         @if(request('is_purchase'))
             <script>
                 console.log('Purchase successful');
-                gtag('event', 'conversion', {
-                    'send_to': 'AW-16987671881/2_N3CML21ukbEMmaraQ_',
-                    'transaction_id': ''
-                });
+                gtag('event', 'purchase');
             </script>
         @endif
         <script>
