@@ -85,8 +85,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('payment/{payment}/success', [PaymentController::class, 'success'])->name('payment.success');
 
     Route::post('view', [ViewController::class, 'store'])->name('view.store');
-    Route::post('presentation-view', [PresentationViewController::class, 'store'])->name('presentation-view.store');
 });
+Route::post('presentation-view', [PresentationViewController::class, 'store'])->name('presentation-view.store');
 
 Route::post('webhooks/stripe', [StripeController::class, 'webhook'])->name('webhooks.stripe');
 Route::post('error-watch', function () {})->name('error.watch');

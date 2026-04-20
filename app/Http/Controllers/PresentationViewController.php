@@ -180,7 +180,7 @@ class PresentationViewController extends Controller
     public function store(Request $request)
     {
         PresentationView::create([
-            'user_id' => auth()->id(),
+            'user_id' => auth()?->id(),
             'presentation_id' => $request->get('presentation_id'),
             'is_reading' => $request->get('is_reading'),
             'is_passive' => $request->get('is_passive'),
