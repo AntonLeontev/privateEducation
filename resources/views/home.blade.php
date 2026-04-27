@@ -137,15 +137,14 @@
 					});
         
 					this.startPlay(this.playingMedia)
-					@if (auth()->check()) 
-						axios
-							.post(route('presentation-view.store'), {
-								'presentation_id': this.playingFragment.id,
-								'is_reading': false,
-								'is_passive': true,
-								'lang': '{{ loc() }}',
-							})
-					@endif
+					
+                    axios
+                        .post(route('presentation-view.store'), {
+                            'presentation_id': this.playingFragment.id,
+                            'is_reading': false,
+                            'is_passive': true,
+                            'lang': '{{ loc() }}',
+                        })
                 })
 
 				this.$watch('modal', () => {
@@ -156,15 +155,13 @@
 				this.playingFragment = this.fragments[this.playingFragment.id === 17 ? 0 : this.playingFragment.id]
 				this.startPlay('presentation')
 
-				@if (auth()->check()) 
-					axios
-						.post(route('presentation-view.store'), {
-							'presentation_id': this.playingFragment.id,
-							'is_reading': false,
-							'is_passive': true,
-							'lang': '{{ loc() }}',
-						})
-				@endif
+                axios
+                    .post(route('presentation-view.store'), {
+                        'presentation_id': this.playingFragment.id,
+                        'is_reading': false,
+                        'is_passive': true,
+                        'lang': '{{ loc() }}',
+                    })
 			},
             activateFragment(id) {
                 this.selectedFragment = this.fragments
