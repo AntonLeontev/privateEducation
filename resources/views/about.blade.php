@@ -101,7 +101,7 @@
 										$paddingBottom = [32];
 									@endphp
 
-									@foreach (range(24, 70) as $i)
+									@foreach (range(24, 44) as $i)
 										@if ($i === 70 && app()->getLocale() === 'ru')
 											@continue
 										@endif
@@ -111,8 +111,40 @@
 											'text', 
 											'highlight' => in_array($i, $highlights),
 											'pb' => in_array($i, $paddingBottom),
-										])>{{ __('about.'.$i) }}</p>
+										])>{!! __('about.'.$i) !!}</p>
 									@endforeach
+
+                                    <p class="text">{!! __('about.45') !!}</p>
+                                    <ol class="!mt-0 text ms-4 md:ms-12 list-disc">
+                                        <li class="">{{ __('about.46') }}</li>
+                                        <li class="">{{ __('about.47') }}</li>
+                                        <li class="">{{ __('about.48') }}</li>
+                                        <li class="">{{ __('about.49') }}</li>
+                                        <li class="">{{ __('about.50') }}</li>
+                                        <li class="">{{ __('about.51') }}</li>
+                                        <li class="">{{ __('about.52') }}</li>
+                                    </ol>
+
+                                    <p class="text">{!! __('about.53') !!}</p>
+                                    <ul class="!mt-0 text ms-4 md:ms-12">
+                                        <li class="list-disc">{{ __('about.54') }}</li>
+                                        <li class="list-disc">{{ __('about.55') }}</li>
+                                        <li class="list-disc">{{ __('about.56') }}</li>
+                                        <li class="list-disc">{{ __('about.57') }}</li>
+                                        <li class="list-disc">{{ __('about.58') }}</li>
+                                        <li class="list-disc">{{ __('about.59') }}</li>
+                                    </ul>
+
+                                    <p class="text">{!! __('about.60') !!}</p>
+                                    <ol class="!mt-0 text ms-4 md:ms-12 list-disc">
+                                        <li class="">{{ __('about.61') }}</li>
+                                        <li class="">{{ __('about.62') }}</li>
+                                        <li class="">{{ __('about.63') }}</li>
+                                        <li class="">{{ __('about.64') }}</li>
+                                        <li class="">{{ __('about.65') }}</li>
+                                        <li class="">{{ __('about.66') }}</li>
+                                        <li class="">{{ __('about.67') }}</li>
+                                    </ol>
 								</div>
                             </div>
                         </div>
