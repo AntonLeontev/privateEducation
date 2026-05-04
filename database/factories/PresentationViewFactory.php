@@ -3,11 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Presentation;
+use App\Models\PresentationView;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PresentationView>
+ * @extends Factory<PresentationView>
  */
 class PresentationViewFactory extends Factory
 {

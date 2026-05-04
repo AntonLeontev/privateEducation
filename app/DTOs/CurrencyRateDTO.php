@@ -7,8 +7,8 @@ use Carbon\Carbon;
 class CurrencyRateDTO
 {
     public function __construct(
-        readonly public Carbon $date,
-        readonly public string $name,
-        readonly public float $rate,
+        public readonly Carbon $date,
+        public readonly string $name,
+        public readonly float $rate,
     ) {}
 }

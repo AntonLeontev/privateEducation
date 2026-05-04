@@ -5,10 +5,11 @@ namespace Database\Factories;
 use App\Models\Audio;
 use App\Models\User;
 use App\Models\Video;
+use App\Models\View;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\View>
+ * @extends Factory<View>
  */
 class ViewFactory extends Factory
 {
