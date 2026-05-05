@@ -36,7 +36,7 @@ return [
     'loading' => 'Loading ...',
     'notfound' => 'Records not found',
     'collapse_menu' => 'Collapse menu',
-    '404' => 'Houston we have a problem page not found',
+    404 => 'Houston we have a problem page not found',
     'notifications' => [
         'title' => 'Notifications',
         'mark_as_read_all' => 'Mark all as read',
@@ -66,19 +66,14 @@ return [
         'admins_title' => 'Admins',
         'role_title' => 'Roles',
         'role_name' => 'Title',
-
         'main_information' => 'Main information',
         'change_password' => 'Change password',
-
         'link_socialite' => 'Link account',
         'linked_socialite' => 'Account linked',
-
         'queued' => 'Queued',
-
         'export' => [
             'exported' => 'File exported',
         ],
-
         'import' => [
             'imported' => 'Imported',
             'file_required' => 'File is required',
