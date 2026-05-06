@@ -5,6 +5,12 @@
 /public/storage
 /storage/*.key
 /vendor
+.cursor
+.ai-factory.json
+.ai-factory
+.agents
+skills-lock.json
+AGENTS.md
 .env
 .env.backup
 .env.production
