@@ -120,6 +120,8 @@
                                         <li class="mt-4">{{ __('about.47') }}</li>
                                         <li class="mt-4">{{ __('about.48') }}</li>
                                         <li class="mt-4">{{ __('about.49') }}</li>
+                                        <li class="mt-4">{{ __('about.50') }}</li>
+                                        <li class="mt-4">{{ __('about.51') }}</li>
                                     </ol>
 
                                     <p class="text">{!! __('about.53') !!}</p>
