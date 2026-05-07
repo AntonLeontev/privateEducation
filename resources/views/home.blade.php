@@ -101,6 +101,13 @@
             playingMedia: 'presentation',
 			sound: 'stereo',
 			device: 'notebook',
+			viewTimeActiveSeconds: 0,
+			viewTimePassiveSeconds: 0,
+			viewTimeTimerId: null,
+			viewTimeLastTick: null,
+			viewTimePresentationId: null,
+			viewTimeForcePassive: false,
+			viewTimeHandlersBound: false,
         
             init() {
                 this.playingFragment = this.fragments[0];
@@ -128,6 +135,11 @@
                         muted: true,
                     });
         
+                    this.player.on('play', () => this.startViewTimer());
+                    this.player.on('pause', () => {
+						this.stopViewTimer()
+						this.flushViewTimes()
+					});
                     this.player.on('ended', () => this.playNext());
 
 					this.player.on('error', () => {
@@ -136,7 +148,8 @@
 						}
 					});
         
-					this.startPlay(this.playingMedia)
+					this.bindViewTimeLifecycleHandlers()
+					this.startPlay(this.playingMedia, true)
 					
                     axios
                         .post(route('presentation-view.store'), {
@@ -153,7 +166,7 @@
             },
 			playNext() {
 				this.playingFragment = this.fragments[this.playingFragment.id === 17 ? 0 : this.playingFragment.id]
-				this.startPlay('presentation')
+				this.startPlay('presentation', true)
 
                 axios
                     .post(route('presentation-view.store'), {
@@ -219,7 +232,7 @@
 
 					if (!isReading) {
 						this.playingFragment = this.selectedFragment
-						this.startPlay(mediaType)
+						this.startPlay(mediaType, false)
 					}
 					
 					axios
@@ -233,7 +246,7 @@
 				} 
 
 				this.playingFragment = this.selectedFragment
-				this.startPlay(mediaType)
+				this.startPlay(mediaType, false)
 
 				axios
 					.post(route('view.store'), {
@@ -242,9 +255,14 @@
 						'lang': '{{ loc() }}',
 					})
 			},
-			startPlay(mediaType) {
+			startPlay(mediaType, forcePassive = false) {
 				let sound = this.sound === 'text' ? 'stereo' : this.sound
 				this.playingMedia = mediaType
+				this.viewTimeForcePassive = forcePassive
+				this.stopViewTimer()
+				this.flushViewTimes()
+				this.resetViewTimes()
+				this.viewTimePresentationId = this.playingFragment?.id
 
 				this.player.src({
 					type: this.playingFragment[mediaType].media[0]?.format,
@@ -261,6 +279,139 @@
 							this.modal = 'fullText'
 						})
 				}
+			},
+			startViewTimer() {
+				if (this.viewTimeTimerId) {
+					return
+				}
+
+				console.debug('[FIX] View timer started', {
+					presentationId: this.viewTimePresentationId,
+					forcePassive: this.viewTimeForcePassive,
+				})
+				this.viewTimeLastTick = Date.now()
+				this.viewTimeTimerId = setInterval(() => {
+					if (this.player?.paused()) {
+						return
+					}
+
+					const now = Date.now()
+					const seconds = Math.floor((now - this.viewTimeLastTick) / 1000)
+
+					if (seconds < 1) {
+						return
+					}
+
+					this.viewTimeLastTick = now
+
+					if (this.viewTimeForcePassive || document.hidden) {
+						this.viewTimePassiveSeconds += seconds
+					} else {
+						this.viewTimeActiveSeconds += seconds
+					}
+				}, 1000)
+			},
+			stopViewTimer() {
+				if (!this.viewTimeTimerId) {
+					return
+				}
+
+				clearInterval(this.viewTimeTimerId)
+				this.viewTimeTimerId = null
+				this.viewTimeLastTick = null
+			},
+			resetViewTimes() {
+				this.viewTimeActiveSeconds = 0
+				this.viewTimePassiveSeconds = 0
+			},
+			flushViewTimes(preferBeacon = false) {
+				if (!this.viewTimePresentationId) {
+					return
+				}
+
+				if (this.viewTimeActiveSeconds >= 1) {
+					this.sendViewTime(this.viewTimeActiveSeconds, false, preferBeacon)
+				}
+
+				if (this.viewTimePassiveSeconds >= 1) {
+					this.sendViewTime(this.viewTimePassiveSeconds, true, preferBeacon)
+				}
+
+				this.resetViewTimes()
+			},
+			sendViewTime(seconds, isPassive, preferBeacon = false) {
+				const payload = {
+					'presentation_id': this.viewTimePresentationId,
+					'seconds': seconds,
+					'is_passive': isPassive,
+				}
+
+				if (preferBeacon && navigator.sendBeacon) {
+					const token = document.querySelector(`meta[name='csrf-token']`)?.getAttribute('content')
+					const formData = new FormData()
+					formData.append('presentation_id', String(payload.presentation_id))
+					formData.append('seconds', String(payload.seconds))
+					formData.append('is_passive', payload.is_passive ? '1' : '0')
+
+					if (token) {
+						formData.append('_token', token)
+					}
+
+					const sent = navigator.sendBeacon(route('presentation-view-time.store'), formData)
+
+					if (sent) {
+						return
+					}
+				}
+
+				axios
+					.post(route('presentation-view-time.store'), payload, preferBeacon ? { keepalive: true } : undefined)
+					.then(() => {
+						console.debug('[FIX] View time persisted', {
+							presentationId: payload.presentation_id,
+							seconds: payload.seconds,
+							isPassive: payload.is_passive,
+							preferBeacon,
+						})
+					})
+					.catch((error) => {
+						console.warn('[FIX] View time persist failed', {
+							presentationId: payload.presentation_id,
+							seconds: payload.seconds,
+							isPassive: payload.is_passive,
+							preferBeacon,
+							message: error?.message,
+						})
+					})
+			},
+			bindViewTimeLifecycleHandlers() {
+				if (this.viewTimeHandlersBound) {
+					return
+				}
+
+				this.viewTimeHandlersBound = true
+
+				document.addEventListener('visibilitychange', () => {
+					if (!document.hidden) {
+						return
+					}
+
+					console.debug('[FIX] visibilitychange -> flush passive buffer')
+					this.stopViewTimer()
+					this.flushViewTimes(true)
+				})
+
+				window.addEventListener('pagehide', () => {
+					console.debug('[FIX] pagehide -> flush passive buffer')
+					this.stopViewTimer()
+					this.flushViewTimes(true)
+				})
+
+				window.addEventListener('beforeunload', () => {
+					console.debug('[FIX] beforeunload -> flush passive buffer')
+					this.stopViewTimer()
+					this.flushViewTimes(true)
+				})
 			},
 			audioPrice() {
 				if (this.selectedFragment === null) {

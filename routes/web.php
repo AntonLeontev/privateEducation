@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PresentationViewController;
+use App\Http\Controllers\PresentationViewTimeController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
@@ -87,6 +88,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('view', [ViewController::class, 'store'])->name('view.store');
 });
 Route::post('presentation-view', [PresentationViewController::class, 'store'])->name('presentation-view.store');
+Route::post('presentation-view-time', [PresentationViewTimeController::class, 'store'])
+    ->name('presentation-view-time.store');
 
 Route::post('webhooks/stripe', [StripeController::class, 'webhook'])->name('webhooks.stripe');
 Route::post('error-watch', function () {})->name('error.watch');

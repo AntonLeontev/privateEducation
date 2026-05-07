@@ -14,6 +14,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ViewController;
+use App\Http\Controllers\VisitorController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')
@@ -39,6 +40,8 @@ Route::prefix('admin')
                     ->group(function () {
                         Route::get('/', [AdminController::class, 'fragments'])->name('fragments');
                         Route::get('users', [AdminController::class, 'users'])->name('users');
+                        Route::get('visitors', [VisitorController::class, 'index'])->name('visitors');
+                        Route::get('visitors/{visitor}', [VisitorController::class, 'show'])->name('visitors.show');
                         Route::get('files', [AdminController::class, 'files'])->name('files');
                         Route::get('prices', [AdminController::class, 'prices'])->name('prices');
                         Route::get('deactivation', [AdminController::class, 'deactivation'])->name('deactivation');
