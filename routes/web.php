@@ -10,6 +10,7 @@ use App\Http\Controllers\PresentationViewTimeController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
+use App\Http\Middleware\TrackVisitor;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -36,7 +37,7 @@ if (app()->isLocal()) {
 }
 
 Route::prefix(LaravelLocalization::setLocale())
-    ->middleware(['localeSessionRedirect', 'localizationRedirect'])
+    ->middleware(['localeSessionRedirect', 'localizationRedirect', TrackVisitor::class])
     ->group(static function () {
         Route::get('/', HomeController::class)->name('home');
         Route::view('about', 'about')->name('about');
