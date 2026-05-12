@@ -33,7 +33,7 @@ class VisitorController extends Controller
             })
             ->orderByDesc('last_visit_at')
             ->orderByDesc('id')
-            ->cursorPaginate();
+            ->cursorPaginate(50);
 
         return VisitorResource::collection($visitors);
     }
