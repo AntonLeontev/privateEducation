@@ -7,7 +7,7 @@
 	<header class="my-4 header">
 		<div class="container container-header">
 			<span class="!mb-0 mr-10 player__title__bg">Посетители</span>
-			<form class="flex justify-between p-1 mb-2 gap-x-2" x-ref="form">
+			<form class="flex gap-x-2 justify-between p-1 mb-2" x-ref="form">
 				<select
 					class="bg-transparent border cursor-pointer rounded-none px-1 py-2 text-[16px] font-bold focus:outline-none"
 					name="period"
@@ -53,30 +53,26 @@
 	</header>
 
 	<div class="container">
-		<div class="relative w-full max-h-screen text-md">
-			<div class="text-lg text-black max-h-[calc(100vh-91px-58px)] overflow-y-auto">
+		<div class="relative w-full text-md">
+			<div class="text-lg text-black">
 				<template x-for="visitor in visitors">
 					<x-visitor />
 				</template>
 			</div>
 		</div>
 
-		<nav role="navigation" aria-label="Pagination Navigation" class="flex justify-start pt-3 pb-4 gap-x-5" x-show="paginatorMeta?.next_cursor || paginatorMeta?.prev_cursor" x-cloak>
-			<span class="text-gray-400" x-show="paginatorMeta?.prev_cursor === null">
-				{!! __('pagination.previous') !!}
-			</span>
-			<button class="" x-show="paginatorMeta?.prev_cursor" @click="prevPage">
-				{!! __('pagination.previous') !!}
+		<div class="flex gap-x-3 justify-start items-center pt-3 pb-4" x-show="paginatorMeta?.next_cursor || loadingPagination" x-cloak>
+			<button
+				type="button"
+				class="px-3 py-2 text-[16px] font-bold border transition hover:bg-primary hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+				x-show="paginatorMeta?.next_cursor"
+				:disabled="loadingPagination"
+				@click="loadMore"
+			>
+				Загрузить ещё
 			</button>
-
-			<button class="" x-show="paginatorMeta?.next_cursor" @click="nextPage">
-				{!! __('pagination.next') !!}
-			</button>
-			<span class="text-gray-400" x-show="paginatorMeta?.next_cursor === null">
-				{!! __('pagination.next') !!}
-			</span>
-			<span class="ml-1 loading loading-dots loading-sm" x-show="loadingPagination" x-cloak></span>
-		</nav>
+			<span class="loading loading-dots loading-sm" x-show="loadingPagination" x-cloak></span>
+		</div>
 	</div>
 </div>
 
@@ -86,56 +82,61 @@
 			visitors: [],
 			period: 'today',
 			paginatorMeta: null,
-			cursor: null,
 			loadingPagination: false,
 			loadingFilter: false,
 
 			init() {
-				this.$watch('cursor', () => this.update());
-				this.update()
+				this.reloadFromStart();
 			},
 			changePeriod() {
 				this.period = this.$refs.select.value;
-				this.cursor = null;
 
 				if (this.period === 'custom' && (this.$refs.start.value === '' || this.$refs.end.value === '')) {
 					return;
 				}
 
-				this.update();
+				this.reloadFromStart();
 			},
-			update() {
-				this.loadingFilter = true
+			reloadFromStart() {
+				this.fetchVisitors({ append: false });
+			},
+			loadMore() {
+				if (!this.paginatorMeta?.next_cursor || this.loadingPagination) {
+					return;
+				}
+				this.fetchVisitors({ append: true });
+			},
+			fetchVisitors({ append }) {
+				if (append) {
+					this.loadingPagination = true;
+				} else {
+					this.loadingFilter = true;
+				}
+
+				const cursor = append ? this.paginatorMeta.next_cursor : null;
 
 				axios
 					.get(route('admin.visitors'), {
 						params: {
-							cursor: this.cursor,
+							cursor,
 							period: this.period,
 							start: this.$refs.start.value,
 							end: this.$refs.end.value,
 						}
 					})
 					.then(response => {
-						this.visitors = response.data.data
-						this.paginatorMeta = response.data.meta
+						const chunk = response.data.data;
+						this.visitors = append ? [...this.visitors, ...chunk] : chunk;
+						this.paginatorMeta = response.data.meta;
 					})
 					.catch(error => {
 						alert('Ошибка. Перезагрузите страницу');
 					})
 					.finally(() => {
-						this.loadingPagination = false
-						this.loadingFilter = false
-						this.$dispatch('visitors-update')
-					})
-			},
-			prevPage() {
-				this.loadingPagination = true
-				this.cursor = this.paginatorMeta.prev_cursor
-			},
-			nextPage() {
-				this.loadingPagination = true
-				this.cursor = this.paginatorMeta.next_cursor
+						this.loadingPagination = false;
+						this.loadingFilter = false;
+						this.$dispatch('visitors-update');
+					});
 			},
 		}))
 	})
