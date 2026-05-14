@@ -35,6 +35,19 @@
                 this.loading = false
             })
     },
+    formatDayIso(iso) {
+        if (!iso) {
+            return '—'
+        }
+
+        const parts = String(iso).split('-')
+
+        if (parts.length !== 3) {
+            return iso
+        }
+
+        return `${parts[2]}.${parts[1]}.${parts[0]}`
+    },
     formatSeconds(seconds) {
         if (seconds === null || seconds === undefined) {
             return '0:00'
@@ -118,6 +131,73 @@
                             <div class="break-all text-sm" x-text="visitor.referrer_first ?? '—'"></div>
                             <div class="break-all text-sm" x-text="visitor.referrer_last ?? '—'"></div>
                         </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <div class="text-sm opacity-60">По визитам</div>
+                        <template x-if="details?.visits?.length">
+                            <div class="mt-2 grid gap-3">
+                                <template x-for="v in details.visits" :key="v.id">
+                                    <div class="rounded-lg bg-white/10 px-3 py-2">
+                                        <div class="text-xs opacity-60"
+                                             x-text="'Визит #' + v.id + ' · ' + (v.started_at ?? '—')"></div>
+                                        <div class="mt-2 flex flex-wrap gap-4 text-xs">
+                                            <div>
+                                                <div class="opacity-60">UTM</div>
+                                                <div x-text="v.utm?.source ?? '—'"></div>
+                                                <div x-text="v.utm?.medium ?? '—'"></div>
+                                                <div x-text="v.utm?.campaign ?? '—'"></div>
+                                            </div>
+                                            <div class="min-w-[120px]">
+                                                <div class="opacity-60">Referrer</div>
+                                                <div class="break-all" x-text="v.referrer ?? '—'"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2 space-y-1">
+                                            <template x-for="f in (v.fragments || [])" :key="v.id + '-' + f.fragment_id">
+                                                <div class="flex justify-between text-xs">
+                                                    <span x-text="'Фрагмент №' + f.fragment_id"></span>
+                                                    <span>
+                                                        <span x-text="'А: ' + formatSeconds(f.active_seconds)"></span>
+                                                        <span class="ml-2" x-text="'П: ' + formatSeconds(f.passive_seconds)"></span>
+                                                    </span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                        <template x-if="details && (!details.visits || details.visits.length === 0)">
+                            <div class="mt-1 text-sm text-secondary">Нет данных по визитам.</div>
+                        </template>
+                    </div>
+
+                    <div class="mt-6">
+                        <div class="text-sm opacity-60">По дням</div>
+                        <template x-if="details?.by_day?.length">
+                            <div class="mt-2 grid gap-3">
+                                <template x-for="(d, idx) in details.by_day" :key="d.day + '-' + idx">
+                                    <div class="rounded-lg bg-white/10 px-3 py-2">
+                                        <div class="text-xs font-medium opacity-80" x-text="formatDayIso(d.day)"></div>
+                                        <div class="mt-2 space-y-1">
+                                            <template x-for="f in (d.fragments || [])" :key="d.day + '-' + f.fragment_id">
+                                                <div class="flex justify-between text-xs">
+                                                    <span x-text="'Фрагмент №' + f.fragment_id"></span>
+                                                    <span>
+                                                        <span x-text="'А: ' + formatSeconds(f.active_seconds)"></span>
+                                                        <span class="ml-2" x-text="'П: ' + formatSeconds(f.passive_seconds)"></span>
+                                                    </span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                        <template x-if="details && (!details.by_day || details.by_day.length === 0)">
+                            <div class="mt-1 text-sm text-secondary">Нет данных по дням.</div>
+                        </template>
                     </div>
 
                     <div class="mt-4">

@@ -172,6 +172,15 @@ class TrackVisitor
 
     private function syncVisit(Request $request, Visitor $visitor): void
     {
+        if (! $visitor->id) {
+            Log::channel('telegram')->warning('TrackVisitor: visitor without id before syncing visit', [
+                'visitor_uuid' => $visitor->uuid ?? null,
+                'session_id' => $request->session()->getId(),
+            ]);
+
+            return;
+        }
+
         $sessionId = $request->session()->getId();
 
         $visit = Visit::firstOrCreate([
@@ -179,10 +188,70 @@ class TrackVisitor
             'session_id' => $sessionId,
         ]);
 
+        $utm = $this->extractUtm($request);
+        $hasUtm = $this->hasUtm($utm);
+        $referrerDomain = $this->extractReferrerDomain($request->headers->get('referer'));
+
         if ($visit->wasRecentlyCreated) {
+            $this->snapshotVisitAttribution($visit, $utm, $referrerDomain);
+            $visit->save();
             $visitor->visits_count = ($visitor->visits_count ?? 0) + 1;
             $visitor->save();
+
+            return;
         }
+
+        if ($hasUtm || $referrerDomain) {
+            $this->mergeVisitAttributionFromRequest($visit, $utm, $referrerDomain);
+            if ($visit->isDirty()) {
+                $visit->save();
+            }
+        }
+    }
+
+    /**
+     * Полный снимок UTM/referrer при создании визита.
+     */
+    private function snapshotVisitAttribution(Visit $visit, array $utm, ?string $referrerDomain): void
+    {
+        foreach ($this->utmColumnMap() as $utmKey => $column) {
+            $value = $utm[$utmKey] ?? null;
+            $visit->setAttribute($column, ($value !== null && $value !== '') ? $value : null);
+        }
+        $visit->referrer = $referrerDomain;
+    }
+
+    /**
+     * Последнее непустое значение в рамках сессии (GET под TrackVisitor).
+     */
+    private function mergeVisitAttributionFromRequest(Visit $visit, array $utm, ?string $referrerDomain): void
+    {
+        if ($this->hasUtm($utm)) {
+            foreach ($this->utmColumnMap() as $utmKey => $column) {
+                $value = $utm[$utmKey] ?? null;
+                if ($value !== null && $value !== '') {
+                    $visit->setAttribute($column, $value);
+                }
+            }
+        }
+
+        if ($referrerDomain) {
+            $visit->referrer = $referrerDomain;
+        }
+    }
+
+    /**
+     * @return array<string, string> utm query key => column on visits
+     */
+    private function utmColumnMap(): array
+    {
+        return [
+            'source' => 'utm_source',
+            'medium' => 'utm_medium',
+            'campaign' => 'utm_campaign',
+            'term' => 'utm_term',
+            'content' => 'utm_content',
+        ];
     }
 
     private function extractUtm(Request $request): array

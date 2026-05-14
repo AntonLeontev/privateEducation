@@ -12,6 +12,7 @@ class PresentationViewTime extends Model
 
     protected $fillable = [
         'visitor_id',
+        'visit_id',
         'presentation_id',
         'seconds',
         'is_passive',
@@ -24,6 +25,11 @@ class PresentationViewTime extends Model
     public function visitor(): BelongsTo
     {
         return $this->belongsTo(Visitor::class);
+    }
+
+    public function visit(): BelongsTo
+    {
+        return $this->belongsTo(Visit::class);
     }
 
     public function presentation(): BelongsTo

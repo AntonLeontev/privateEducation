@@ -55,6 +55,16 @@ x-data="{
 			</li>
 		@endif
 
+		@if (Route::has('admin.visitor-statistics'))
+			<li class="transition duration-300 border border-t-0 border-x-0 right-menu__item border-b-1 @if (Route::is('admin.visitor-statistics')) !bg-[#50657c] @endif">
+				<a class="right-menu__link" href="{{ route('admin.visitor-statistics') }}">
+					<span class="right-menu-link__wrapper">
+						<span class="right-menu-link__text @if (Route::is('admin.visitor-statistics')) !text-primary @endif">Статистика посетителей</span>
+					</span>
+				</a>
+			</li>
+		@endif
+
 		@if (Route::has('admin.users.subscriptions'))
 			<li class="transition duration-300 right-menu__item border border-t-0 border-x-0 @if (Route::is('admin.users.subscriptions')) !bg-[#50657c] @endif">
 				<a class="right-menu__link" href="{{ route('admin.users.subscriptions') }}">
