@@ -7,7 +7,7 @@
 	<header class="my-4 header">
 		<div class="container container-header">
 			<span class="!mb-0 mr-10 player__title__bg">Статистика посетителей</span>
-			<form class="flex flex-wrap justify-between p-1 mb-2 gap-x-2 gap-y-2" x-ref="form">
+			<form class="flex justify-between p-1 mb-2 gap-x-2 flex-wrap gap-y-2" x-ref="form">
 				<select
 					class="bg-transparent border cursor-pointer rounded-none px-1 py-2 text-[16px] font-bold focus:outline-none"
 					name="period"
@@ -66,55 +66,62 @@
 	</header>
 
 	<div class="container">
-		<span class="ml-1 loading loading-dots loading-sm" x-show="loadingFilter" x-cloak></span>
+		<div class="relative w-full max-h-screen text-md">
+			<div class="text-lg text-black max-h-[calc(100vh-91px-58px)] overflow-y-auto space-y-6">
+				<section>
+					<div class="flex gap-2 items-center mb-2">
+						<span class="text-sm opacity-60">Время по фрагментам</span>
+						<span class="loading loading-dots loading-sm" x-show="loadingFilter" x-cloak></span>
+					</div>
+					<div class="overflow-hidden rounded-xl bg-white/20">
+						<div class="p-4 text-secondary">
+							<template x-if="fragments.length === 0">
+								<div class="px-3 py-2 rounded-lg bg-white/10 text-sm">Нет данных за выбранный период</div>
+							</template>
+							<template x-if="fragments.length > 0">
+								<div class="grid gap-2">
+									<div class="flex flex-wrap gap-x-6 gap-y-1 px-3 py-2 rounded-lg bg-white/10 text-sm font-bold">
+										<div class="min-w-[6rem] flex-1">Фрагмент</div>
+										<div class="min-w-[5rem]">Активно</div>
+										<div class="min-w-[5rem]">Пассивно</div>
+									</div>
+									<template x-for="row in fragments" :key="row.fragment_id">
+										<div class="flex flex-wrap gap-x-6 gap-y-1 px-3 py-2 rounded-lg bg-white/10 text-sm">
+											<div class="min-w-[6rem] flex-1 font-bold" x-text="row.fragment_id"></div>
+											<div class="min-w-[5rem]" x-text="formatDuration(row.active_seconds)"></div>
+											<div class="min-w-[5rem]" x-text="formatDuration(row.passive_seconds)"></div>
+										</div>
+									</template>
+								</div>
+							</template>
+						</div>
+					</div>
+				</section>
 
-		<div class="relative w-full max-h-screen text-md mt-2">
-			<h2 class="text-lg font-bold mb-2">Время по фрагментам</h2>
-			<div class="text-lg text-black max-h-[40vh] overflow-y-auto border border-gray-300">
-				<table class="w-full text-left border-collapse">
-					<thead>
-						<tr class="border-b bg-gray-100">
-							<th class="p-2">Фрагмент</th>
-							<th class="p-2">Активно</th>
-							<th class="p-2">Пассивно</th>
-						</tr>
-					</thead>
-					<tbody>
-						<template x-if="fragments.length === 0">
-							<tr><td class="p-2 text-gray-500" colspan="3">Нет данных за выбранный период</td></tr>
-						</template>
-						<template x-for="row in fragments" :key="row.fragment_id">
-							<tr class="border-b">
-								<td class="p-2" x-text="row.fragment_id"></td>
-								<td class="p-2" x-text="formatDuration(row.active_seconds)"></td>
-								<td class="p-2" x-text="formatDuration(row.passive_seconds)"></td>
-							</tr>
-						</template>
-					</tbody>
-				</table>
-			</div>
-
-			<h2 class="text-lg font-bold mb-2 mt-6">Визиты по UTM source</h2>
-			<div class="text-lg text-black max-h-[40vh] overflow-y-auto border border-gray-300">
-				<table class="w-full text-left border-collapse">
-					<thead>
-						<tr class="border-b bg-gray-100">
-							<th class="p-2">Источник</th>
-							<th class="p-2">Визитов</th>
-						</tr>
-					</thead>
-					<tbody>
-						<template x-if="utmBreakdown.length === 0">
-							<tr><td class="p-2 text-gray-500" colspan="2">Нет данных за выбранный период</td></tr>
-						</template>
-						<template x-for="row in utmBreakdown" :key="row.value">
-							<tr class="border-b">
-								<td class="p-2" x-text="row.label"></td>
-								<td class="p-2" x-text="row.visits_count"></td>
-							</tr>
-						</template>
-					</tbody>
-				</table>
+				<section>
+					<div class="text-sm opacity-60 mb-2">Визиты по UTM source</div>
+					<div class="overflow-hidden rounded-xl bg-white/20">
+						<div class="p-4 text-secondary">
+							<template x-if="utmBreakdown.length === 0">
+								<div class="px-3 py-2 rounded-lg bg-white/10 text-sm">Нет данных за выбранный период</div>
+							</template>
+							<template x-if="utmBreakdown.length > 0">
+								<div class="grid gap-2">
+									<div class="flex flex-wrap gap-x-6 gap-y-1 px-3 py-2 rounded-lg bg-white/10 text-sm font-bold">
+										<div class="min-w-[8rem] flex-1">Источник</div>
+										<div class="min-w-[5rem]">Визитов</div>
+									</div>
+									<template x-for="row in utmBreakdown" :key="row.value">
+										<div class="flex flex-wrap gap-x-6 gap-y-1 px-3 py-2 rounded-lg bg-white/10 text-sm">
+											<div class="min-w-[8rem] flex-1 break-all" x-text="row.label"></div>
+											<div class="min-w-[5rem] font-bold" x-text="row.visits_count"></div>
+										</div>
+									</template>
+								</div>
+							</template>
+						</div>
+					</div>
+				</section>
 			</div>
 		</div>
 	</div>

@@ -218,6 +218,10 @@ class VisitorController extends Controller
             ];
         }
 
-        return $payload;
+        return collect($payload)
+            ->sortByDesc('day')
+            ->take(3)
+            ->values()
+            ->all();
     }
 }
