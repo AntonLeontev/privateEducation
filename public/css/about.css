@@ -427,7 +427,7 @@ html, body {
 .drawer {
   bottom: 0;
   top: 0;
-  position: absolute;
+  position: absolute !important;
   z-index: 999;
   width: 370px;
   transition: right 0.3s ease-in-out;

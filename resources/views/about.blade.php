@@ -5,6 +5,7 @@
 
 @section('css')
     @vite(['resources/css/about.css'])
+    {{-- @vite(['resources/css/tailwind.css']) --}}
 @endsection
 
 @section('content')
@@ -115,34 +116,56 @@
 									@endforeach
 
                                     <p class="text">{!! __('about.45') !!}</p>
+                                    <style>
+                                        .\!mt-0 {
+                                            margin-top: 0 !important;
+                                        }
+                                        .ms-4 {
+                                            margin-inline-start: 1rem;
+                                        }
+                                        .list-disc {
+                                            list-style-type: disc;
+                                        }
+                                        .mt-2 {
+                                            margin-top: 0.5rem;
+                                        }
+                                        @media (min-width: 768px) {
+                                            .md\:ms-12 {
+                                                margin-inline-start: 3rem;
+                                            }
+                                            .md\:mt-4 {
+                                                margin-top: 1rem;
+                                            }
+                                        }
+                                    </style>
                                     <ol class="!mt-0 text ms-4 md:ms-12 list-disc">
-                                        <li class="mt-4">{{ __('about.46') }}</li>
-                                        <li class="mt-4">{{ __('about.47') }}</li>
-                                        <li class="mt-4">{{ __('about.48') }}</li>
-                                        <li class="mt-4">{{ __('about.49') }}</li>
-                                        <li class="mt-4">{{ __('about.50') }}</li>
-                                        <li class="mt-4">{{ __('about.51') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.46') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.47') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.48') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.49') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.50') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.51') }}</li>
                                     </ol>
 
                                     <p class="text">{!! __('about.53') !!}</p>
                                     <ul class="!mt-0 text ms-4 md:ms-12">
-                                        <li class="mt-4 list-disc">{{ __('about.54') }}</li>
-                                        <li class="mt-4 list-disc">{{ __('about.55') }}</li>
-                                        <li class="mt-4 list-disc">{{ __('about.56') }}</li>
-                                        <li class="mt-4 list-disc">{{ __('about.57') }}</li>
-                                        <li class="mt-4 list-disc">{{ __('about.58') }}</li>
-                                        <li class="mt-4 list-disc">{{ __('about.59') }}</li>
+                                        <li class="mt-2 list-disc md:mt-4">{{ __('about.54') }}</li>
+                                        <li class="mt-2 list-disc md:mt-4">{{ __('about.55') }}</li>
+                                        <li class="mt-2 list-disc md:mt-4">{{ __('about.56') }}</li>
+                                        <li class="mt-2 list-disc md:mt-4">{{ __('about.57') }}</li>
+                                        <li class="mt-2 list-disc md:mt-4">{{ __('about.58') }}</li>
+                                        <li class="mt-2 list-disc md:mt-4">{{ __('about.59') }}</li>
                                     </ul>
 
                                     <p class="text">{!! __('about.60') !!}</p>
                                     <ol class="!mt-0 text ms-4 md:ms-12 list-disc">
-                                        <li class="mt-4">{{ __('about.61') }}</li>
-                                        <li class="mt-4">{{ __('about.62') }}</li>
-                                        <li class="mt-4">{{ __('about.63') }}</li>
-                                        <li class="mt-4">{{ __('about.64') }}</li>
-                                        <li class="mt-4">{{ __('about.65') }}</li>
-                                        <li class="mt-4">{{ __('about.66') }}</li>
-                                        <li class="mt-4">{{ __('about.67') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.61') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.62') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.63') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.64') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.65') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.66') }}</li>
+                                        <li class="mt-2 md:mt-4">{{ __('about.67') }}</li>
                                     </ol>
 								</div>
                             </div>

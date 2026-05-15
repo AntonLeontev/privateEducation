@@ -812,11 +812,11 @@ html, body {
 .drawer {
   bottom: 0;
   top: 0;
-  position: absolute;
+  position: absolute !important;
   z-index: 1000;
-  width: 370px;
+  width: 370px !important;
   transition: right 0.3s ease-in-out;
-  display: flex;
+  display: flex!important;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -901,7 +901,7 @@ html, body {
 @media screen and (max-width: 680px) and (orientation: portrait) {
   .drawer {
     width: 56.154vw;
-    position: fixed;
+    position: fixed !important;
     bottom: auto;
   }
   .drawer__top {
@@ -1125,7 +1125,7 @@ button {
 }
 @media (max-width: 1024px) {
 	.text {
-		font-size: 1.8vw;
+		font-size: clamp(0.75rem, 2.5vw, 2rem);
 	}
 	.highlight {
 		padding: 1vw 2.5vw;
