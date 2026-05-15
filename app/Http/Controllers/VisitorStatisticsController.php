@@ -94,11 +94,16 @@ class VisitorStatisticsController extends Controller
      */
     private function queryUtmBreakdown(Carbon $from, Carbon $to): array
     {
-        $rows = DB::table('visits')
+        // Subquery avoids ONLY_FULL_GROUP_BY rejecting TRIM(utm_source) vs GROUP BY expression.
+        $utmNormSub = DB::table('visits')
             ->whereBetween('created_at', [$from, $to])
-            ->selectRaw("NULLIF(TRIM(utm_source), '') AS norm_key")
+            ->selectRaw("NULLIF(TRIM(utm_source), '') AS norm_key");
+
+        $rows = DB::query()
+            ->fromSub($utmNormSub, 'utm_norm')
+            ->select('norm_key')
             ->selectRaw('COUNT(*) AS visits_count')
-            ->groupByRaw("NULLIF(TRIM(utm_source), '')")
+            ->groupBy('norm_key')
             ->get();
 
         $out = [];
