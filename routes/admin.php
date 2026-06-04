@@ -42,7 +42,6 @@ Route::prefix('admin')
                         Route::get('/', [AdminController::class, 'fragments'])->name('fragments');
                         Route::get('users', [AdminController::class, 'users'])->name('users');
                         Route::get('visitors', [VisitorController::class, 'index'])->name('visitors');
-                        Route::get('visitors/{visitor}', [VisitorController::class, 'show'])->name('visitors.show');
                         Route::get('visitor-statistics', [VisitorStatisticsController::class, 'index'])->name('visitor-statistics');
                         Route::get('files', [AdminController::class, 'files'])->name('files');
                         Route::get('prices', [AdminController::class, 'prices'])->name('prices');

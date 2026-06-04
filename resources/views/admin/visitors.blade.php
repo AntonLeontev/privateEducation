@@ -55,7 +55,7 @@
 	<div class="container">
 		<div class="relative w-full text-md">
 			<div class="text-lg text-black">
-				<template x-for="visitor in visitors">
+				<template x-for="visit in visits">
 					<x-visitor />
 				</template>
 			</div>
@@ -79,7 +79,7 @@
 <script>
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('visitors', () => ({
-			visitors: [],
+			visits: [],
 			period: 'today',
 			paginatorMeta: null,
 			loadingPagination: false,
@@ -126,7 +126,7 @@
 					})
 					.then(response => {
 						const chunk = response.data.data;
-						this.visitors = append ? [...this.visitors, ...chunk] : chunk;
+						this.visits = append ? [...this.visits, ...chunk] : chunk;
 						this.paginatorMeta = response.data.meta;
 					})
 					.catch(error => {
