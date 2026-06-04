@@ -12,6 +12,7 @@ class EncryptCookies extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        // Set from the browser (visit-session.blade.php), not via Cookie::queue()
+        'visit_session_id',
     ];
 }

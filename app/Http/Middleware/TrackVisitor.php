@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Jobs\ResolveVisitorCountry;
-use App\Models\Visit;
 use App\Models\Visitor;
 use App\Services\DeviceTypeResolver;
 use Closure;
@@ -30,13 +29,15 @@ class TrackVisitor
         }
 
         try {
-            $shouldSetCookie = false;
-            $visitor = $this->resolveVisitor($request, $shouldSetCookie);
-            $this->syncVisit($request, $visitor);
+            $shouldSetVisitorCookie = false;
+            $visitor = $this->resolveVisitor($request, $shouldSetVisitorCookie);
 
-            if ($shouldSetCookie) {
-                $cookie = Cookie::make('visitor_uuid', $visitor->uuid, 60 * 24 * 365);
-                $response->headers->setCookie($cookie);
+            if ($shouldSetVisitorCookie) {
+                $response->headers->setCookie($this->makeVisitorCookie($visitor->uuid));
+            }
+
+            if (config('app.debug')) {
+                $this->appendDebugConsoleLog($response, $visitor);
             }
         } catch (Throwable $exception) {
             Log::channel('telegram')->warning('TrackVisitor: failed to track visitor', [
@@ -55,10 +56,6 @@ class TrackVisitor
         }
 
         if ($request->expectsJson() || $request->ajax()) {
-            return true;
-        }
-
-        if ($response->isRedirection()) {
             return true;
         }
 
@@ -163,95 +160,42 @@ class TrackVisitor
         $host = parse_url($referrer, PHP_URL_HOST);
 
         if (! $host) {
-            // Some referrers may come without protocol, parse them as host/path.
             $host = parse_url('//'.ltrim($referrer, '/'), PHP_URL_HOST);
         }
 
         return $host ?: null;
     }
 
-    private function syncVisit(Request $request, Visitor $visitor): void
+    private function appendDebugConsoleLog(Response $response, Visitor $visitor): void
     {
-        if (! $visitor->id) {
-            Log::channel('telegram')->warning('TrackVisitor: visitor without id before syncing visit', [
-                'visitor_uuid' => $visitor->uuid ?? null,
-                'session_id' => $request->session()->getId(),
-            ]);
-
+        if (! $this->isHtmlResponse($response)) {
             return;
         }
 
-        $sessionId = $request->session()->getId();
-
-        $visit = Visit::firstOrCreate([
-            'visitor_id' => $visitor->id,
-            'session_id' => $sessionId,
-        ]);
-
-        $utm = $this->extractUtm($request);
-        $hasUtm = $this->hasUtm($utm);
-        $referrerDomain = $this->extractReferrerDomain($request->headers->get('referer'));
-
-        if ($visit->wasRecentlyCreated) {
-            $this->snapshotVisitAttribution($visit, $utm, $referrerDomain);
-            $visit->save();
-            $visitor->visits_count = ($visitor->visits_count ?? 0) + 1;
-            $visitor->save();
-
+        $content = $response->getContent();
+        if ($content === false || $content === '') {
             return;
         }
 
-        if ($hasUtm || $referrerDomain) {
-            $this->mergeVisitAttributionFromRequest($visit, $utm, $referrerDomain);
-            if ($visit->isDirty()) {
-                $visit->save();
-            }
+        $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE;
+
+        $script = sprintf(
+            '<script>console.log("Visitor", %s);</script>',
+            json_encode($visitor->toArray(), $jsonFlags)
+        );
+
+        if (str_contains($content, '</body>')) {
+            $content = preg_replace('/<\/body>/i', $script.'</body>', $content, 1);
+        } else {
+            $content .= $script;
         }
+
+        $response->setContent($content);
     }
 
-    /**
-     * Полный снимок UTM/referrer при создании визита.
-     */
-    private function snapshotVisitAttribution(Visit $visit, array $utm, ?string $referrerDomain): void
+    public static function makeVisitorCookie(string $uuid): \Symfony\Component\HttpFoundation\Cookie
     {
-        foreach ($this->utmColumnMap() as $utmKey => $column) {
-            $value = $utm[$utmKey] ?? null;
-            $visit->setAttribute($column, ($value !== null && $value !== '') ? $value : null);
-        }
-        $visit->referrer = $referrerDomain;
-    }
-
-    /**
-     * Последнее непустое значение в рамках сессии (GET под TrackVisitor).
-     */
-    private function mergeVisitAttributionFromRequest(Visit $visit, array $utm, ?string $referrerDomain): void
-    {
-        if ($this->hasUtm($utm)) {
-            foreach ($this->utmColumnMap() as $utmKey => $column) {
-                $value = $utm[$utmKey] ?? null;
-                if ($value !== null && $value !== '') {
-                    $visit->setAttribute($column, $value);
-                }
-            }
-        }
-
-        if ($referrerDomain) {
-            $visit->referrer = $referrerDomain;
-        }
-    }
-
-    /**
-     * @return array<string, string> utm query key => column on visits
-     */
-    private function utmColumnMap(): array
-    {
-        return [
-            'source' => 'utm_source',
-            'medium' => 'utm_medium',
-            'campaign' => 'utm_campaign',
-            'term' => 'utm_term',
-            'content' => 'utm_content',
-        ];
+        return Cookie::make('visitor_uuid', $uuid, 60 * 24 * 365, '/', null, null, true, false, 'lax');
     }
 
     private function extractUtm(Request $request): array

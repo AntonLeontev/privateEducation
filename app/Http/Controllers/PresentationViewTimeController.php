@@ -43,10 +43,19 @@ class PresentationViewTimeController extends Controller
             return response()->json(['message' => 'Visitor not found'], 404);
         }
 
-        $sessionId = $request->session()->getId();
+        $visitSessionId = $request->cookie('visit_session_id');
+
+        if (! $visitSessionId) {
+            Log::channel('telegram')->warning('PresentationViewTime: missing visit session cookie', [
+                'visitor_id' => $visitor->id,
+            ]);
+
+            return response()->json(['message' => 'Visit not found'], 404);
+        }
+
         $visit = Visit::query()
             ->where('visitor_id', '=', $visitor->id, 'and')
-            ->where('session_id', '=', $sessionId, 'and')
+            ->where('session_id', '=', $visitSessionId, 'and')
             ->first();
 
         $payload = $validator->validated();
@@ -54,7 +63,7 @@ class PresentationViewTimeController extends Controller
         if (! $visit) {
             Log::channel('telegram')->warning('PresentationViewTime: visit not found for session', [
                 'visitor_id' => $visitor->id,
-                'session_id' => $sessionId,
+                'visit_session_id' => $visitSessionId,
                 'presentation_id' => $payload['presentation_id'],
             ]);
 
@@ -80,7 +89,7 @@ class PresentationViewTimeController extends Controller
         } catch (Throwable $exception) {
             Log::channel('telegram')->warning('PresentationViewTime: failed to save', [
                 'visitor_id' => $visitor->id,
-                'session_id' => $sessionId,
+                'visit_session_id' => $visitSessionId,
                 'visit_id' => $visit->id,
                 'presentation_id' => $payload['presentation_id'],
                 'is_passive' => $payload['is_passive'],

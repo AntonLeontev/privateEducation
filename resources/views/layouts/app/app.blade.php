@@ -44,6 +44,8 @@
 
 	@yield('content')
 
+	@include('partials.visit-session')
+
 </body>
 </html>
 

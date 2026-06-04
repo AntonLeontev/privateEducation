@@ -10,6 +10,7 @@ use App\Http\Controllers\PresentationViewTimeController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
+use App\Http\Controllers\VisitSessionController;
 use App\Http\Middleware\TrackVisitor;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Route;
@@ -89,6 +90,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('view', [ViewController::class, 'store'])->name('view.store');
 });
 Route::post('presentation-view', [PresentationViewController::class, 'store'])->name('presentation-view.store');
+Route::get('visit-session/sync', [VisitSessionController::class, 'sync'])
+    ->name('visit-session.sync');
 Route::post('presentation-view-time', [PresentationViewTimeController::class, 'store'])
     ->name('presentation-view-time.store');
 
