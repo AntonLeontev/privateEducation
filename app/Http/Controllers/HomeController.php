@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fragment;
+use App\Services\PlaytimeParser;
 
 class HomeController extends Controller
 {
-    public function __invoke()
+    public function __invoke(PlaytimeParser $playtimeParser)
     {
         $fragments = Fragment::all(['id', 'title_'.loc(), 'is_active']);
 
@@ -15,6 +16,15 @@ class HomeController extends Controller
             'audio' => fn ($q) => $q->select(['id', 'price', 'fragment_id'])->with('subscription'),
             'video' => fn ($q) => $q->select(['id', 'price', 'fragment_id'])->with('subscription'),
         ]);
+
+        $fragments->each(function (Fragment $fragment) use ($playtimeParser) {
+            if ($fragment->presentation) {
+                $fragment->presentation->setAttribute(
+                    'duration_seconds',
+                    $playtimeParser->durationForPresentation($fragment->presentation)
+                );
+            }
+        });
 
         return response()->view('home', compact('fragments'))
             ->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0')

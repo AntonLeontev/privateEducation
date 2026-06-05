@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Presentation;
+use App\Services\PlaytimeParser;
 use App\Support\Traits\WorksWithPeriods;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,6 +18,8 @@ class VisitorStatisticsController extends Controller
     use WorksWithPeriods;
 
     private const UTM_NONE_VALUE = '__none__';
+
+    public function __construct(private readonly PlaytimeParser $playtimeParser) {}
 
     public function index(Request $request): View|JsonResponse
     {
@@ -81,11 +85,20 @@ class VisitorStatisticsController extends Controller
 
         $filtersBase['utm_source'] = $appliedUtm;
 
+        $fragmentId = $request->query('fragment_id');
+        $timeline = null;
+        if (is_numeric($fragmentId)) {
+            $timeline = $this->queryAggregateTimeline($fromBound, $toBound, $appliedUtm, (int) $fragmentId);
+        }
+
         return [
             'fragments' => $this->queryFragments($fromBound, $toBound, $appliedUtm),
+            'timeline' => $timeline,
             'utm_breakdown' => $utmBreakdown,
             'utm_options' => $this->sortUtmOptions($utmBreakdown),
-            'filters_applied' => $filtersBase,
+            'filters_applied' => array_merge($filtersBase, [
+                'fragment_id' => is_numeric($fragmentId) ? (int) $fragmentId : null,
+            ]),
         ];
     }
 
@@ -125,14 +138,14 @@ class VisitorStatisticsController extends Controller
      */
     private function queryFragments(Carbon $from, Carbon $to, ?string $appliedUtm): array
     {
-        $query = DB::table('presentation_view_times')
-            ->join('visits', 'presentation_view_times.visit_id', '=', 'visits.id')
-            ->join('presentations', 'presentation_view_times.presentation_id', '=', 'presentations.id')
+        $query = DB::table('presentation_view_second_stats')
+            ->join('visits', 'presentation_view_second_stats.visit_id', '=', 'visits.id')
+            ->join('presentations', 'presentation_view_second_stats.presentation_id', '=', 'presentations.id')
             ->whereBetween('visits.created_at', [$from, $to])
             ->select([
                 'presentations.fragment_id',
-                DB::raw('SUM(CASE WHEN presentation_view_times.is_passive = 0 THEN presentation_view_times.seconds ELSE 0 END) AS active_seconds'),
-                DB::raw('SUM(CASE WHEN presentation_view_times.is_passive = 1 THEN presentation_view_times.seconds ELSE 0 END) AS passive_seconds'),
+                DB::raw('SUM(CASE WHEN presentation_view_second_stats.is_passive = 0 THEN presentation_view_second_stats.hit_count ELSE 0 END) AS active_seconds'),
+                DB::raw('SUM(CASE WHEN presentation_view_second_stats.is_passive = 1 THEN presentation_view_second_stats.hit_count ELSE 0 END) AS passive_seconds'),
             ])
             ->groupBy('presentations.fragment_id')
             ->orderBy('presentations.fragment_id');
@@ -184,5 +197,62 @@ class VisitorStatisticsController extends Controller
         }
 
         return array_merge($options, $rest);
+    }
+
+    /**
+     * @return array{duration_seconds: int, active: list<array{second_index: int, total_hits: int, visits_reached: int}>, passive: list<array{second_index: int, total_hits: int, visits_reached: int}>}|null
+     */
+    private function queryAggregateTimeline(Carbon $from, Carbon $to, ?string $appliedUtm, int $fragmentId): ?array
+    {
+        $presentation = Presentation::query()
+            ->where('fragment_id', '=', $fragmentId)
+            ->with('media')
+            ->first();
+
+        if (! $presentation) {
+            return null;
+        }
+
+        $query = DB::table('presentation_view_second_stats')
+            ->join('visits', 'presentation_view_second_stats.visit_id', '=', 'visits.id')
+            ->join('presentations', 'presentation_view_second_stats.presentation_id', '=', 'presentations.id')
+            ->whereBetween('visits.created_at', [$from, $to])
+            ->where('presentations.fragment_id', '=', $fragmentId)
+            ->select([
+                'presentation_view_second_stats.second_index',
+                'presentation_view_second_stats.is_passive',
+                DB::raw('SUM(presentation_view_second_stats.hit_count) AS total_hits'),
+                DB::raw('COUNT(DISTINCT presentation_view_second_stats.visit_id) AS visits_reached'),
+            ])
+            ->groupBy('presentation_view_second_stats.second_index', 'presentation_view_second_stats.is_passive')
+            ->orderBy('presentation_view_second_stats.second_index');
+
+        if ($appliedUtm === self::UTM_NONE_VALUE) {
+            $query->whereRaw("NULLIF(TRIM(visits.utm_source), '') IS NULL");
+        } elseif ($appliedUtm !== null && $appliedUtm !== '') {
+            $query->whereRaw("NULLIF(TRIM(visits.utm_source), '') = ?", [$appliedUtm]);
+        }
+
+        $active = [];
+        $passive = [];
+
+        foreach ($query->get() as $row) {
+            $point = [
+                'second_index' => (int) $row->second_index,
+                'total_hits' => (int) $row->total_hits,
+                'visits_reached' => (int) $row->visits_reached,
+            ];
+            if ($row->is_passive) {
+                $passive[] = $point;
+            } else {
+                $active[] = $point;
+            }
+        }
+
+        return [
+            'duration_seconds' => $this->playtimeParser->durationForPresentation($presentation),
+            'active' => $active,
+            'passive' => $passive,
+        ];
     }
 }

@@ -101,13 +101,15 @@
             playingMedia: 'presentation',
 			sound: 'stereo',
 			device: 'notebook',
-			viewTimeActiveSeconds: 0,
-			viewTimePassiveSeconds: 0,
-			viewTimeTimerId: null,
-			viewTimeLastTick: null,
+			viewSecondCountsActive: {},
+			viewSecondCountsPassive: {},
+			viewSecondsLastSec: null,
+			viewSecondsLastUpdate: 0,
+			viewDurationSeconds: 0,
 			viewTimePresentationId: null,
 			viewTimeForcePassive: false,
 			viewTimeHandlersBound: false,
+			viewSecondsThrottleMs: 250,
         
             init() {
                 this.playingFragment = this.fragments[0];
@@ -135,12 +137,12 @@
                         muted: true,
                     });
         
-                    this.player.on('play', () => this.startViewTimer());
-                    this.player.on('pause', () => {
-						this.stopViewTimer()
-						this.flushViewTimes()
+                    this.player.on('timeupdate', () => this.recordViewSecondFromPlayer());
+                    this.player.on('pause', () => this.flushViewSeconds());
+                    this.player.on('ended', () => {
+						this.flushViewSeconds(true);
+						this.playNext();
 					});
-                    this.player.on('ended', () => this.playNext());
 
 					this.player.on('error', () => {
 						if (this.playingMedia === 'presentation') {
@@ -257,12 +259,20 @@
 			},
 			startPlay(mediaType, forcePassive = false) {
 				let sound = this.sound === 'text' ? 'stereo' : this.sound
+				if (this.playingMedia === 'presentation') {
+					this.flushViewSeconds(true)
+				}
 				this.playingMedia = mediaType
 				this.viewTimeForcePassive = forcePassive
-				this.stopViewTimer()
-				this.flushViewTimes()
-				this.resetViewTimes()
-				this.viewTimePresentationId = this.playingFragment?.id
+				this.resetViewSecondCounts()
+				this.viewSecondsLastSec = null
+				if (mediaType === 'presentation') {
+					this.viewDurationSeconds = this.playingFragment?.presentation?.duration_seconds ?? 0
+					this.viewTimePresentationId = this.playingFragment?.id
+				} else {
+					this.viewDurationSeconds = 0
+					this.viewTimePresentationId = null
+				}
 
 				this.player.src({
 					type: this.playingFragment[mediaType].media[0]?.format,
@@ -280,104 +290,106 @@
 						})
 				}
 			},
-			startViewTimer() {
-				if (this.viewTimeTimerId) {
+			recordViewSecondFromPlayer() {
+				if (this.playingMedia !== 'presentation' || !this.viewTimePresentationId || this.player?.paused()) {
 					return
 				}
 
-				console.debug('[FIX] View timer started', {
-					presentationId: this.viewTimePresentationId,
-					forcePassive: this.viewTimeForcePassive,
+				const now = Date.now()
+				if (now - this.viewSecondsLastUpdate < this.viewSecondsThrottleMs) {
+					return
+				}
+				this.viewSecondsLastUpdate = now
+
+				const sec = Math.floor(this.player.currentTime())
+				if (sec < 0) {
+					return
+				}
+
+				if (this.viewDurationSeconds > 0 && sec >= this.viewDurationSeconds) {
+					console.debug('[ViewSeconds] clamp skip', { sec, duration: this.viewDurationSeconds })
+					return
+				}
+
+				if (this.viewSecondsLastSec === sec) {
+					return
+				}
+
+				this.viewSecondsLastSec = sec
+				const map = (this.viewTimeForcePassive || document.hidden)
+					? this.viewSecondCountsPassive
+					: this.viewSecondCountsActive
+				map[sec] = (map[sec] ?? 0) + 1
+
+				console.debug('[ViewSeconds] hit', {
+					sec,
+					passive: this.viewTimeForcePassive || document.hidden,
+					count: map[sec],
 				})
-				this.viewTimeLastTick = Date.now()
-				this.viewTimeTimerId = setInterval(() => {
-					if (this.player?.paused()) {
-						return
-					}
-
-					const now = Date.now()
-					const seconds = Math.floor((now - this.viewTimeLastTick) / 1000)
-
-					if (seconds < 1) {
-						return
-					}
-
-					this.viewTimeLastTick = now
-
-					if (this.viewTimeForcePassive || document.hidden) {
-						this.viewTimePassiveSeconds += seconds
-					} else {
-						this.viewTimeActiveSeconds += seconds
-					}
-				}, 1000)
 			},
-			stopViewTimer() {
-				if (!this.viewTimeTimerId) {
+			resetViewSecondCounts() {
+				this.viewSecondCountsActive = {}
+				this.viewSecondCountsPassive = {}
+			},
+			flushViewSeconds(preferBeacon = false) {
+				if (!this.viewTimePresentationId || this.playingMedia !== 'presentation') {
 					return
 				}
 
-				clearInterval(this.viewTimeTimerId)
-				this.viewTimeTimerId = null
-				this.viewTimeLastTick = null
+				console.debug('[ViewSeconds] flush', { preferBeacon, presentationId: this.viewTimePresentationId })
+				this.sendViewSecondBuckets(this.viewSecondCountsActive, false, preferBeacon)
+				this.sendViewSecondBuckets(this.viewSecondCountsPassive, true, preferBeacon)
+				this.resetViewSecondCounts()
+				this.viewSecondsLastSec = null
 			},
-			resetViewTimes() {
-				this.viewTimeActiveSeconds = 0
-				this.viewTimePassiveSeconds = 0
+			buildViewSecondBuckets(counts) {
+				const maxSec = this.viewDurationSeconds > 0 ? this.viewDurationSeconds - 1 : null
+
+				return Object.entries(counts)
+					.map(([s, c]) => ({ s: Number(s), c: Number(c) }))
+					.filter((b) => b.c >= 1 && (maxSec === null || b.s <= maxSec))
 			},
-			flushViewTimes(preferBeacon = false) {
-				if (!this.viewTimePresentationId) {
+			sendViewSecondBuckets(counts, isPassive, preferBeacon = false) {
+				const buckets = this.buildViewSecondBuckets(counts)
+				if (!buckets.length) {
 					return
 				}
 
-				if (this.viewTimeActiveSeconds >= 1) {
-					this.sendViewTime(this.viewTimeActiveSeconds, false, preferBeacon)
-				}
-
-				if (this.viewTimePassiveSeconds >= 1) {
-					this.sendViewTime(this.viewTimePassiveSeconds, true, preferBeacon)
-				}
-
-				this.resetViewTimes()
-			},
-			sendViewTime(seconds, isPassive, preferBeacon = false) {
 				const payload = {
-					'presentation_id': this.viewTimePresentationId,
-					'seconds': seconds,
-					'is_passive': isPassive,
+					presentation_id: this.viewTimePresentationId,
+					is_passive: isPassive,
+					buckets,
 				}
 
 				if (preferBeacon && navigator.sendBeacon) {
 					const token = document.querySelector(`meta[name='csrf-token']`)?.getAttribute('content')
 					const formData = new FormData()
 					formData.append('presentation_id', String(payload.presentation_id))
-					formData.append('seconds', String(payload.seconds))
 					formData.append('is_passive', payload.is_passive ? '1' : '0')
-
+					formData.append('buckets', JSON.stringify(payload.buckets))
 					if (token) {
 						formData.append('_token', token)
 					}
 
-					const sent = navigator.sendBeacon(route('presentation-view-time.store'), formData)
-
+					const sent = navigator.sendBeacon(route('presentation-view-seconds.store'), formData)
 					if (sent) {
 						return
 					}
 				}
 
 				axios
-					.post(route('presentation-view-time.store'), payload, preferBeacon ? { keepalive: true } : undefined)
+					.post(route('presentation-view-seconds.store'), payload, preferBeacon ? { keepalive: true } : undefined)
 					.then(() => {
-						console.debug('[FIX] View time persisted', {
+						console.debug('[ViewSeconds] persisted', {
 							presentationId: payload.presentation_id,
-							seconds: payload.seconds,
 							isPassive: payload.is_passive,
+							bucketCount: buckets.length,
 							preferBeacon,
 						})
 					})
 					.catch((error) => {
-						console.warn('[FIX] View time persist failed', {
+						console.warn('[ViewSeconds] persist failed', {
 							presentationId: payload.presentation_id,
-							seconds: payload.seconds,
 							isPassive: payload.is_passive,
 							preferBeacon,
 							message: error?.message,
@@ -396,21 +408,18 @@
 						return
 					}
 
-					console.debug('[FIX] visibilitychange -> flush passive buffer')
-					this.stopViewTimer()
-					this.flushViewTimes(true)
+					console.debug('[ViewSeconds] visibilitychange -> flush')
+					this.flushViewSeconds(true)
 				})
 
 				window.addEventListener('pagehide', () => {
-					console.debug('[FIX] pagehide -> flush passive buffer')
-					this.stopViewTimer()
-					this.flushViewTimes(true)
+					console.debug('[ViewSeconds] pagehide -> flush')
+					this.flushViewSeconds(true)
 				})
 
 				window.addEventListener('beforeunload', () => {
-					console.debug('[FIX] beforeunload -> flush passive buffer')
-					this.stopViewTimer()
-					this.flushViewTimes(true)
+					console.debug('[ViewSeconds] beforeunload -> flush')
+					this.flushViewSeconds(true)
 				})
 			},
 			audioPrice() {

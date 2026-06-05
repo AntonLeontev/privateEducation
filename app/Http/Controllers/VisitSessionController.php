@@ -3,23 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Visitor;
+use App\Services\VisitSessionIdResolver;
 use App\Services\VisitSyncService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class VisitSessionController extends Controller
 {
-    public function __construct(private readonly VisitSyncService $visitSyncService) {}
+    public function __construct(
+        private readonly VisitSyncService $visitSyncService,
+        private readonly VisitSessionIdResolver $visitSessionIdResolver,
+    ) {}
 
     public function sync(Request $request): JsonResponse
     {
         $visitorUuid = $request->cookie('visitor_uuid');
-        $visitSessionId = $request->cookie('visit_session_id');
+        $visitSessionId = $this->visitSessionIdResolver->resolve($request->cookie('visit_session_id'));
 
         if (! $visitSessionId) {
             return response()->json([
                 'message' => 'Missing cookies',
                 'missing' => ['visit_session_id'],
+                'invalid' => $request->cookie('visit_session_id') !== null,
                 'retry' => true,
             ], 400);
         }

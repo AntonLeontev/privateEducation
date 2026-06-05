@@ -33,4 +33,9 @@ class Visit extends Model
     {
         return $this->hasMany(PresentationViewTime::class);
     }
+
+    public function presentationViewSecondStats(): HasMany
+    {
+        return $this->hasMany(PresentationViewSecondStat::class);
+    }
 }

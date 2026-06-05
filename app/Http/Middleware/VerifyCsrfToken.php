@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'webhooks/*',
         'presentation-view-time',
+        'presentation-view-seconds',
     ];
 }

@@ -3,12 +3,17 @@
     var VISIT_KEY = 'visit_session_id';
     var OPEN_TABS_KEY = 'visit_open_tabs';
     var TAB_ID_KEY = 'visit_tab_id';
+    var RELOAD_KEY = 'visit_session_reload_id';
+    var HEARTBEAT_KEY = 'visit_tabs_heartbeat';
+    var PAGE_HIDE_KEY = 'visit_page_hide_at';
     var syncUrl = @json(route('visit-session.sync'));
     var debugVisit = @json((bool) config('app.debug'));
     var maxSyncAttempts = 25;
     var syncRetryDelayMs = 150;
-    var tabCloseCleanupDelayMs = 1500;
-    var cleanupTimer = null;
+    var pageHideGraceMs = 2000;
+    var heartbeatIntervalMs = 3000;
+    var heartbeatMaxAgeMs = 8000;
+    var heartbeatTimer = null;
 
     function getCookie(name) {
         var match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()[\]\\/+^]/g, '\\$&') + '=([^;]*)'));
@@ -36,6 +41,11 @@
         });
     }
 
+    function isValidVisitId(id) {
+        return typeof id === 'string'
+            && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
+    }
+
     function getOpenTabs() {
         try {
             var raw = localStorage.getItem(OPEN_TABS_KEY);
@@ -50,6 +60,32 @@
         localStorage.setItem(OPEN_TABS_KEY, JSON.stringify(list));
     }
 
+    function touchHeartbeat() {
+        localStorage.setItem(HEARTBEAT_KEY, String(Date.now()));
+    }
+
+    function isHeartbeatFresh() {
+        var ts = parseInt(localStorage.getItem(HEARTBEAT_KEY) || '0', 10);
+        return !isNaN(ts) && (Date.now() - ts) < heartbeatMaxAgeMs;
+    }
+
+    function getReloadVisitId() {
+        var id = sessionStorage.getItem(RELOAD_KEY);
+        return isValidVisitId(id) ? id : null;
+    }
+
+    function setReloadVisitId(visitId) {
+        sessionStorage.setItem(RELOAD_KEY, visitId);
+    }
+
+    function clearReloadVisitId() {
+        sessionStorage.removeItem(RELOAD_KEY);
+    }
+
+    function clearPageHideMarker() {
+        localStorage.removeItem(PAGE_HIDE_KEY);
+    }
+
     function getTabId() {
         var tabId = sessionStorage.getItem(TAB_ID_KEY);
         if (!tabId) {
@@ -60,12 +96,13 @@
     }
 
     function registerTab(tabId) {
-        cancelVisitCleanup();
+        clearPageHideMarker();
         var tabs = getOpenTabs();
         if (tabs.indexOf(tabId) === -1) {
             tabs.push(tabId);
             setOpenTabs(tabs);
         }
+        touchHeartbeat();
     }
 
     function unregisterTab(tabId) {
@@ -76,54 +113,103 @@
         return tabs;
     }
 
-    function getStoredVisitId() {
-        return getCookie(VISIT_KEY) || localStorage.getItem(VISIT_KEY);
-    }
-
-    function persistVisitId(visitId) {
-        localStorage.setItem(VISIT_KEY, visitId);
-        setCookie(VISIT_KEY, visitId);
-    }
-
-    function clearVisitSession() {
+    function clearVisitCookieAndStorage() {
         localStorage.removeItem(VISIT_KEY);
         clearCookie(VISIT_KEY);
     }
 
-    function cancelVisitCleanup() {
-        if (cleanupTimer !== null) {
-            clearTimeout(cleanupTimer);
-            cleanupTimer = null;
+    function clearVisitSession() {
+        clearVisitCookieAndStorage();
+        localStorage.removeItem(OPEN_TABS_KEY);
+        localStorage.removeItem(HEARTBEAT_KEY);
+        clearPageHideMarker();
+        clearReloadVisitId();
+    }
+
+    function isRecentPageHide() {
+        var hideTs = parseInt(localStorage.getItem(PAGE_HIDE_KEY) || '0', 10);
+        return !isNaN(hideTs) && (Date.now() - hideTs) < pageHideGraceMs;
+    }
+
+    function handlePendingPageHide() {
+        var hideTs = parseInt(localStorage.getItem(PAGE_HIDE_KEY) || '0', 10);
+        if (!hideTs) {
+            return;
+        }
+
+        var elapsed = Date.now() - hideTs;
+
+        if (elapsed < pageHideGraceMs) {
+            if (debugVisit) {
+                console.log('Visit session: recent pagehide, treating as reload');
+            }
+            return;
+        }
+
+        clearPageHideMarker();
+
+        if (getOpenTabs().length === 0 && !isHeartbeatFresh()) {
+            clearVisitSession();
+            if (debugVisit) {
+                console.log('Visit session cleanup', { type: 'delayed' });
+            }
         }
     }
 
-    function scheduleVisitCleanupIfNoTabs() {
-        cancelVisitCleanup();
-        cleanupTimer = setTimeout(function () {
-            cleanupTimer = null;
-            if (getOpenTabs().length === 0) {
-                clearVisitSession();
-                if (debugVisit) {
-                    console.log('Visit session ended (all tabs closed)');
-                }
-            }
-        }, tabCloseCleanupDelayMs);
+    function resolveVisitId() {
+        var reloadId = getReloadVisitId();
+        if (reloadId) {
+            return { id: reloadId, created: false, reason: 'reload' };
+        }
+
+        var cookieId = getCookie(VISIT_KEY);
+        var sessionActive = isHeartbeatFresh() || isRecentPageHide();
+
+        if (cookieId && isValidVisitId(cookieId) && sessionActive) {
+            return { id: cookieId, created: false, reason: 'cookie' };
+        }
+
+        if (cookieId || getOpenTabs().length > 0) {
+            clearVisitCookieAndStorage();
+            localStorage.removeItem(OPEN_TABS_KEY);
+            localStorage.removeItem(HEARTBEAT_KEY);
+        } else {
+            localStorage.removeItem(VISIT_KEY);
+        }
+
+        return {
+            id: uuid(),
+            created: true,
+            reason: sessionActive ? 'no_cookie' : 'cold_start',
+        };
+    }
+
+    function persistVisitId(visitId) {
+        setCookie(VISIT_KEY, visitId);
+        setReloadVisitId(visitId);
+        touchHeartbeat();
+    }
+
+    function startHeartbeat() {
+        if (heartbeatTimer !== null) {
+            return;
+        }
+        touchHeartbeat();
+        heartbeatTimer = setInterval(touchHeartbeat, heartbeatIntervalMs);
     }
 
     function initVisitSession() {
-        var visitId = getStoredVisitId();
-        var created = false;
+        var resolved = resolveVisitId();
 
-        if (!visitId) {
-            visitId = uuid();
-            created = true;
-        }
-
-        persistVisitId(visitId);
+        persistVisitId(resolved.id);
+        clearPageHideMarker();
         runVisitSync(0);
 
-        if (debugVisit && created) {
-            console.log('Visit session started', { visitId: visitId });
+        if (debugVisit && resolved.created) {
+            console.log('Visit session started', {
+                visitId: resolved.id,
+                reason: resolved.reason,
+            });
         }
     }
 
@@ -151,6 +237,12 @@
                     || result.status >= 500
                 );
 
+                if (!result.ok && result.status === 400 && result.data && result.data.invalid) {
+                    clearVisitSession();
+                    initVisitSession();
+                    return;
+                }
+
                 if (shouldRetry) {
                     setTimeout(function () { runVisitSync(attempt + 1); }, syncRetryDelayMs);
                     return;
@@ -175,9 +267,12 @@
             });
     }
 
+    handlePendingPageHide();
+
     var tabId = getTabId();
-    registerTab(tabId);
     initVisitSession();
+    registerTab(tabId);
+    startHeartbeat();
 
     window.addEventListener('pageshow', function (event) {
         registerTab(tabId);
@@ -187,13 +282,20 @@
     });
 
     window.addEventListener('pagehide', function (event) {
+        var remainingTabs = unregisterTab(tabId);
+
         if (event.persisted) {
             return;
         }
 
-        var remainingTabs = unregisterTab(tabId);
         if (remainingTabs.length === 0) {
-            scheduleVisitCleanupIfNoTabs();
+            localStorage.setItem(PAGE_HIDE_KEY, String(Date.now()));
+            clearVisitCookieAndStorage();
+            localStorage.removeItem(OPEN_TABS_KEY);
+            localStorage.removeItem(HEARTBEAT_KEY);
+            if (debugVisit) {
+                console.log('Visit session cleanup', { type: 'pagehide' });
+            }
         }
     });
 })();

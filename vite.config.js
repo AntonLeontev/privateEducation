@@ -18,6 +18,7 @@ export default defineConfig({
                 "resources/scss/lang-panel.scss",
                 "resources/js/app.js",
                 "resources/js/metrics.js",
+                "resources/js/second-timeline-chart.js",
                 "resources/js/index.js",
                 "resources/js/account.js",
                 "node_modules/video.js/dist/video-js.min.css",

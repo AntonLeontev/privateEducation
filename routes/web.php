@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PresentationViewController;
+use App\Http\Controllers\PresentationViewSecondStatController;
 use App\Http\Controllers\PresentationViewTimeController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
@@ -94,6 +95,8 @@ Route::get('visit-session/sync', [VisitSessionController::class, 'sync'])
     ->name('visit-session.sync');
 Route::post('presentation-view-time', [PresentationViewTimeController::class, 'store'])
     ->name('presentation-view-time.store');
+Route::post('presentation-view-seconds', [PresentationViewSecondStatController::class, 'store'])
+    ->name('presentation-view-seconds.store');
 
 Route::post('webhooks/stripe', [StripeController::class, 'webhook'])->name('webhooks.stripe');
 Route::post('error-watch', function () {})->name('error.watch');

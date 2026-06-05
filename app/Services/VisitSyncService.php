@@ -6,11 +6,22 @@ use App\Models\Visit;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class VisitSyncService
 {
     public function sync(Request $request, Visitor $visitor, string $browserSessionId): ?Visit
     {
+        if (! Str::isUuid($browserSessionId)) {
+            Log::channel('telegram')->warning('[FIX] VisitSync: rejected non-UUID session_id before insert', [
+                'visitor_uuid' => $visitor->uuid ?? null,
+                'visit_session_id_length' => strlen($browserSessionId),
+                'visit_session_id_prefix' => substr($browserSessionId, 0, 24),
+            ]);
+
+            return null;
+        }
+
         if (! $visitor->id) {
             Log::channel('telegram')->warning('VisitSync: visitor without id before syncing visit', [
                 'visitor_uuid' => $visitor->uuid ?? null,

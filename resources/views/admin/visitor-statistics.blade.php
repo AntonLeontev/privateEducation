@@ -69,6 +69,35 @@
 		<div class="relative w-full max-h-screen text-md">
 			<div class="text-lg text-black max-h-[calc(100vh-91px-58px)] overflow-y-auto space-y-6">
 				<section>
+					<div class="flex flex-wrap gap-3 items-center mb-2">
+						<span class="text-sm opacity-60">Timeline по фрагменту</span>
+						<select
+							class="bg-transparent border cursor-pointer rounded-none px-1 py-1 text-sm font-bold focus:outline-none"
+							x-model.number="timelineFragmentId"
+							@change="update"
+						>
+							<template x-for="n in 17" :key="n">
+								<option class="text-black" :value="n" x-text="'Фрагмент ' + n"></option>
+							</template>
+						</select>
+					</div>
+					<div class="overflow-hidden rounded-xl bg-white/20 mb-6" x-show="timeline" x-cloak>
+						<div class="p-4 text-secondary">
+							<div class="grid gap-4 md:grid-cols-2">
+								<div>
+									<div class="mb-1 text-xs opacity-60">Активный — сумма hit_count за период</div>
+									<div id="stats-chart-active" class="w-full h-52"></div>
+								</div>
+								<div>
+									<div class="mb-1 text-xs opacity-60">Пассивный — сумма hit_count за период</div>
+									<div id="stats-chart-passive" class="w-full h-52"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section>
 					<div class="flex gap-2 items-center mb-2">
 						<span class="text-sm opacity-60">Время по фрагментам</span>
 						<span class="loading loading-dots loading-sm" x-show="loadingFilter" x-cloak></span>
@@ -131,6 +160,8 @@
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('visitorStatistics', () => ({
 			fragments: [],
+			timeline: null,
+			timelineFragmentId: 1,
 			utmBreakdown: [],
 			utmOptions: [],
 			period: 'today',
@@ -172,6 +203,7 @@
 					period: this.period,
 					start: this.$refs.start.value,
 					end: this.$refs.end.value,
+					fragment_id: this.timelineFragmentId,
 				};
 				if (this.utmSource !== '') {
 					params.utm_source = this.utmSource;
@@ -181,10 +213,12 @@
 					.get(route('admin.visitor-statistics'), { params })
 					.then(response => {
 						this.fragments = response.data.fragments || [];
+						this.timeline = response.data.timeline || null;
 						this.utmBreakdown = response.data.utm_breakdown || [];
 						this.utmOptions = response.data.utm_options || [];
 						const applied = response.data.filters_applied?.utm_source;
 						this.utmSource = applied == null ? '' : applied;
+						this.$nextTick(() => this.renderTimelineCharts());
 					})
 					.catch(() => {
 						alert('Ошибка. Перезагрузите страницу');
@@ -192,6 +226,35 @@
 					.finally(() => {
 						this.loadingFilter = false;
 					});
+			},
+			timelineToChartPoints(rows) {
+				return (rows ?? []).map((row) => ({
+					second_index: row.second_index,
+					hit_count: row.total_hits,
+				}));
+			},
+			renderTimelineCharts() {
+				if (typeof window.disposeSecondTimelineChart === 'function') {
+					window.disposeSecondTimelineChart('stats-chart-active');
+					window.disposeSecondTimelineChart('stats-chart-passive');
+				}
+				if (!this.timeline || typeof window.renderSecondTimelineChart !== 'function') {
+					return;
+				}
+				const detailOptions = {
+					variant: 'detail',
+					durationSeconds: this.timeline.duration_seconds ?? 0,
+				};
+				window.renderSecondTimelineChart(
+					'stats-chart-active',
+					this.timelineToChartPoints(this.timeline.active),
+					{ ...detailOptions, title: 'Активный агрегат' }
+				);
+				window.renderSecondTimelineChart(
+					'stats-chart-passive',
+					this.timelineToChartPoints(this.timeline.passive),
+					{ ...detailOptions, title: 'Пассивный агрегат' }
+				);
 			},
 		}));
 	});

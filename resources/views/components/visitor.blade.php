@@ -7,10 +7,55 @@
     },
 
     reset() {
+        this.disposeAllCharts()
         this.show = false
     },
     toggle() {
         this.show = !this.show
+        if (this.show) {
+            this.$nextTick(() => this.renderAllCharts())
+        } else {
+            this.disposeAllCharts()
+        }
+    },
+    chartId(kind, fragmentId) {
+        return `visit-chart-${kind}-${visit.id}-${fragmentId}`
+    },
+    renderAllCharts() {
+        if (!visit.fragments?.length) {
+            return
+        }
+        for (const fragment of visit.fragments) {
+            this.renderFragmentCharts(fragment)
+        }
+    },
+    renderFragmentCharts(fragment) {
+        if (typeof window.renderSecondTimelineChart !== 'function') {
+            return
+        }
+        const chartOptions = {
+            variant: 'compact',
+            durationSeconds: fragment.duration_seconds ?? 0,
+        }
+        window.renderSecondTimelineChart(
+            this.chartId('active', fragment.fragment_id),
+            fragment.active_timeline ?? [],
+            chartOptions
+        )
+        window.renderSecondTimelineChart(
+            this.chartId('passive', fragment.fragment_id),
+            fragment.passive_timeline ?? [],
+            chartOptions
+        )
+    },
+    disposeAllCharts() {
+        if (!visit.fragments?.length || typeof window.disposeSecondTimelineChart !== 'function') {
+            return
+        }
+        for (const fragment of visit.fragments) {
+            window.disposeSecondTimelineChart(this.chartId('active', fragment.fragment_id))
+            window.disposeSecondTimelineChart(this.chartId('passive', fragment.fragment_id))
+        }
     },
     formatSeconds(seconds) {
         if (seconds === null || seconds === undefined) {
@@ -92,11 +137,13 @@
                             <template x-if="visit.fragments?.length">
                                 <div class="grid gap-2">
                                     <template x-for="fragment in visit.fragments" :key="visit.id + '-' + fragment.fragment_id">
-                                        <div class="flex gap-8 px-3 py-2 rounded-lg bg-white/10">
-                                            <div class="text-sm font-bold" x-text="'Фрагмент №' + fragment.fragment_id"></div>
-                                            <div class="flex gap-6 text-sm">
-                                                <div x-text="'Активный просмотр: ' + formatSeconds(fragment.active_seconds)"></div>
-                                                <div x-text="'Пассивный просмотр: ' + formatSeconds(fragment.passive_seconds)"></div>
+                                        <div class="flex flex-row flex-wrap items-center gap-x-4 gap-y-2 px-3 py-2 rounded-lg bg-white/10 lg:flex-nowrap">
+                                            <div class="text-sm font-bold shrink-0" x-text="'Фрагмент №' + fragment.fragment_id"></div>
+                                            <div class="text-sm shrink-0" x-text="'Активный просмотр: ' + formatSeconds(fragment.active_seconds)"></div>
+                                            <div class="text-sm shrink-0" x-text="'Пассивный просмотр: ' + formatSeconds(fragment.passive_seconds)"></div>
+                                            <div class="flex flex-1 gap-3 min-w-0 basis-full lg:basis-auto">
+                                                <div class="flex-1 min-w-[120px] h-14 rounded bg-black/20 overflow-visible" :id="chartId('active', fragment.fragment_id)"></div>
+                                                <div class="flex-1 min-w-[120px] h-14 rounded bg-black/20 overflow-visible" :id="chartId('passive', fragment.fragment_id)"></div>
                                             </div>
                                         </div>
                                     </template>
