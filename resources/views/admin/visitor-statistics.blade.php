@@ -69,64 +69,27 @@
 		<div class="relative w-full max-h-screen text-md">
 			<div class="text-lg text-black max-h-[calc(100vh-91px-58px)] overflow-y-auto space-y-6">
 				<section>
-					<div class="text-sm opacity-60 mb-2">Просмотры по секундам</div>
-					<div class="overflow-hidden rounded-xl bg-white/20 mb-6">
-						<div class="p-4 text-secondary">
-							<div class="flex flex-wrap gap-3 items-center mb-2">
-								<select
-									class="bg-transparent border cursor-pointer rounded-none px-1 py-1 text-sm font-bold focus:outline-none"
-									x-model.number="timelineFragmentId"
-									@change="update"
-								>
-									<template x-for="n in 17" :key="n">
-										<option class="text-black" :value="n" x-text="'Фрагмент ' + n"></option>
-									</template>
-								</select>
-								<span class="loading loading-dots loading-sm" x-show="loadingFilter" x-cloak></span>
-							</div>
-							<template x-if="timeline">
-								<div class="grid gap-2">
-									<div class="flex flex-row flex-wrap gap-y-2 gap-x-4 items-center px-3 py-2 rounded-lg bg-white/10 lg:flex-nowrap">
-										<div class="text-sm font-bold shrink-0" x-text="'Фрагмент №' + timelineFragmentId"></div>
-										<div class="text-sm shrink-0">Пассивный просмотр:</div>
-										<div id="stats-chart-passive" class="flex-1 min-w-[120px] h-[4.5rem] rounded bg-black/20 overflow-visible"></div>
-										<div class="text-sm shrink-0">Активный просмотр:</div>
-										<div id="stats-chart-active" class="flex-1 min-w-[120px] h-[4.5rem] rounded bg-black/20 overflow-visible"></div>
-									</div>
-								</div>
-							</template>
-							<template x-if="!timeline">
-								<div class="px-3 py-2 rounded-lg bg-white/10 text-sm">Нет данных за выбранный период</div>
-							</template>
-						</div>
-					</div>
-				</section>
-
-				<section>
 					<div class="flex gap-2 items-center mb-2">
-						<span class="text-sm opacity-60">Время по фрагментам</span>
+						<span class="text-sm opacity-60">Просмотры по секундам</span>
 						<span class="loading loading-dots loading-sm" x-show="loadingFilter" x-cloak></span>
 					</div>
-					<div class="overflow-hidden rounded-xl bg-white/20">
+					<div class="overflow-hidden rounded-xl bg-white/20 mb-6">
 						<div class="p-4 text-secondary">
-							<template x-if="fragments.length === 0">
-								<div class="px-3 py-2 rounded-lg bg-white/10 text-sm">Нет данных за выбранный период</div>
-							</template>
-							<template x-if="fragments.length > 0">
+							<template x-if="timelines.length > 0">
 								<div class="grid gap-2">
-									<div class="flex flex-wrap gap-x-6 gap-y-1 px-3 py-2 rounded-lg bg-white/10 text-sm font-bold">
-										<div class="min-w-[6rem] flex-1">Фрагмент</div>
-										<div class="min-w-[5rem]">Активно</div>
-										<div class="min-w-[5rem]">Пассивно</div>
-									</div>
-									<template x-for="row in fragments" :key="row.fragment_id">
-										<div class="flex flex-wrap gap-x-6 gap-y-1 px-3 py-2 rounded-lg bg-white/10 text-sm">
-											<div class="min-w-[6rem] flex-1 font-bold" x-text="row.fragment_id"></div>
-											<div class="min-w-[5rem]" x-text="formatDuration(row.active_seconds)"></div>
-											<div class="min-w-[5rem]" x-text="formatDuration(row.passive_seconds)"></div>
+									<template x-for="item in timelines" :key="item.fragment_id">
+										<div class="flex flex-row flex-wrap gap-y-2 gap-x-4 items-center px-3 py-2 rounded-lg bg-white/10 lg:flex-nowrap">
+											<div class="text-sm font-bold shrink-0" x-text="'Фрагмент №' + item.fragment_id"></div>
+											<div class="text-sm shrink-0">Пассивный просмотр:</div>
+											<div class="flex-1 min-w-[120px] h-[4.5rem] rounded bg-black/20 overflow-visible" :id="chartId('passive', item.fragment_id)"></div>
+											<div class="text-sm shrink-0">Активный просмотр:</div>
+											<div class="flex-1 min-w-[120px] h-[4.5rem] rounded bg-black/20 overflow-visible" :id="chartId('active', item.fragment_id)"></div>
 										</div>
 									</template>
 								</div>
+							</template>
+							<template x-if="timelines.length === 0">
+								<div class="px-3 py-2 rounded-lg bg-white/10 text-sm">Нет данных за выбранный период</div>
 							</template>
 						</div>
 					</div>
@@ -164,26 +127,19 @@
 <script>
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('visitorStatistics', () => ({
-			fragments: [],
-			timeline: null,
-			timelineFragmentId: 1,
+			timelines: [],
 			utmBreakdown: [],
 			utmOptions: [],
 			period: 'today',
 			utmSource: '',
 			loadingFilter: false,
 
-			formatDuration(totalSeconds) {
-				const s = Math.max(0, parseInt(totalSeconds, 10) || 0);
-				const h = Math.floor(s / 3600);
-				const m = Math.floor((s % 3600) / 60);
-				const sec = s % 60;
-				const pad = (n) => String(n).padStart(2, '0');
-				return `${h}:${pad(m)}:${pad(sec)}`;
-			},
-
 			init() {
 				this.update();
+			},
+
+			chartId(kind, fragmentId) {
+				return `stats-chart-${kind}-${fragmentId}`;
 			},
 
 			changePeriod() {
@@ -208,7 +164,6 @@
 					period: this.period,
 					start: this.$refs.start.value,
 					end: this.$refs.end.value,
-					fragment_id: this.timelineFragmentId,
 				};
 				if (this.utmSource !== '') {
 					params.utm_source = this.utmSource;
@@ -217,8 +172,8 @@
 				axios
 					.get(route('admin.visitor-statistics'), { params })
 					.then(response => {
-						this.fragments = response.data.fragments || [];
-						this.timeline = response.data.timeline || null;
+						this.disposeAllCharts();
+						this.timelines = response.data.timelines || [];
 						this.utmBreakdown = response.data.utm_breakdown || [];
 						this.utmOptions = response.data.utm_options || [];
 						const applied = response.data.filters_applied?.utm_source;
@@ -232,34 +187,44 @@
 						this.loadingFilter = false;
 					});
 			},
+
 			timelineToChartPoints(rows) {
 				return (rows ?? []).map((row) => ({
 					second_index: row.second_index,
 					hit_count: row.total_hits,
 				}));
 			},
-			renderTimelineCharts() {
-				if (typeof window.disposeSecondTimelineChart === 'function') {
-					window.disposeSecondTimelineChart('stats-chart-active');
-					window.disposeSecondTimelineChart('stats-chart-passive');
-				}
-				if (!this.timeline || typeof window.renderSecondTimelineChart !== 'function') {
+
+			disposeAllCharts() {
+				if (typeof window.disposeSecondTimelineChart !== 'function') {
 					return;
 				}
-				const chartOptions = {
-					variant: 'compact',
-					durationSeconds: this.timeline.duration_seconds ?? 0,
-				};
-				window.renderSecondTimelineChart(
-					'stats-chart-passive',
-					this.timelineToChartPoints(this.timeline.passive),
-					chartOptions
-				);
-				window.renderSecondTimelineChart(
-					'stats-chart-active',
-					this.timelineToChartPoints(this.timeline.active),
-					chartOptions
-				);
+				for (const item of this.timelines) {
+					window.disposeSecondTimelineChart(this.chartId('active', item.fragment_id));
+					window.disposeSecondTimelineChart(this.chartId('passive', item.fragment_id));
+				}
+			},
+
+			renderTimelineCharts() {
+				if (typeof window.renderSecondTimelineChart !== 'function') {
+					return;
+				}
+				for (const item of this.timelines) {
+					const chartOptions = {
+						variant: 'compact',
+						durationSeconds: item.duration_seconds ?? 0,
+					};
+					window.renderSecondTimelineChart(
+						this.chartId('passive', item.fragment_id),
+						this.timelineToChartPoints(item.passive),
+						chartOptions
+					);
+					window.renderSecondTimelineChart(
+						this.chartId('active', item.fragment_id),
+						this.timelineToChartPoints(item.active),
+						chartOptions
+					);
+				}
 			},
 		}));
 	});

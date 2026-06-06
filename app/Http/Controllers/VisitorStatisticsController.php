@@ -44,7 +44,7 @@ class VisitorStatisticsController extends Controller
 
     /**
      * @return array{
-     *     fragments: list<array{fragment_id: int, active_seconds: int, passive_seconds: int}>,
+     *     timelines: list<array{fragment_id: int, duration_seconds: int, active: list<array{second_index: int, total_hits: int, visits_reached: int}>, passive: list<array{second_index: int, total_hits: int, visits_reached: int}>}>,
      *     utm_breakdown: list<array{label: string, value: string, visits_count: int}>,
      *     utm_options: list<array{label: string, value: string}>,
      *     filters_applied: array{period: mixed, start: mixed, end: mixed, utm_source: ?string}
@@ -65,7 +65,7 @@ class VisitorStatisticsController extends Controller
 
         if ($from === null || $to === null) {
             return [
-                'fragments' => [],
+                'timelines' => [],
                 'utm_breakdown' => [],
                 'utm_options' => [],
                 'filters_applied' => $filtersBase,
@@ -85,20 +85,11 @@ class VisitorStatisticsController extends Controller
 
         $filtersBase['utm_source'] = $appliedUtm;
 
-        $fragmentId = $request->query('fragment_id');
-        $timeline = null;
-        if (is_numeric($fragmentId)) {
-            $timeline = $this->queryAggregateTimeline($fromBound, $toBound, $appliedUtm, (int) $fragmentId);
-        }
-
         return [
-            'fragments' => $this->queryFragments($fromBound, $toBound, $appliedUtm),
-            'timeline' => $timeline,
+            'timelines' => $this->queryAllAggregateTimelines($fromBound, $toBound, $appliedUtm),
             'utm_breakdown' => $utmBreakdown,
             'utm_options' => $this->sortUtmOptions($utmBreakdown),
-            'filters_applied' => array_merge($filtersBase, [
-                'fragment_id' => is_numeric($fragmentId) ? (int) $fragmentId : null,
-            ]),
+            'filters_applied' => $filtersBase,
         ];
     }
 
@@ -131,38 +122,6 @@ class VisitorStatisticsController extends Controller
         }
 
         return $out;
-    }
-
-    /**
-     * @return list<array{fragment_id: int, active_seconds: int, passive_seconds: int}>
-     */
-    private function queryFragments(Carbon $from, Carbon $to, ?string $appliedUtm): array
-    {
-        $query = DB::table('presentation_view_second_stats')
-            ->join('visits', 'presentation_view_second_stats.visit_id', '=', 'visits.id')
-            ->join('presentations', 'presentation_view_second_stats.presentation_id', '=', 'presentations.id')
-            ->whereBetween('visits.created_at', [$from, $to])
-            ->select([
-                'presentations.fragment_id',
-                DB::raw('SUM(CASE WHEN presentation_view_second_stats.is_passive = 0 THEN presentation_view_second_stats.hit_count ELSE 0 END) AS active_seconds'),
-                DB::raw('SUM(CASE WHEN presentation_view_second_stats.is_passive = 1 THEN presentation_view_second_stats.hit_count ELSE 0 END) AS passive_seconds'),
-            ])
-            ->groupBy('presentations.fragment_id')
-            ->orderBy('presentations.fragment_id');
-
-        if ($appliedUtm === self::UTM_NONE_VALUE) {
-            $query->whereRaw("NULLIF(TRIM(visits.utm_source), '') IS NULL");
-        } elseif ($appliedUtm !== null && $appliedUtm !== '') {
-            $query->whereRaw("NULLIF(TRIM(visits.utm_source), '') = ?", [$appliedUtm]);
-        }
-
-        return $query->get()->map(static function ($row): array {
-            return [
-                'fragment_id' => (int) $row->fragment_id,
-                'active_seconds' => (int) $row->active_seconds,
-                'passive_seconds' => (int) $row->passive_seconds,
-            ];
-        })->values()->all();
     }
 
     /**
@@ -200,31 +159,27 @@ class VisitorStatisticsController extends Controller
     }
 
     /**
-     * @return array{duration_seconds: int, active: list<array{second_index: int, total_hits: int, visits_reached: int}>, passive: list<array{second_index: int, total_hits: int, visits_reached: int}>}|null
+     * @return list<array{fragment_id: int, duration_seconds: int, active: list<array{second_index: int, total_hits: int, visits_reached: int}>, passive: list<array{second_index: int, total_hits: int, visits_reached: int}>}>
      */
-    private function queryAggregateTimeline(Carbon $from, Carbon $to, ?string $appliedUtm, int $fragmentId): ?array
+    private function queryAllAggregateTimelines(Carbon $from, Carbon $to, ?string $appliedUtm): array
     {
-        $presentation = Presentation::query()
-            ->where('fragment_id', '=', $fragmentId)
-            ->with('media')
-            ->first();
-
-        if (! $presentation) {
-            return null;
-        }
-
         $query = DB::table('presentation_view_second_stats')
             ->join('visits', 'presentation_view_second_stats.visit_id', '=', 'visits.id')
             ->join('presentations', 'presentation_view_second_stats.presentation_id', '=', 'presentations.id')
             ->whereBetween('visits.created_at', [$from, $to])
-            ->where('presentations.fragment_id', '=', $fragmentId)
             ->select([
+                'presentations.fragment_id',
                 'presentation_view_second_stats.second_index',
                 'presentation_view_second_stats.is_passive',
                 DB::raw('SUM(presentation_view_second_stats.hit_count) AS total_hits'),
                 DB::raw('COUNT(DISTINCT presentation_view_second_stats.visit_id) AS visits_reached'),
             ])
-            ->groupBy('presentation_view_second_stats.second_index', 'presentation_view_second_stats.is_passive')
+            ->groupBy(
+                'presentations.fragment_id',
+                'presentation_view_second_stats.second_index',
+                'presentation_view_second_stats.is_passive'
+            )
+            ->orderBy('presentations.fragment_id')
             ->orderBy('presentation_view_second_stats.second_index');
 
         if ($appliedUtm === self::UTM_NONE_VALUE) {
@@ -233,26 +188,58 @@ class VisitorStatisticsController extends Controller
             $query->whereRaw("NULLIF(TRIM(visits.utm_source), '') = ?", [$appliedUtm]);
         }
 
-        $active = [];
-        $passive = [];
+        $byFragment = [];
 
         foreach ($query->get() as $row) {
+            $fragmentId = (int) $row->fragment_id;
+
+            if (! isset($byFragment[$fragmentId])) {
+                $byFragment[$fragmentId] = [
+                    'active' => [],
+                    'passive' => [],
+                ];
+            }
+
             $point = [
                 'second_index' => (int) $row->second_index,
                 'total_hits' => (int) $row->total_hits,
                 'visits_reached' => (int) $row->visits_reached,
             ];
+
             if ($row->is_passive) {
-                $passive[] = $point;
+                $byFragment[$fragmentId]['passive'][] = $point;
             } else {
-                $active[] = $point;
+                $byFragment[$fragmentId]['active'][] = $point;
             }
         }
 
-        return [
-            'duration_seconds' => $this->playtimeParser->durationForPresentation($presentation),
-            'active' => $active,
-            'passive' => $passive,
-        ];
+        if ($byFragment === []) {
+            return [];
+        }
+
+        $presentations = Presentation::query()
+            ->whereIn('fragment_id', array_keys($byFragment))
+            ->with('media')
+            ->get()
+            ->keyBy('fragment_id');
+
+        ksort($byFragment);
+
+        $timelines = [];
+
+        foreach ($byFragment as $fragmentId => $data) {
+            $presentation = $presentations->get($fragmentId);
+
+            $timelines[] = [
+                'fragment_id' => $fragmentId,
+                'duration_seconds' => $presentation !== null
+                    ? $this->playtimeParser->durationForPresentation($presentation)
+                    : 0,
+                'active' => $data['active'],
+                'passive' => $data['passive'],
+            ];
+        }
+
+        return $timelines;
     }
 }
