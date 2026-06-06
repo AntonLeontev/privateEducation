@@ -178,14 +178,27 @@ function renderCompactChart(root, containerId, chartData, length) {
             paddingLeft: 0,
             paddingRight: 0,
             paddingTop: 0,
-            paddingBottom: 0,
+            paddingBottom: 16,
         })
     );
 
     const xRenderer = am5xy.AxisRendererX.new(root, {
         minGridDistance: 40,
     });
-    xRenderer.labels.template.set('visible', false);
+    xRenderer.labels.template.setAll({
+        visible: true,
+        fontSize: 10,
+        fill: am5.color(COMPACT_GRID_COLOR),
+        fillOpacity: 0.7,
+    });
+    xRenderer.labels.template.adapters.add('text', (text, target) => {
+        const value = target.dataItem?.get('value');
+        if (value == null || Number.isNaN(Number(value))) {
+            return '';
+        }
+
+        return String(Math.round(Number(value) / 60));
+    });
     xRenderer.grid.template.setAll({
         stroke: am5.color(COMPACT_GRID_COLOR),
         strokeOpacity: 0.2,
@@ -197,6 +210,7 @@ function renderCompactChart(root, containerId, chartData, length) {
             min: 0,
             max: Math.max(0, length - 1),
             strictMinMax: true,
+            interval: 60,
         }),
     );
 

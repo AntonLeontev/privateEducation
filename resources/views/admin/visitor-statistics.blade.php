@@ -89,9 +89,9 @@
 									<div class="flex flex-row flex-wrap gap-y-2 gap-x-4 items-center px-3 py-2 rounded-lg bg-white/10 lg:flex-nowrap">
 										<div class="text-sm font-bold shrink-0" x-text="'Фрагмент №' + timelineFragmentId"></div>
 										<div class="text-sm shrink-0">Пассивный просмотр:</div>
-										<div id="stats-chart-passive" class="flex-1 min-w-[120px] h-14 rounded bg-black/20 overflow-visible"></div>
+										<div id="stats-chart-passive" class="flex-1 min-w-[120px] h-[4.5rem] rounded bg-black/20 overflow-visible"></div>
 										<div class="text-sm shrink-0">Активный просмотр:</div>
-										<div id="stats-chart-active" class="flex-1 min-w-[120px] h-14 rounded bg-black/20 overflow-visible"></div>
+										<div id="stats-chart-active" class="flex-1 min-w-[120px] h-[4.5rem] rounded bg-black/20 overflow-visible"></div>
 									</div>
 								</div>
 							</template>
