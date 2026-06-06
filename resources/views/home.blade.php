@@ -103,6 +103,8 @@
 			device: 'notebook',
 			viewSecondCountsActive: {},
 			viewSecondCountsPassive: {},
+			viewSecondsSentActive: {},
+			viewSecondsSentPassive: {},
 			viewSecondsLastSec: null,
 			viewSecondsLastUpdate: 0,
 			viewDurationSeconds: 0,
@@ -140,7 +142,10 @@
                     });
         
                     this.player.on('timeupdate', () => this.recordViewSecondFromPlayer());
-                    this.player.on('seeking', () => this.activateViewSecondsFromManualSeek());
+                    this.player.on('seeking', () => {
+						this.resetViewSecondsSentCacheOnManualSeek()
+						this.activateViewSecondsFromManualSeek()
+					});
                     this.player.on('pause', () => this.flushViewSeconds());
                     this.player.on('ended', () => {
 						this.flushViewSeconds(true);
@@ -268,6 +273,7 @@
 				this.playingMedia = mediaType
 				this.viewTimeForcePassive = forcePassive
 				this.resetViewSecondCounts()
+				this.resetViewSecondsSentCache()
 				this.viewSecondsLastSec = null
 				if (mediaType === 'presentation') {
 					this.viewDurationSeconds = this.playingFragment?.presentation?.duration_seconds ?? 0
@@ -358,6 +364,10 @@
 					return
 				}
 
+				if (this.isViewSecondSent(sec, this.viewTimeForcePassive)) {
+					return
+				}
+
 				this.viewSecondsLastSec = sec
 				const map = this.viewTimeForcePassive
 					? this.viewSecondCountsPassive
@@ -373,6 +383,29 @@
 			resetViewSecondCounts() {
 				this.viewSecondCountsActive = {}
 				this.viewSecondCountsPassive = {}
+			},
+			isViewSecondSent(sec, isPassive) {
+				const cache = isPassive ? this.viewSecondsSentPassive : this.viewSecondsSentActive
+
+				return cache[sec] === true
+			},
+			markViewSecondsSent(buckets, isPassive) {
+				const cache = isPassive ? this.viewSecondsSentPassive : this.viewSecondsSentActive
+
+				for (const bucket of buckets) {
+					cache[bucket.s] = true
+				}
+			},
+			resetViewSecondsSentCache() {
+				this.viewSecondsSentActive = {}
+				this.viewSecondsSentPassive = {}
+			},
+			resetViewSecondsSentCacheOnManualSeek() {
+				if (this.playingMedia !== 'presentation' || this.viewSecondsIgnoreSeek) {
+					return
+				}
+
+				this.resetViewSecondsSentCache()
 			},
 			flushViewSeconds(preferBeacon = false) {
 				if (!this.viewTimePresentationId || this.playingMedia !== 'presentation') {
@@ -394,6 +427,7 @@
 			},
 			sendViewSecondBuckets(counts, isPassive, preferBeacon = false) {
 				const buckets = this.buildViewSecondBuckets(counts)
+					.filter((bucket) => !this.isViewSecondSent(bucket.s, isPassive))
 				if (!buckets.length) {
 					return
 				}
@@ -416,9 +450,12 @@
 
 					const sent = navigator.sendBeacon(route('presentation-view-seconds.store'), formData)
 					if (sent) {
+						this.markViewSecondsSent(buckets, isPassive)
 						return
 					}
 				}
+
+				this.markViewSecondsSent(buckets, isPassive)
 
 				axios
 					.post(route('presentation-view-seconds.store'), payload, preferBeacon ? { keepalive: true } : undefined)
