@@ -7,6 +7,7 @@ const chartRoots = new Map();
 const COMPACT_LINE_COLOR = 0xe8e4df;
 const COMPACT_FILL_TOP = 0xffffff;
 const COMPACT_GRID_COLOR = 0x8a8278;
+const COMPACT_AXIS_LABEL_COLOR = 0xffffff;
 
 /**
  * @param {string|{title?: string, variant?: 'compact'|'detail', durationSeconds?: number}} third
@@ -187,9 +188,10 @@ function renderCompactChart(root, containerId, chartData, length) {
     });
     xRenderer.labels.template.setAll({
         visible: true,
-        fontSize: 10,
-        fill: am5.color(COMPACT_GRID_COLOR),
-        fillOpacity: 0.7,
+        fontSize: 11,
+        fontWeight: '600',
+        fill: am5.color(COMPACT_AXIS_LABEL_COLOR),
+        fillOpacity: 1,
     });
     xRenderer.labels.template.adapters.add('text', (text, target) => {
         const value = target.dataItem?.get('value');
