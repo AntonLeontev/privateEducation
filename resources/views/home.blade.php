@@ -108,6 +108,8 @@
 			viewDurationSeconds: 0,
 			viewTimePresentationId: null,
 			viewTimeForcePassive: false,
+			viewSecondsIgnoreSeek: false,
+			viewSecondsIgnoreSeekTimer: null,
 			viewTimeHandlersBound: false,
 			viewSecondsThrottleMs: 250,
         
@@ -138,6 +140,7 @@
                     });
         
                     this.player.on('timeupdate', () => this.recordViewSecondFromPlayer());
+                    this.player.on('seeking', () => this.activateViewSecondsFromManualSeek());
                     this.player.on('pause', () => this.flushViewSeconds());
                     this.player.on('ended', () => {
 						this.flushViewSeconds(true);
@@ -274,6 +277,24 @@
 					this.viewTimePresentationId = null
 				}
 
+				if (this.viewSecondsIgnoreSeekTimer) {
+					clearTimeout(this.viewSecondsIgnoreSeekTimer)
+					this.viewSecondsIgnoreSeekTimer = null
+				}
+				this.viewSecondsIgnoreSeek = true
+				const clearViewSecondsIgnoreSeek = () => {
+					if (!this.viewSecondsIgnoreSeek) {
+						return
+					}
+					if (this.viewSecondsIgnoreSeekTimer) {
+						clearTimeout(this.viewSecondsIgnoreSeekTimer)
+						this.viewSecondsIgnoreSeekTimer = null
+					}
+					this.viewSecondsIgnoreSeek = false
+				}
+				this.player.one('seeked', clearViewSecondsIgnoreSeek)
+				this.viewSecondsIgnoreSeekTimer = setTimeout(clearViewSecondsIgnoreSeek, 500)
+
 				this.player.src({
 					type: this.playingFragment[mediaType].media[0]?.format,
 					src: `/media/${mediaType}/${this.playingFragment.id}/{{ loc() }}/${sound}/${this.device}` 
@@ -289,6 +310,18 @@
 							this.modal = 'fullText'
 						})
 				}
+			},
+			activateViewSecondsFromManualSeek() {
+				if (this.playingMedia !== 'presentation') {
+					return
+				}
+				if (!this.viewTimeForcePassive) {
+					return
+				}
+				if (this.viewSecondsIgnoreSeek) {
+					return
+				}
+				this.viewTimeForcePassive = false
 			},
 			recordViewSecondFromPlayer() {
 				if (this.playingMedia !== 'presentation' || !this.viewTimePresentationId || this.player?.paused()) {
@@ -313,6 +346,14 @@
 
 				if (this.viewSecondsLastSec === sec) {
 					return
+				}
+
+				if (
+					this.viewTimeForcePassive
+					&& this.viewSecondsLastSec !== null
+					&& Math.abs(sec - this.viewSecondsLastSec) > 2
+				) {
+					this.activateViewSecondsFromManualSeek()
 				}
 
 				this.viewSecondsLastSec = sec
