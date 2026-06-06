@@ -359,14 +359,14 @@
 				}
 
 				this.viewSecondsLastSec = sec
-				const map = (this.viewTimeForcePassive || document.hidden)
+				const map = this.viewTimeForcePassive
 					? this.viewSecondCountsPassive
 					: this.viewSecondCountsActive
 				map[sec] = (map[sec] ?? 0) + 1
 
 				console.debug('[ViewSeconds] hit', {
 					sec,
-					passive: this.viewTimeForcePassive || document.hidden,
+					passive: this.viewTimeForcePassive,
 					count: map[sec],
 				})
 			},
