@@ -134,6 +134,34 @@ function attachChartCursor(chart, root, xAxis, series) {
 }
 
 /**
+ * @param {number} maxSecond
+ */
+function addCompactMinuteAxisRanges(xAxis, xRenderer, maxSecond) {
+    xRenderer.labels.template.set('forceHidden', true);
+    xRenderer.grid.template.set('forceHidden', true);
+
+    for (let second = 0; second <= maxSecond; second += 60) {
+        const rangeDataItem = xAxis.makeDataItem({ value: second });
+        const range = xAxis.createAxisRange(rangeDataItem);
+
+        range.get('label').setAll({
+            forceHidden: false,
+            text: String(second / 60),
+            fontSize: 11,
+            fontWeight: '600',
+            fill: am5.color(COMPACT_AXIS_LABEL_COLOR),
+            fillOpacity: 1,
+        });
+
+        range.get('grid').setAll({
+            forceHidden: false,
+            stroke: am5.color(COMPACT_GRID_COLOR),
+            strokeOpacity: 0.2,
+        });
+    }
+}
+
+/**
  * @param {string} containerId
  * @param {Array<{second_index: number, hit_count: number}>} points
  * @param {string|object} [options]
@@ -183,38 +211,19 @@ function renderCompactChart(root, containerId, chartData, length) {
         })
     );
 
-    const xRenderer = am5xy.AxisRendererX.new(root, {
-        minGridDistance: 40,
-    });
-    xRenderer.labels.template.setAll({
-        visible: true,
-        fontSize: 11,
-        fontWeight: '600',
-        fill: am5.color(COMPACT_AXIS_LABEL_COLOR),
-        fillOpacity: 1,
-    });
-    xRenderer.labels.template.adapters.add('text', (text, target) => {
-        const value = target.dataItem?.get('value');
-        if (value == null || Number.isNaN(Number(value))) {
-            return '';
-        }
-
-        return String(Math.round(Number(value) / 60));
-    });
-    xRenderer.grid.template.setAll({
-        stroke: am5.color(COMPACT_GRID_COLOR),
-        strokeOpacity: 0.2,
-    });
+    const maxSecond = Math.max(0, length - 1);
+    const xRenderer = am5xy.AxisRendererX.new(root, {});
 
     const xAxis = chart.xAxes.push(
         am5xy.ValueAxis.new(root, {
             renderer: xRenderer,
             min: 0,
-            max: Math.max(0, length - 1),
+            max: maxSecond,
             strictMinMax: true,
-            interval: 60,
         }),
     );
+
+    addCompactMinuteAxisRanges(xAxis, xRenderer, maxSecond);
 
     const yRenderer = am5xy.AxisRendererY.new(root, {});
     yRenderer.labels.template.set('visible', false);
