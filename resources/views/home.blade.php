@@ -272,6 +272,12 @@
 				if (mediaType === 'presentation') {
 					this.viewDurationSeconds = this.playingFragment?.presentation?.duration_seconds ?? 0
 					this.viewTimePresentationId = this.playingFragment?.id
+					if (!forcePassive) {
+						console.debug('[FIX][ViewSeconds] active mode enabled', {
+							presentationId: this.playingFragment?.id,
+							reason: 'manual play',
+						})
+					}
 				} else {
 					this.viewDurationSeconds = 0
 					this.viewTimePresentationId = null
@@ -322,6 +328,10 @@
 					return
 				}
 				this.viewTimeForcePassive = false
+				console.debug('[FIX][ViewSeconds] active mode enabled', {
+					presentationId: this.viewTimePresentationId,
+					reason: 'manual seek',
+				})
 			},
 			recordViewSecondFromPlayer() {
 				if (this.playingMedia !== 'presentation' || !this.viewTimePresentationId || this.player?.paused()) {
@@ -346,14 +356,6 @@
 
 				if (this.viewSecondsLastSec === sec) {
 					return
-				}
-
-				if (
-					this.viewTimeForcePassive
-					&& this.viewSecondsLastSec !== null
-					&& Math.abs(sec - this.viewSecondsLastSec) > 2
-				) {
-					this.activateViewSecondsFromManualSeek()
 				}
 
 				this.viewSecondsLastSec = sec
