@@ -69,30 +69,35 @@
 		<div class="relative w-full max-h-screen text-md">
 			<div class="text-lg text-black max-h-[calc(100vh-91px-58px)] overflow-y-auto space-y-6">
 				<section>
-					<div class="flex flex-wrap gap-3 items-center mb-2">
-						<span class="text-sm opacity-60">Timeline по фрагменту</span>
-						<select
-							class="bg-transparent border cursor-pointer rounded-none px-1 py-1 text-sm font-bold focus:outline-none"
-							x-model.number="timelineFragmentId"
-							@change="update"
-						>
-							<template x-for="n in 17" :key="n">
-								<option class="text-black" :value="n" x-text="'Фрагмент ' + n"></option>
-							</template>
-						</select>
-					</div>
-					<div class="overflow-hidden rounded-xl bg-white/20 mb-6" x-show="timeline" x-cloak>
+					<div class="text-sm opacity-60 mb-2">Просмотры по секундам</div>
+					<div class="overflow-hidden rounded-xl bg-white/20 mb-6">
 						<div class="p-4 text-secondary">
-							<div class="grid gap-4 md:grid-cols-2">
-								<div>
-									<div class="mb-1 text-xs opacity-60">Активный — сумма hit_count за период</div>
-									<div id="stats-chart-active" class="w-full h-52"></div>
-								</div>
-								<div>
-									<div class="mb-1 text-xs opacity-60">Пассивный — сумма hit_count за период</div>
-									<div id="stats-chart-passive" class="w-full h-52"></div>
-								</div>
+							<div class="flex flex-wrap gap-3 items-center mb-2">
+								<select
+									class="bg-transparent border cursor-pointer rounded-none px-1 py-1 text-sm font-bold focus:outline-none"
+									x-model.number="timelineFragmentId"
+									@change="update"
+								>
+									<template x-for="n in 17" :key="n">
+										<option class="text-black" :value="n" x-text="'Фрагмент ' + n"></option>
+									</template>
+								</select>
+								<span class="loading loading-dots loading-sm" x-show="loadingFilter" x-cloak></span>
 							</div>
+							<template x-if="timeline">
+								<div class="grid gap-2">
+									<div class="flex flex-row flex-wrap gap-y-2 gap-x-4 items-center px-3 py-2 rounded-lg bg-white/10 lg:flex-nowrap">
+										<div class="text-sm font-bold shrink-0" x-text="'Фрагмент №' + timelineFragmentId"></div>
+										<div class="text-sm shrink-0">Пассивный просмотр:</div>
+										<div id="stats-chart-passive" class="flex-1 min-w-[120px] h-14 rounded bg-black/20 overflow-visible"></div>
+										<div class="text-sm shrink-0">Активный просмотр:</div>
+										<div id="stats-chart-active" class="flex-1 min-w-[120px] h-14 rounded bg-black/20 overflow-visible"></div>
+									</div>
+								</div>
+							</template>
+							<template x-if="!timeline">
+								<div class="px-3 py-2 rounded-lg bg-white/10 text-sm">Нет данных за выбранный период</div>
+							</template>
 						</div>
 					</div>
 				</section>
@@ -241,19 +246,19 @@
 				if (!this.timeline || typeof window.renderSecondTimelineChart !== 'function') {
 					return;
 				}
-				const detailOptions = {
-					variant: 'detail',
+				const chartOptions = {
+					variant: 'compact',
 					durationSeconds: this.timeline.duration_seconds ?? 0,
 				};
 				window.renderSecondTimelineChart(
-					'stats-chart-active',
-					this.timelineToChartPoints(this.timeline.active),
-					{ ...detailOptions, title: 'Активный агрегат' }
-				);
-				window.renderSecondTimelineChart(
 					'stats-chart-passive',
 					this.timelineToChartPoints(this.timeline.passive),
-					{ ...detailOptions, title: 'Пассивный агрегат' }
+					chartOptions
+				);
+				window.renderSecondTimelineChart(
+					'stats-chart-active',
+					this.timelineToChartPoints(this.timeline.active),
+					chartOptions
 				);
 			},
 		}));

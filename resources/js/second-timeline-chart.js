@@ -26,6 +26,20 @@ function normalizeOptions(third) {
     };
 }
 
+function formatTimelineSeconds(totalSeconds) {
+    const total = Number(totalSeconds);
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+    const secs = total % 60;
+    const padded = String(secs).padStart(2, "0");
+
+    if (hours > 0) {
+        return `${hours}:${String(minutes).padStart(2, "0")}:${padded}`;
+    }
+
+    return `${minutes}:${padded}`;
+}
+
 /**
  * @param {Array<{second_index?: number, hit_count?: number}>} points
  * @param {number} durationSeconds
@@ -47,6 +61,7 @@ export function buildDenseTimeline(points, durationSeconds) {
         data.push({
             second,
             hits: map.get(second) ?? 0,
+            timeLabel: formatTimelineSeconds(second),
         });
     }
 
@@ -75,11 +90,12 @@ function resolveTimelineLength(points, durationSeconds) {
 }
 
 function showEmptyState(el) {
-    el.innerHTML = '<div class="flex h-full items-center justify-center text-xs opacity-60">Нет данных</div>';
+    el.innerHTML =
+        '<div class="flex justify-center items-center h-full text-xs opacity-60">Нет данных</div>';
 }
 
 const TIMELINE_TOOLTIP_TEXT =
-    'Секунда: {valueX.formatNumber("#.")}\nПросмотров: {valueY.formatNumber("#.")}';
+    'Время: {timeLabel}\nПросмотров: {valueY.formatNumber("#.")}';
 
 function createTimelineTooltip(root) {
     const tooltip = am5.Tooltip.new(root, {
@@ -181,8 +197,7 @@ function renderCompactChart(root, containerId, chartData, length) {
             min: 0,
             max: Math.max(0, length - 1),
             strictMinMax: true,
-            tooltip: am5.Tooltip.new(root, {}),
-        })
+        }),
     );
 
     const yRenderer = am5xy.AxisRendererY.new(root, {});
