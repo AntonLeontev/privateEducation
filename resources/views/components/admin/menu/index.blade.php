@@ -94,25 +94,25 @@
 			</x-admin.menu.submenu>
 		</x-admin.menu.item>
 
-		<x-admin.menu.item title="Просмотры презентаций">
-			<x-admin.menu.subitem stats="pres" page="sum" title="Суммарные просмотры и чтение презентаций">
+		<x-admin.menu.item title="Активные просмотры">
+			<x-admin.menu.subitem stats="pres" page="sum" title="Активные просмотры и чтение презентаций">
 				<img width="25px" src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
 				<div class="">
-					Суммарные просмотры и чтение
+					Активные просмотры и чтение
 				</div>
 			</x-admin.menu.subitem>
 
-			<x-admin.menu.subitem stats="pres" page="video" title="Суммарные просмотры презентаций">
+			<x-admin.menu.subitem stats="pres" page="video" title="Активные просмотры презентаций">
 				<img width="25px" src="{{ Vite::asset('resources/images/icon3.png') }}" alt="">
 				<div>
-					Суммарные просмотры
+					Активные просмотры
 				</div>
 			</x-admin.menu.subitem>
 
-			<x-admin.menu.subitem stats="pres" page="audio" title="Суммарное чтение презентаций">
+			<x-admin.menu.subitem stats="pres" page="audio" title="Активное чтение презентаций">
 				<img width="25px" src="{{ Vite::asset('resources/images/icon2.png') }}" alt="">
 				<div>
-					Суммарное чтение
+					Активное чтение
 				</div>
 			</x-admin.menu.subitem>
 
@@ -120,7 +120,7 @@
 				<x-admin.menu.subitem stats="metrics-pres" page="sum" title="Суммарный график просмотров и чтения презентаций">
 					<img width="25px" src="{{ Vite::asset('resources/images/icon1.png') }}" alt="">
 					<div>
-						Суммарный график просмотров и чтения
+						График активных просмотров и чтения
 					</div>
 				</x-admin.menu.subitem>
 
@@ -134,7 +134,7 @@
 				<x-admin.menu.subitem stats="metrics-pres" page="video" title="График просмотров презентаций">
 					<img width="25px" src="{{ Vite::asset('resources/images/icon3.png') }}" alt="">
 					<div>
-						График просмотров презентаций
+						График активных просмотров презентаций
 					</div>
 				</x-admin.menu.subitem>
 			</x-admin.menu.submenu>
