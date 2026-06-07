@@ -48,6 +48,9 @@
 					>
 				</label>
 			</form>
+			<div class="text-sm ms-2">
+				Количество посещений c просмотрами презентаций: <span x-text="totalVisits"></span>
+			</div>
 			<x-admin.menu-button />
 		</div>
 	</header>
@@ -80,6 +83,7 @@
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('visitors', () => ({
 			visits: [],
+			totalVisits: 0,
 			period: 'today',
 			paginatorMeta: null,
 			loadingPagination: false,
@@ -128,6 +132,10 @@
 						const chunk = response.data.data;
 						this.visits = append ? [...this.visits, ...chunk] : chunk;
 						this.paginatorMeta = response.data.meta;
+
+						if (!append) {
+							this.totalVisits = response.data.total_visits ?? 0;
+						}
 					})
 					.catch(error => {
 						alert('Ошибка. Перезагрузите страницу');

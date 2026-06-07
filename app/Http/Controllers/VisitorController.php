@@ -24,27 +24,33 @@ class VisitorController extends Controller
 
         [$periodStart, $periodEnd] = $this->getPeriodDates();
 
-        $visits = Visit::query()
-            ->select('visits.*')
-            ->selectRaw('ROW_NUMBER() OVER (PARTITION BY visits.visitor_id ORDER BY visits.created_at ASC, visits.id ASC) AS visit_number')
+        $baseQuery = Visit::query()
             ->where(function ($query) {
                 $query->whereHas('presentationViewTimes')
                     ->orWhereHas('presentationViewSecondStats');
             })
-            ->with(['visitor.user', 'visitor.country'])
             ->when($periodStart && $periodEnd, function ($query) use ($periodStart, $periodEnd) {
                 $query->whereBetween('visits.created_at', [
                     $periodStart->copy()->startOfDay(),
                     $periodEnd->copy()->endOfDay(),
                 ]);
-            })
+            });
+
+        $totalVisits = (clone $baseQuery)->count();
+
+        $visits = (clone $baseQuery)
+            ->select('visits.*')
+            ->selectRaw('ROW_NUMBER() OVER (PARTITION BY visits.visitor_id ORDER BY visits.created_at ASC, visits.id ASC) AS visit_number')
+            ->with(['visitor.user', 'visitor.country'])
             ->orderByDesc('visits.created_at')
             ->orderByDesc('visits.id')
             ->cursorPaginate(50);
 
         $this->attachFragmentsToVisits($visits->getCollection());
 
-        return VisitResource::collection($visits);
+        return VisitResource::collection($visits)->additional([
+            'total_visits' => $totalVisits,
+        ]);
     }
 
     /**
