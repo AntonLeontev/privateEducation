@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SalesStatsRequest;
+use App\Services\AdminMetrics\DailySeriesBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class SubscriptionController extends Controller
 {
@@ -73,59 +76,46 @@ class SubscriptionController extends Controller
         return response()->json($fragments);
     }
 
-    public function metrics(SalesStatsRequest $request)
+    public function metrics(SalesStatsRequest $request, DailySeriesBuilder $dailySeriesBuilder)
     {
-        $sales = [];
-
+        $start = now()->subDays(180)->startOfDay();
+        $end = now()->endOfDay();
         $model = $request->getModel($request->get('content'));
 
-        foreach (range(180, 0, -1) as $day) {
-            $date = now()->subDays($day);
-
-            $sum = DB::table('subscriptions')
-                ->where('created_at', '>=', $date->startOfDay())
-                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
+        try {
+            $rows = DB::table('subscriptions')
+                ->selectRaw('DATE(created_at) as day')
+                ->selectRaw('SUM(price) as sum')
+                ->selectRaw("SUM(CASE WHEN lang = 'ru' THEN price ELSE 0 END) as ru")
+                ->selectRaw("SUM(CASE WHEN lang = 'en' THEN price ELSE 0 END) as en")
+                ->where('created_at', '>=', $start)
+                ->where('created_at', '<=', $end)
                 ->when(! empty($model), function (Builder $query) use ($model) {
                     return $query->where('subscribable_type', $model);
                 })
                 ->when(is_numeric($request->get('fragment')), function (Builder $query) {
                     return $query->where('subscribable_id', request()->get('fragment'));
                 })
-                ->sum('price');
+                ->groupBy(DB::raw('DATE(created_at)'))
+                ->get();
+        } catch (Throwable $e) {
+            Log::error('[SubscriptionController.metrics] query failed', [
+                'message' => $e->getMessage(),
+            ]);
 
-            $ru = DB::table('subscriptions')
-                ->where('created_at', '>=', $date->startOfDay())
-                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
-                ->where('lang', 'ru')
-                ->when(! empty($model), function (Builder $query) use ($model) {
-                    return $query->where('subscribable_type', $model);
-                })
-                ->when(is_numeric($request->get('fragment')), function (Builder $query) {
-                    return $query->where('subscribable_id', request()->get('fragment'));
-                })
-                ->sum('price');
+            throw $e;
+        }
 
-            $en = DB::table('subscriptions')
-                ->where('created_at', '>=', $date->startOfDay())
-                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
-                ->where('lang', 'en')
-                ->when(! empty($model), function (Builder $query) use ($model) {
-                    return $query->where('subscribable_type', $model);
-                })
-                ->when(is_numeric($request->get('fragment')), function (Builder $query) {
-                    return $query->where('subscribable_id', request()->get('fragment'));
-                })
-                ->sum('price');
-
-            $sales[] = [
-                'date' => $date->format('Y-m-d'),
-                'sum' => (int) $sum / 100,
-                'ru' => (int) $ru / 100,
-                'en' => (int) $en / 100,
+        $byDate = [];
+        foreach ($rows as $row) {
+            $byDate[(string) $row->day] = [
+                'sum' => (int) $row->sum / 100,
+                'ru' => (int) $row->ru / 100,
+                'en' => (int) $row->en / 100,
             ];
         }
 
-        return response()->json($sales);
+        return response()->json($dailySeriesBuilder->build($byDate, $start, $end));
     }
 
     public function geoSales(): JsonResponse

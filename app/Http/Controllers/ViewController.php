@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ViewsStatsRequest;
 use App\Models\View;
+use App\Services\AdminMetrics\DailySeriesBuilder;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class ViewController extends Controller
 {
@@ -74,59 +77,46 @@ class ViewController extends Controller
         return response()->json($fragments);
     }
 
-    public function metrics(ViewsStatsRequest $request)
+    public function metrics(ViewsStatsRequest $request, DailySeriesBuilder $dailySeriesBuilder)
     {
-        $sales = [];
-
+        $start = now()->subDays(180)->startOfDay();
+        $end = now()->endOfDay();
         $model = $request->getModel($request->get('content'));
 
-        foreach (range(180, 0, -1) as $day) {
-            $date = now()->subDays($day);
-
-            $sum = DB::table('views')
-                ->where('created_at', '>=', $date->startOfDay())
-                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
+        try {
+            $rows = DB::table('views')
+                ->selectRaw('DATE(created_at) as day')
+                ->selectRaw('COUNT(*) as sum')
+                ->selectRaw("SUM(CASE WHEN lang = 'ru' THEN 1 ELSE 0 END) as ru")
+                ->selectRaw("SUM(CASE WHEN lang = 'en' THEN 1 ELSE 0 END) as en")
+                ->where('created_at', '>=', $start)
+                ->where('created_at', '<=', $end)
                 ->when(! empty($model), function (Builder $query) use ($model) {
                     return $query->where('viewable_type', $model);
                 })
                 ->when(is_numeric($request->get('fragment')), function (Builder $query) {
                     return $query->where('viewable_id', request()->get('fragment'));
                 })
-                ->count();
+                ->groupBy(DB::raw('DATE(created_at)'))
+                ->get();
+        } catch (Throwable $e) {
+            Log::error('[ViewController.metrics] query failed', [
+                'message' => $e->getMessage(),
+            ]);
 
-            $ru = DB::table('views')
-                ->where('created_at', '>=', $date->startOfDay())
-                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
-                ->where('lang', 'ru')
-                ->when(! empty($model), function (Builder $query) use ($model) {
-                    return $query->where('viewable_type', $model);
-                })
-                ->when(is_numeric($request->get('fragment')), function (Builder $query) {
-                    return $query->where('viewable_id', request()->get('fragment'));
-                })
-                ->count();
+            throw $e;
+        }
 
-            $en = DB::table('views')
-                ->where('created_at', '>=', $date->startOfDay())
-                ->where('created_at', '<=', now()->subDays($day)->endOfDay())
-                ->where('lang', 'en')
-                ->when(! empty($model), function (Builder $query) use ($model) {
-                    return $query->where('viewable_type', $model);
-                })
-                ->when(is_numeric($request->get('fragment')), function (Builder $query) {
-                    return $query->where('viewable_id', request()->get('fragment'));
-                })
-                ->count();
-
-            $sales[] = [
-                'date' => $date->format('Y-m-d'),
-                'sum' => (int) $sum,
-                'ru' => (int) $ru,
-                'en' => (int) $en,
+        $byDate = [];
+        foreach ($rows as $row) {
+            $byDate[(string) $row->day] = [
+                'sum' => (int) $row->sum,
+                'ru' => (int) $row->ru,
+                'en' => (int) $row->en,
             ];
         }
 
-        return response()->json($sales);
+        return response()->json($dailySeriesBuilder->build($byDate, $start, $end));
     }
 
     public function store(Request $request)
