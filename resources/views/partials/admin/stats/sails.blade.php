@@ -91,15 +91,10 @@
 
                 init() {
 					this.update();
-					this.$watch('stats', value => {
-						this.update();
-					});
-					this.$watch('page', value => {
-						this.update();
-					});
-					this.$watch('fragment', value => {
-						this.update();
-					});
+					this.$watch(
+						() => `${this.stats}|${this.page}|${this.fragment}`,
+						() => this.update()
+					);
                 },
                 changePeriod() {
                     this.period = this.$refs.select.value;

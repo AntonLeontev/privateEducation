@@ -13,9 +13,10 @@
 			en: null,
 
             init() {
-				this.$watch('stats', value => this.update())
-				this.$watch('page', value => this.update())
-				this.$watch('fragment', value => this.update())
+				this.$watch(
+					() => `${this.stats}|${this.page}|${this.fragment}`,
+					() => this.update()
+				)
             },
 			update() {
 				if (this.stats !== 'metrics-views' && this.stats !== 'metrics-sails' && this.stats !== 'metrics-pres') return;
