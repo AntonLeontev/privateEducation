@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Private new education for future generations',
+    'title' => 'Alternative education for future generations',
     'description' => 'Presented in an electronic book, audio book and video book',
     'fragment' => 'Fragment',
     'audio' => 'Audio',
