@@ -114,6 +114,7 @@
     }
 
     function clearVisitCookieAndStorage() {
+        window.__visitSessionId = null;
         localStorage.removeItem(VISIT_KEY);
         clearCookie(VISIT_KEY);
     }
@@ -185,6 +186,7 @@
     }
 
     function persistVisitId(visitId) {
+        window.__visitSessionId = visitId;
         setCookie(VISIT_KEY, visitId);
         setReloadVisitId(visitId);
         touchHeartbeat();
@@ -290,11 +292,10 @@
 
         if (remainingTabs.length === 0) {
             localStorage.setItem(PAGE_HIDE_KEY, String(Date.now()));
-            clearVisitCookieAndStorage();
             localStorage.removeItem(OPEN_TABS_KEY);
             localStorage.removeItem(HEARTBEAT_KEY);
             if (debugVisit) {
-                console.log('Visit session cleanup', { type: 'pagehide' });
+                console.log('Visit session cleanup', { type: 'pagehide', keepCookie: true });
             }
         }
     });

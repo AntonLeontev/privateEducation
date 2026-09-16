@@ -425,6 +425,24 @@
 					.map(([s, c]) => ({ s: Number(s), c: Number(c) }))
 					.filter((b) => b.c >= 1 && (maxSec === null || b.s <= maxSec))
 			},
+			resolveVisitSessionId() {
+				if (typeof window.__visitSessionId === 'string' && window.__visitSessionId) {
+					return window.__visitSessionId
+				}
+
+				try {
+					const match = document.cookie.match(/(?:^|; )visit_session_id=([^;]*)/)
+					if (match) {
+						return decodeURIComponent(match[1])
+					}
+				} catch (e) {}
+
+				try {
+					return sessionStorage.getItem('visit_session_reload_id')
+				} catch (e) {
+					return null
+				}
+			},
 			sendViewSecondBuckets(counts, isPassive, preferBeacon = false) {
 				const buckets = this.buildViewSecondBuckets(counts)
 					.filter((bucket) => !this.isViewSecondSent(bucket.s, isPassive))
@@ -432,10 +450,16 @@
 					return
 				}
 
+				const visitSessionId = this.resolveVisitSessionId()
 				const payload = {
 					presentation_id: this.viewTimePresentationId,
+					visit_session_id: visitSessionId,
 					is_passive: isPassive,
 					buckets,
+				}
+
+				if (!visitSessionId) {
+					console.warn('[ViewSeconds] missing visit session id')
 				}
 
 				if (preferBeacon && navigator.sendBeacon) {
@@ -444,6 +468,9 @@
 					formData.append('presentation_id', String(payload.presentation_id))
 					formData.append('is_passive', payload.is_passive ? '1' : '0')
 					formData.append('buckets', JSON.stringify(payload.buckets))
+					if (visitSessionId) {
+						formData.append('visit_session_id', visitSessionId)
+					}
 					if (token) {
 						formData.append('_token', token)
 					}

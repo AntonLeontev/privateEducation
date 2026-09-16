@@ -50,4 +50,26 @@ class VisitSessionIdResolverTest extends TestCase
     {
         $this->assertNull($this->resolver->resolve('not-a-valid-session-id'));
     }
+
+    public function test_resolve_preferred_falls_back_to_second_value(): void
+    {
+        $uuid = '58731270-016e-4c35-81d9-07e20691cab0';
+
+        $this->assertSame($uuid, $this->resolver->resolvePreferred(null, $uuid));
+        $this->assertSame($uuid, $this->resolver->resolvePreferred('', $uuid));
+    }
+
+    public function test_resolve_preferred_uses_primary_value_when_valid(): void
+    {
+        $cookieUuid = '58731270-016e-4c35-81d9-07e20691cab0';
+        $bodyUuid = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
+
+        $this->assertSame($cookieUuid, $this->resolver->resolvePreferred($cookieUuid, $bodyUuid));
+    }
+
+    public function test_resolve_preferred_returns_null_when_both_missing(): void
+    {
+        $this->assertNull($this->resolver->resolvePreferred(null, null));
+        $this->assertNull($this->resolver->resolvePreferred('', ''));
+    }
 }

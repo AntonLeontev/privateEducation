@@ -32,6 +32,7 @@ class StorePresentationViewSecondStatsRequest extends FormRequest
     {
         return [
             'presentation_id' => ['required', 'integer', 'exists:presentations,id'],
+            'visit_session_id' => ['nullable', 'string', 'max:255'],
             'is_passive' => ['required', 'boolean'],
             'buckets' => ['required', 'array', 'min:1'],
             'buckets.*.s' => ['required', 'integer', 'min:0'],

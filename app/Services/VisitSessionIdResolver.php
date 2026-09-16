@@ -47,4 +47,9 @@ class VisitSessionIdResolver
 
         return null;
     }
+
+    public function resolvePreferred(?string $primary, ?string $fallback): ?string
+    {
+        return $this->resolve($primary) ?? $this->resolve($fallback);
+    }
 }
