@@ -15,6 +15,27 @@ class FragmentUpdateRequest extends FormRequest
         return admin()->user()->isAdmin();
     }
 
+    protected function prepareForValidation(): void
+    {
+        $titles = [];
+
+        foreach (['title_ru', 'title_en'] as $field) {
+            if (! $this->exists($field)) {
+                continue;
+            }
+
+            $value = $this->input($field);
+
+            if (is_string($value)) {
+                $titles[$field] = trim($value);
+            }
+        }
+
+        if ($titles !== []) {
+            $this->merge($titles);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,8 +45,8 @@ class FragmentUpdateRequest extends FormRequest
     {
         return [
             'is_active' => ['sometimes', 'boolean'],
-            'title_ru' => ['sometimes', 'string', 'max:255'],
-            'title_en' => ['sometimes', 'string', 'max:255'],
+            'title_ru' => ['sometimes', 'filled', 'string', 'max:255'],
+            'title_en' => ['sometimes', 'filled', 'string', 'max:255'],
         ];
     }
 }

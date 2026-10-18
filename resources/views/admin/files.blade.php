@@ -42,6 +42,7 @@
 											x-ref="lineWrap"
 											@click-fragment.window="reset"
 											@change-lang.window="reset"
+											@title-updated.window="reset"
 										>
 											<div class="relative right-0 transition ease-linear whitespace-nowrap w-max" x-text="lang === 'ru' ? selectedFragment?.title_ru : selectedFragment?.title_en" x-ref="line"></div>
 										</div>
@@ -134,11 +135,21 @@
 						<button class="myBtn modal-content__close-btn" @click="modalText = false"></button>
 					</div>
 					<div class="justify-center modal-content__body">
-						<div class="flex justify-between gap-3 mb-2">
+						<div class="flex justify-center gap-3 mb-2">
+							<button class="p-1 rounded" :class="mode === 'title' && 'bg-[#ffaa74]'" @click="mode = 'title'">Заглавие</button>
 							<button class="p-1 rounded" :class="mode === 'presentation' && 'bg-[#ffaa74]'" @click="mode = 'presentation'">Текст презентации</button>
 							<button class="p-1 rounded" :class="mode === 'full' && 'bg-[#ffaa74]'" @click="mode = 'full'">Полный текст</button>
 						</div>
 						<div class="w-full h-full pb-5">
+							<form class="flex flex-col h-full active:outline-none gap-y-2" @submit.prevent="updateHeading" x-show="mode === 'title'">
+								<textarea 
+									class="h-full p-1 text-black resize-none rounded-xl" 
+									:name="lang === 'ru' ? 'title_ru' : 'title_en'" 
+									:value="heading"
+								></textarea>
+								<button class="!mt-3 myBtn action-btn auth-modal__login-btn">СОХРАНИТЬ</button>
+							</form>
+
 							<form class="flex flex-col h-full active:outline-none gap-y-2" @submit.prevent="updatePresentationText" x-show="mode === 'presentation'">
 								<textarea 
 									class="h-full p-1 text-black resize-none rounded-xl" 
@@ -163,11 +174,16 @@
 				<script>
 					document.addEventListener('alpine:init', () => {
 						Alpine.data('redactor', () => ({
+							heading: '',
 							text: null,
 							fullText: null,
 							mode: 'presentation',
 
 							open() {
+								this.heading = this.lang === 'ru'
+									? (this.selectedFragment.title_ru ?? '')
+									: (this.selectedFragment.title_en ?? '')
+
 								this.text = this.lang === 'ru' 
 									? this.clean(this.selectedFragment.presentation.text_ru) 
 									: this.clean(this.selectedFragment.presentation.text_en)
@@ -198,6 +214,46 @@
 								return text.split('\n')
 									.map(line => `<p class=\"par\">${line}</p>`)
 									.join('')
+							},
+							updateHeading() {
+								let data = new FormData(this.$event.target)
+								let field = `title_${this.lang}`
+								let value = (data.get(field) ?? '').trim()
+
+								if (value === '') {
+									alert('Заглавие не может быть пустым')
+									return
+								}
+
+								data.set(field, value)
+
+								axios
+									.post(route('admin.fragments.update', this.selectedFragment.id), data)
+									.then(response => {
+										this.selectedFragment.title_ru = response.data.title_ru
+										this.selectedFragment.title_en = response.data.title_en
+										this.$dispatch('title-updated')
+										this.modalText = false
+									})
+									.catch(error => {
+										let status = error.response && error.response.status
+										let messages = []
+
+										if (error.response && error.response.data && error.response.data.errors) {
+											messages = Object.values(error.response.data.errors).flat()
+										}
+
+										let emptyTitle = messages.some(message => {
+											return /must have a value|is required|обязательно для заполнения/i.test(message)
+										})
+
+										if (status === 422 && (value === '' || emptyTitle)) {
+											alert('Заглавие не может быть пустым')
+											return
+										}
+
+										alert('Ошибка сохранения')
+									})
 							},
 							updatePresentationText() {
 								let data = new FormData(this.$event.target)
@@ -242,6 +298,10 @@
 									
 							},
 							headerText() {
+								if (this.mode === 'title') {
+									return `Заглавие фрагмента №${this.selectedFragment?.id}`
+								}
+
 								return this.mode === 'presentation'
 									? `Текст презентации фрагмента №${this.selectedFragment?.id}`
 									: `Полный текст фрагмента №${this.selectedFragment?.id}`
