@@ -78,6 +78,9 @@ Route::prefix('admin')
                             ->name('presentations.update');
 
                         Route::post('media/create', [MediaController::class, 'store'])->name('media.store');
+                        Route::post('media/uploads', [MediaController::class, 'initUpload'])->name('media.uploads.init');
+                        Route::post('media/uploads/{upload}/chunks', [MediaController::class, 'storeChunk'])->name('media.uploads.chunks');
+                        Route::post('media/uploads/{upload}/complete', [MediaController::class, 'completeUpload'])->name('media.uploads.complete');
 
                         Route::get('actions', [ActionLogController::class, 'page'])->name('actions.page');
                         Route::get('actions/index', [ActionLogController::class, 'index'])->name('actions.index');

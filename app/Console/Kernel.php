@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('telescope:prune --hours=48')->daily()->at('1:00');
         $schedule->command('app:rates')->daily()->at('2:00');
+        $schedule->command('app:purge-stale-media-uploads')->daily()->at('3:00');
     }
 
     /**

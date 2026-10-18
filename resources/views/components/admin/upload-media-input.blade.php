@@ -35,50 +35,123 @@
 			sound: '{{ $sound }}',
 			device: '{{ $device }}',
 
-			upload() {
-				let data = new FormData()
+			async upload() {
+				const file = this.$refs.file.files[0]
+				if (!file) {
+					return
+				}
 
-				this.page === 'audio' 
-					? data.append('audio', this.$refs.file.files[0])
-					: data.append('video', this.$refs.file.files[0])
+				const maxFileSize = {{ (int) config('media.max_file_size') }}
+				if (file.size > maxFileSize) {
+					alert('Файл больше {{ (int) config("media.max_file_size") / 1024 / 1024 / 1024 }} ГБ')
+					return
+				}
 
-				data.append('lang', this.lang)
-				data.append('sound', this.sound)
-				data.append('device', this.device)
-				data.append('type', this.page)
-				data.append('fragment_id', this.selectedFragment.id)
-				
 				this.progressbar = true
+				this.progress = 0
 
-				axios
-					.postForm(
-						route('admin.media.store'), 
-						data, 
-						{onUploadProgress: (e) => {
-							this.progress = e.progress
-						}}
+				try {
+					const init = await axios.post(route('admin.media.uploads.init'), {
+						lang: this.lang,
+						sound: this.sound,
+						device: this.device,
+						type: this.page,
+						fragment_id: this.selectedFragment.id,
+						size: file.size,
+					})
+
+					const uploadId = init.data.upload_id
+					const chunkSize = init.data.chunk_size
+					const totalChunks = Math.ceil(file.size / chunkSize)
+
+					for (let index = 0; index < totalChunks; index++) {
+						const start = index * chunkSize
+						const blob = file.slice(start, start + chunkSize)
+						await this.postChunk(uploadId, index, blob, file.name, totalChunks)
+					}
+
+					const response = await axios.post(
+						route('admin.media.uploads.complete', { upload: uploadId })
 					)
-					.then(response => {
-						let media = this.findMedia()
 
-						if (!media) {
-							this.selectedFragment[this.page].media.push(response.data)
-							return
+					this.applyUploadedMedia(response.data)
+				} catch (error) {
+					axios.post(route('error.watch', {test: true, error: error}))
+					alert(this.uploadErrorMessage(error))
+				} finally {
+					setTimeout(() => {
+						this.progressbar = false
+					}, 500)
+				}
+			},
+			uploadErrorMessage(error) {
+				if (!error.response) {
+					return 'Связь оборвалась. Попробуйте ещё раз'
+				}
+
+				const status = error.response.status
+				const reason = error.response.data?.reason
+				const url = String(error.config?.url || '')
+
+				if (reason === 'size' || status === 413) {
+					if (url.includes('/chunks')) {
+						return 'Слишком большой фрагмент файла'
+					}
+
+					return 'Файл больше 2 ГБ'
+				}
+
+				if (reason === 'incomplete' || url.includes('/complete')) {
+					return 'Не удалось собрать файл'
+				}
+
+				return 'Ошибка загрузки'
+			},
+			async postChunk(uploadId, index, blob, fileName, totalChunks) {
+				let lastError = null
+
+				for (let attempt = 1; attempt <= 3; attempt++) {
+					try {
+						const data = new FormData()
+						data.append('index', index)
+						data.append('chunk', blob, fileName)
+
+						await axios.post(
+							route('admin.media.uploads.chunks', { upload: uploadId }),
+							data,
+							{
+								onUploadProgress: (event) => {
+									const chunkProgress = event.progress ?? 0
+									this.progress = (index + chunkProgress) / totalChunks
+								},
+							}
+						)
+
+						this.progress = (index + 1) / totalChunks
+						return
+					} catch (error) {
+						lastError = error
+						const status = error.response?.status
+						const canRetry = !error.response || (status >= 500 && status < 600)
+
+						if (!canRetry || attempt === 3) {
+							throw error
 						}
+					}
+				}
 
-						let index = this.selectedFragment[this.page].media.indexOf(media)
-						this.selectedFragment[this.page].media[index] = response.data
-					})
-					.catch(error => {
-						console.log(error);
-						axios.post(route('error.watch', {test: true, error: error}));
-						alert('Ошибка загрузки')
-					})
-					.finally(() => {
-						setTimeout(() => {
-							this.progressbar = false
-						}, 500);
-					})
+				throw lastError
+			},
+			applyUploadedMedia(uploaded) {
+				const media = this.findMedia()
+
+				if (!media) {
+					this.selectedFragment[this.page].media.push(uploaded)
+					return
+				}
+
+				const mediaIndex = this.selectedFragment[this.page].media.indexOf(media)
+				this.selectedFragment[this.page].media[mediaIndex] = uploaded
 			},
 			exists() {
 				let media = this.findMedia()

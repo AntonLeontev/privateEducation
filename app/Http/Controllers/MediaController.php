@@ -3,55 +3,99 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GetMediaRequest;
+use App\Http\Requests\MediaChunkRequest;
 use App\Http\Requests\MediaStoreRequest;
+use App\Http\Requests\MediaUploadInitRequest;
 use App\Models\Audio;
 use App\Models\Fragment;
 use App\Models\Media;
+use App\Services\Media\ChunkedMediaUploadException;
+use App\Services\Media\ChunkedMediaUploadService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
-use Owenoj\LaravelGetId3\GetId3;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class MediaController extends Controller
 {
-    public function store(MediaStoreRequest $request)
+    public function initUpload(MediaUploadInitRequest $request, ChunkedMediaUploadService $uploads): JsonResponse
     {
-        $fileName = "{$request->get('type')}{$request->get('fragment_id')}_{$request->get('lang')}_{$request->get('sound')}_{$request->get('device')}";
-        $mediaType = $request->get('type') === 'audio' ? 'audio' : 'video';
+        try {
+            $result = $uploads->init(
+                fragmentId: (int) $request->validated('fragment_id'),
+                lang: $request->validated('lang'),
+                sound: $request->validated('sound'),
+                device: $request->validated('device'),
+                type: $request->validated('type'),
+                size: (int) $request->validated('size'),
+                adminId: (int) admin()->id(),
+            );
+        } catch (ChunkedMediaUploadException $exception) {
+            return $this->chunkedUploadErrorResponse($exception);
+        } catch (Throwable $exception) {
+            Log::error('Chunked media upload init failed', [
+                'error' => $exception->getMessage(),
+            ]);
 
-        $media = Media::where('sound', $request->get('sound'))
-            ->where('device', $request->get('device'))
-            ->where('lang', $request->get('lang'))
-            ->where('mediable_type', $request->get('type'))
-            ->where('mediable_id', $request->get('fragment_id'))
-            ->first();
-
-        if (! is_null($media)) {
-            Storage::disk('media')->delete($media->path);
+            throw $exception;
         }
 
-        if ($request->has('audio')) {
-            $track = GetId3::fromUploadedFile(request()->file('audio'));
-            $path = $request->file('audio')->storeAs($request->get('type'), "$fileName.{$track->getFileFormat()}", 'media');
-        } else {
-            $track = GetId3::fromUploadedFile(request()->file('video'));
-            $path = $request->file('video')->storeAs($request->get('type'), "$fileName.{$track->getFileFormat()}", 'media');
+        return response()->json($result);
+    }
+
+    public function storeChunk(string $upload, MediaChunkRequest $request, ChunkedMediaUploadService $uploads): JsonResponse
+    {
+        try {
+            $result = $uploads->storeChunk(
+                $upload,
+                (int) $request->validated('index'),
+                $request->file('chunk'),
+            );
+        } catch (ChunkedMediaUploadException $exception) {
+            return $this->chunkedUploadErrorResponse($exception);
+        } catch (Throwable $exception) {
+            Log::error('Chunked media upload chunk failed', [
+                'upload_id' => $upload,
+                'index' => $request->input('index'),
+                'error' => $exception->getMessage(),
+            ]);
+
+            throw $exception;
         }
 
-        $media = Media::updateOrCreate(
-            [
-                'sound' => $request->get('sound'),
-                'device' => $request->get('device'),
-                'lang' => $request->get('lang'),
-                'mediable_type' => $request->get('type'),
-                'mediable_id' => $request->get('fragment_id'),
-            ],
-            [
-                'playtime' => $track->getPlaytime(),
-                'format' => $mediaType.'/'.$track->getFileFormat(),
-                'path' => $path,
-            ]
+        return response()->json($result);
+    }
+
+    public function completeUpload(string $upload, ChunkedMediaUploadService $uploads): JsonResponse
+    {
+        try {
+            $result = $uploads->complete($upload);
+        } catch (ChunkedMediaUploadException $exception) {
+            return $this->chunkedUploadErrorResponse($exception);
+        } catch (Throwable $exception) {
+            Log::error('Chunked media upload complete failed', [
+                'upload_id' => $upload,
+                'error' => $exception->getMessage(),
+            ]);
+
+            throw $exception;
+        }
+
+        return response()->json($result);
+    }
+
+    public function store(MediaStoreRequest $request, ChunkedMediaUploadService $uploads)
+    {
+        $file = $request->has('audio') ? $request->file('audio') : $request->file('video');
+
+        $media = $uploads->persistUploadedFile(
+            $file,
+            (int) $request->get('fragment_id'),
+            $request->get('lang'),
+            $request->get('sound'),
+            $request->get('device'),
+            $request->get('type'),
         );
 
         return response()->json($media);
@@ -101,5 +145,21 @@ class MediaController extends Controller
             ->{'text_'.$lang};
 
         return response()->json($text);
+    }
+
+    private function chunkedUploadErrorResponse(ChunkedMediaUploadException $exception): JsonResponse
+    {
+        $status = match ($exception->reason()) {
+            ChunkedMediaUploadException::REASON_SIZE => 413,
+            ChunkedMediaUploadException::REASON_UNKNOWN_UPLOAD => 404,
+            ChunkedMediaUploadException::REASON_BAD_INDEX,
+            ChunkedMediaUploadException::REASON_INCOMPLETE => 422,
+            default => 422,
+        };
+
+        return response()->json([
+            'message' => $exception->getMessage(),
+            'reason' => $exception->reason(),
+        ], $status);
     }
 }
