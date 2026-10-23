@@ -68,14 +68,16 @@
 			activate(icon) {
 				let fragment = this.fragments.find(el => el.id === this.number)
 				this.selectedFragment = fragment
-				this.$dispatch('click-fragment')
+
+				if (icon !== 'text') {
+					this.page = icon
+				}
+
+				this.$dispatch('click-fragment', icon)
 
 				if (icon === 'text') {
 					this.$dispatch('redactor')
-					return
 				}
-				
-				this.page = icon
 			},
 			
 		}))

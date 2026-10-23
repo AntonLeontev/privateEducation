@@ -26,6 +26,7 @@
 				class="content hidden-md visible-sm" 
 				x-data="fragments" 
                 @click-fragment="fragmentClick"
+				@change-lang.window="title = makeTitle()"
 			>
                 <div class="grid grid-cols-11 grid-rows-1 mb-2">
                     <div class="col-span-5 player">
